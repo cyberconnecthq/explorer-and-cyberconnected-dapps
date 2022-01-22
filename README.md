@@ -1,6 +1,6 @@
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Cyberconnected Radar
+This is a submission for the [Gitcoin Schelling Point Hackathon](https://gitcoin.co/issue/cyberconnecthq/explorer-and-cyberconnected-dapps/1/100027517).
+View the website at: https://cyberconnected-explorer.netlify.app/
 
 ## Additional dependencies
 
