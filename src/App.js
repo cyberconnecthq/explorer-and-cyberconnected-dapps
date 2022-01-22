@@ -1,4 +1,4 @@
-import { Container, VStack, Box } from '@chakra-ui/react';
+import { Container, VStack } from '@chakra-ui/react';
 import './App.css';
 import NetworkGraph from './NetworkGraph';
 
