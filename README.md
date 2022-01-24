@@ -7,6 +7,10 @@ View the website at: https://cyberconnected-explorer.netlify.app/
 * A basic NetworkGraph [d3.js](https://d3js.org/) component has been added with a border to see if it is reactive.
 * [Chakra](https://chakra-ui.com) is used for styling
 
+## Documentation
+
+Documentation of this Project can be found at this repo's Wiki [here](https://github.com/pizzooid/explorer-and-cyberconnected-dapps/wiki): https://github.com/pizzooid/explorer-and-cyberconnected-dapps/wiki
+
 ## Available Scripts
 
 In the project directory, you can run:
