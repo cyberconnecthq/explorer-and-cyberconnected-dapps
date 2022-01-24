@@ -17,11 +17,9 @@ class NetworkGraph extends React.Component {
 
         // Add 3 dots for 0, 50 and 100%
         svg.append("circle")
-            .attr("cx", x(10)).attr("cy", 100).attr("r", 40).style("fill", "blue");
+            .attr("cx", x(10)).attr("cy", 100).attr("r", 40).style("fill", "var(--chakra-colors-yellow-600)");
         svg.append("circle")
-            .attr("cx", x(50)).attr("cy", 100).attr("r", 40).style("fill", "red");
-        svg.append("circle")
-            .attr("cx", x(100)).attr("cy", 100).attr("r", 40).style("fill", "green");
+            .attr("cx", x(50)).attr("cy", 100).attr("r", 40).style("fill", "var(--chakra-colors-green-600)");
     }
     render() {
         return <svg ref={this.ref} />
