@@ -1,12 +1,14 @@
+import '@fontsource/poppins';
 import { ChakraProvider } from '@chakra-ui/react'
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import theme from './theme';
 
 ReactDOM.render(
-  <ChakraProvider>
+  <ChakraProvider theme={theme}>
     <App />
   </ChakraProvider>,
   document.getElementById('root')
