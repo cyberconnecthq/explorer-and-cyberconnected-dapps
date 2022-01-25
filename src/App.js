@@ -5,11 +5,14 @@ import NetworkGraph from './NetworkGraph';
 import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, from } from "@apollo/client"
 import { onError } from '@apollo/client/link/error'
 import { DisplayFollowers, DisplayFollowings } from './GetFollowerFollowing';
+import { useState } from 'react';
 
-const errorLink = onError(({ graphqlErrors, networkError }) => {
+const errorLink = onError(({ graphqlErrors }) => {
   if (graphqlErrors) {
     graphqlErrors.map(({ message, location, path }) => {
-      alert(`GraphQL Error: {message}`);
+      console.log('GraphQL Error: ' + message);
+      console.log('Location: ' + location);
+      console.log('Path: ' + path);
       return true;
     })
   }
@@ -22,12 +25,19 @@ const link = from(
 )
 const client = new ApolloClient(
   {
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        UserIdentity: {
+          keyFields: ['address'],
+        }
+      }
+    }),
     link: link
   }
 )
 
 function App () {
+  const [address, setAddress] = useState("0x0c493e5fb71428ba99edcb1bbccd925fdd1f48e0");
   return (
     <ApolloProvider client={client}>
       <Box>
@@ -39,15 +49,17 @@ function App () {
         <Box>
           <Container maxW='container.lg'>
             <Heading as='h2' size='lg' my={2}> Enter Adress: </Heading>
-            <Input defaultValue='0x0c493e5fb71428ba99edcb1bbccd925fdd1f48e0'></Input>
+            <Input name="address" value={address} onChange={e => {
+              setAddress(e.target.value);
+              } }></Input>
 
-            <Heading as='h2' size='sm' my={2} textColor='gray.500'> Displaying Connections for 0x....f48e0 </Heading>
+            <Heading as='h2' size='sm' my={2} textColor='gray.500'> Displaying Connections for {address}</Heading>
             <Wrap spacing={4}>
               <WrapItem>
-                <DisplayFollowers />
+                <DisplayFollowers address={address}/>
               </WrapItem>
               <WrapItem>
-                <DisplayFollowings />
+                <DisplayFollowings address={address} />
               </WrapItem>
               <WrapItem>
                 <Heading as='h3' size='xs' textColor='gray.400'> Network Graph </Heading>

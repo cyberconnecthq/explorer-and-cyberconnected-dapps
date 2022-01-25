@@ -1,46 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { useFollowingsAddress, useFollowersAddress, LoadFollowers, LoadFollowings } from './GraphQL/FollowerFollowingQuery'
+import { SEARCH_FOLLOWERS, SEARCH_FOLLOWINGS } from './GraphQL/FollowerFollowingQuery'
 import ConnectionsTable from './ConnectionsTable';
-import { useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client';
+import { Box } from '@chakra-ui/react';
 
-export default function GetFollowerFollowing () {
-	// This is a sample function of displaying
-	// Followers and Followings simplicity
-	const followers = GetFollowers()
-	const followings = GetFollowings()
-	return (
-		<div>
-			<h3>Followers</h3>
-			{followers.map((f) => {
-				return <p>{f.address}</p>
-			})}
-			<br />
-			<h3>Followings</h3>
-			{followings.map((f) => {
-				return <p>{f.address}</p>
-			})}
-		</div>
-	)
-}
-
-export function DisplayFollowers () {
-	const followers = GetFollowers()
-	return (
-		<ConnectionsTable hColor='yellow.600' heading='Followers' addresses={followers} key="followers.address" />
-	)
-}
-
-export function DisplayFollowings () {
-	const followings = GetFollowings()
-	return (
-		<ConnectionsTable hColor='green.600' heading='Followings' addresses={followings} key="followings.address" />
-	)
-}
-
-export function GetFollowers () {
+export function DisplayFollowers (props) {
 	// Returns a list of Followers Addresses
-	const { error, loading, data } = useQuery(LoadFollowers)
-	// const { error, loading, data } = useFollowersAddress("0x0c493e5fb71428ba99edcb1bbccd925fdd1f48e0") // TODO
+	const { error, loading, data } = useQuery(SEARCH_FOLLOWERS, {variables: {"address": props.address}}); // TODO
 	// console.log(error, loading, data)
 	const [followers, setFollowers] = useState([])
 	useEffect(() => {
@@ -49,20 +15,20 @@ export function GetFollowers () {
 		}
 	}, [data])
 
-	// TODO: Error Handling
-	// if (error) return alert(`Something went wrong: {error}`)
-
-	// TODO: When 'loading' is true
-	// if (loading) return <div>Spinner....</div>
-
-	return followers;
+	if (error) {
+		console.log(error);
+		return <Box>Error retreiving followers.</Box>
+	} else if (loading) {
+		return <Box>Loading data ...</Box>
+	} else {
+		return <ConnectionsTable hColor='yellow.600' heading='Followers' addresses={followers} key="followers.address" />
+	}
 }
 
-export function GetFollowings () {
+export function DisplayFollowings (props) {
 	// Returns a list of Followings Addresses
-	const { error, loading, data } = useQuery(LoadFollowings)
-	console.log(error, loading, data)
-	// const { error, loading, data } = useFollowingsAddress("0x0c493e5fb71428ba99edcb1bbccd925fdd1f48e0") // TODO
+	const { error, loading, data } = useQuery(SEARCH_FOLLOWINGS, {variables: {"address": props.address}}); // TODO
+	// console.log(error, loading, data)
 	const [followings, setFollowings] = useState([])
 	useEffect(() => {
 		if (data) {
@@ -70,11 +36,14 @@ export function GetFollowings () {
 		}
 	}, [data])
 
-	// TODO: Error Handling
-	// if (error) return alert(`Something went wrong: {error}`)
-
-	// TODO: When 'loading' is true
-	// if (loading) return <div>Spinner....</div>
-
-	return followings;
+	if (error) {
+		console.log(error);
+		return <Box>Error retreiving followings.</Box>
+	} else if (loading) {
+		return <Box>Loading data ...</Box>
+	} else {
+		return (
+			<ConnectionsTable hColor='green.600' heading={'Following'} addresses={followings} key="followings.address" />
+		)
+	}
 }
