@@ -96,13 +96,10 @@ export const request = async (url = '', data = {}) => {
   const response = await fetch(url, {
     method: 'POST',
     mode: 'cors',
+    redirect: 'follow',
     cache: 'no-cache',
     headers: {
       'Content-Type': 'application/json',
-      //Allow CORS
-      'Access-Control-Allow-Origin': '*',
-      "Access-Control-Allow-Headers": "Content-Type",
-      'Access-Control-Allow-Methods': 'POST',
     },
     referrerPolicy: 'no-referrer',
     body: JSON.stringify(data),
