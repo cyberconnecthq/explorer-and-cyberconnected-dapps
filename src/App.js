@@ -20,19 +20,29 @@ const errorLink = onError(({ graphqlErrors }) => {
 const link = from(
   [
     errorLink,
-    new HttpLink({ uri: "https://api.cybertino.io/connect/" })
+    new HttpLink({ 
+      uri: "https://api.cybertino.io/connect/",
+    })
   ]
-)
-const client = new ApolloClient(
-  {
-    cache: new InMemoryCache({
-      typePolicies: {
-        UserIdentity: {
-          keyFields: ['address'],
+  )
+  const client = new ApolloClient(
+    {
+      cache: new InMemoryCache({
+        typePolicies: {
+          UserIdentity: {
+            keyFields: ['address'],
+          }
         }
+      }),
+      link: link,
+      //add CORS headers
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+        //no cors mode
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+    
       }
-    }),
-    link: link
   }
 )
 
