@@ -99,6 +99,8 @@ export const request = async (url = '', data = {}) => {
     cache: 'no-cache',
     headers: {
       'Content-Type': 'application/json',
+      //Allow CORS
+      'Access-Control-Allow-Origin': '*',
     },
     referrerPolicy: 'no-referrer',
     body: JSON.stringify(data),
