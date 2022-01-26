@@ -1,0 +1,32 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# production
+/backend/dist
+/front/dist
+
+# dependencies
+node_modules
+
+# testing
+coverage
+.eslintcache
+
+# misc
+.git
+.DS_Store
+*.pem
+.env
+.env.development
+yarn.lock
+
+
+# temp
+package-lock.json
+yarn-lock.json
+
+# log files
+.log*
+*.log
+
+# typescript
+*.tsbuildinfo

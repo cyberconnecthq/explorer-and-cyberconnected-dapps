@@ -1,0 +1,16 @@
+{
+    "name": "cctwitter",
+    "version": "0.1.0",
+    "description": "CyberConnect Twitter",
+    "author": "@davidnari",
+    "license": "MIT",
+    "keywords": [],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/strict-beauty/cctwitter.git"
+    },
+    "bugs": {
+        "url": "https://github.com/strict-beauty/cctwitter/issues"
+    },
+    "homepage": "https://github.com/strict-beauty/cctwitter#readme"
+}
