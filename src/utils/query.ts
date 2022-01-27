@@ -100,7 +100,9 @@ export const request = async (url = '', data = {}) => {
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Access-Control-Allow-Origin': '*'
+      'Access-Control-Allow-Origin': '*',
+      'Origin': 'https://cyberconnect-explorer.netlify.app',
+      'Access-Control-Request-Method': 'POST'
     },
     referrerPolicy: 'no-referrer',
     body: JSON.stringify(data),
