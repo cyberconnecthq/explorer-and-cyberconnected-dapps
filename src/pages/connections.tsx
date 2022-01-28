@@ -7,8 +7,8 @@ import Identicon from 'react-identicons';
 const Connections: NextPage = () => {
     const cd = Object.entries(connections_data);
     return (<>
-        <Box p={6}>
-            <Box p={6} bg='black' textColor='white' rounded='md'>
+        <Box p={6} backgroundColor='black'>
+            <Box p={6} rounded='md' margin='auto' maxW='fit-content' bgColor='white'>
                 {cd.map(([address, opts]) =>
                     <Flex
                         alignItems='center'
@@ -16,6 +16,7 @@ const Connections: NextPage = () => {
                         maxW='33em'
                         gap={0}
                     >
+                        <Box>
                         <Flex minW='4em' alignItems='center' mx={-3}>
                             <Tooltip label={(opts & IS_FOLLOWER) ? 'Is a follower.' : "Isn't a follower."} >
                                 <ChevronRightIcon w={6} h={6} mr={-1} color={
@@ -26,6 +27,7 @@ const Connections: NextPage = () => {
                                     (opts & IS_FOLLOWING) === IS_FOLLOWING ? 'yellow.400' : 'gray.400'} />
                             </Tooltip>
                         </Flex>
+                        </Box>
                         <Box
                             key={address}
                             wordBreak='break-all'
