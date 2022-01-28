@@ -5,7 +5,7 @@ import {
   SearchUserInfoResp,
 } from './types';
 
-const endPoint = 'https://api.cybertino.io/connect/';
+const endPoint = 'https://cors-anywhere.herokuapp.com/https://api.cybertino.io/connect/';
 
 export const followListInfoSchema = ({
   address,
