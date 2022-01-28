@@ -7,6 +7,7 @@ const PrivateRoute = (props) => {
   const { homeAuthenticated } = props;
   const token = useSelector((state) => state.profile.user.token);
   let isAuthenticated = false;
+  
   try {
     jwt.verify(token, process.env.REACT_APP_SECRET_KEY);
     isAuthenticated = true;

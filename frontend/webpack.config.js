@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 
 module.exports = (env, argv) => {
   return {
-    mode: 'development',
+    mode: "development",
     context: __dirname,
     entry: "./src/index.js",
     output: {
@@ -58,22 +58,8 @@ module.exports = (env, argv) => {
       ],
     },
     resolve: {
-      extensions: [".js",".jsx", ".ts", ".tsx", ".json"],
-      fallback: {
-        os: false,
-        fs: false,
-        //"tls": false,
-        //"net": false,
-        http: false,
-        https: false,
-        //"zlib": false,
-        //"path": false,
-        //"util": false,
-        stream: false,
-        //buffer: false,
-        crypto: false,
-        buffer: require.resolve("buffer/")
-      },
+      extensions: [".js", ".jsx", ".ts", ".tsx", ".json"],
+ 
     },
     plugins: [
       new HtmlWebPackPlugin({
@@ -89,7 +75,7 @@ module.exports = (env, argv) => {
                 }).parsed
               )
             : JSON.stringify(dotenv.config().parsed),
-      }),
+      })
     ],
   };
 };
