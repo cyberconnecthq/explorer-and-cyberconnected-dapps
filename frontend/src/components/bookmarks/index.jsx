@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { ProfileCorner, Header } from "../styles/common";
 import Activity from "../profile/activity";
 
-const URL = process.env.REACT_APP_SERVER_URL;
+const URL = process.env.REACT_APP_BACKEND_URL;
 
 const BookMarks = () => {
   const user = useSelector((state) => state.user);

@@ -9,7 +9,7 @@ import { logo, motto } from "./paths";
 // import { Row, Col } from "../styles/common";
 import { Row, Col } from "antd";
 
-const URL = process.env.REACT_APP_SERVER_URL;
+const URL = process.env.REACT_APP_BACKEND_URL;
 let web3 = undefined; // Will hold the web3 instance
 
 const SignIn = (props) => {

@@ -20,7 +20,7 @@ import CommentModal from "./commentModal";
 import Comments from "./comments";
 import TweetActivity from "./activity";
 
-const URL = process.env.REACT_APP_SERVER_URL;
+const URL = process.env.REACT_APP_BACKEND_URL;
 
 const Tweet = (props) => {
   const [tweet, setTweet] = useState(null);

@@ -16,7 +16,7 @@ import Loading from "../loading";
 import { toast } from "react-toastify";
 import { SET_USER, SET_UPDATE } from "../../redux/actions";
 
-const URL = process.env.REACT_APP_SERVER_URL;
+const URL = process.env.REACT_APP_BACKEND_URL;
 
 const Profile = (props) => {
   const [user, setUser] = useState(null);

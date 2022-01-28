@@ -6,7 +6,7 @@ import Loading from "../loading";
 import { PeopleFlex, UserImage, TweetDetails } from "../styles/profile";
 import { isImage, isVideo } from "../../media";
 
-const URL = process.env.REACT_APP_SERVER_URL;
+const URL = process.env.REACT_APP_BACKEND_URL;
 
 const Comments = () => {
   const [comments, setComments] = useState(null);

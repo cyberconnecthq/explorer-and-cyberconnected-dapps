@@ -14,7 +14,7 @@ import { ProfileCorner, Button } from "../styles/common";
 import Loading from "../loading";
 import { SET_UPDATE } from "../../redux/actions";
 
-const URL = process.env.REACT_APP_SERVER_URL;
+const URL = process.env.REACT_APP_BACKEND_URL;
 
 const Follow = () => {
   const [userData, setUserData] = useState(null);

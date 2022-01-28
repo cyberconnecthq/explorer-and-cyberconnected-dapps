@@ -18,7 +18,7 @@ import Bookmark from "./bookmark";
 import Modal from "../modal";
 import CommentModal from "../tweet/commentModal";
 
-const URL = process.env.REACT_APP_SERVER_URL;
+const URL = process.env.REACT_APP_BACKEND_URL;
 
 const Activity = (props) => {
   const [tweets, setTweets] = useState(null);

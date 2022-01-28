@@ -5,7 +5,7 @@ import axios from "axios";
 import Modal from "../modal";
 import { PeopleFlex, PeopleDetails, UserImage } from "../styles/profile";
 
-const URL = process.env.REACT_APP_SERVER_URL;
+const URL = process.env.REACT_APP_BACKEND_URL;
 
 const Retweet = () => {
   const [retweets, setRetweets] = useState([]);

@@ -6,7 +6,7 @@ import UploadButton from "../uploadButton";
 import { Flex, Button } from "../styles/modal";
 import { SET_UPDATE } from "../../redux/actions";
 
-const URL = process.env.REACT_APP_SERVER_URL;
+const URL = process.env.REACT_APP_BACKEND_URL;
 
 const TweetModal = (props) => {
   const [text, setText] = useState("");

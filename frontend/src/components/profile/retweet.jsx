@@ -5,7 +5,7 @@ import Icon from "../icon";
 import { Text } from "../styles/profile";
 import { ActivityBox, ActivityIcon } from "../styles/common";
 
-const URL = process.env.REACT_APP_SERVER_URL;
+const URL = process.env.REACT_APP_BACKEND_URL;
 
 const Retweet = (props) => {
   const [retweetDisabled, setRetweetDisabled] = useState(false);

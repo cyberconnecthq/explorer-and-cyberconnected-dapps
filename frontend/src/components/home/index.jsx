@@ -5,7 +5,7 @@ import Activity from "../profile/activity";
 import { Tweet } from "../styles/home";
 import { ProfileCorner, Header } from "../styles/common";
 
-const URL = process.env.REACT_APP_SERVER_URL;
+const URL = process.env.REACT_APP_BACKEND_URL;
 const Home = () => {
   const userId = useSelector((state) => state.user.id);
   const theme = useSelector((state) => state.theme);

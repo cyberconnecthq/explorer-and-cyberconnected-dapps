@@ -5,7 +5,7 @@ import axios from "axios";
 import { FollowFlex } from "../styles/profile";
 import theme from "../../redux/reducers/theme";
 
-const URL = process.env.REACT_APP_SERVER_URL;
+const URL = process.env.REACT_APP_BACKEND_URL;
 
 const Follower = (props) => {
   const [response, setResponse] = useState(null);

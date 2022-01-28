@@ -7,7 +7,7 @@ import { Search, AutoComplete } from "../styles/explore";
 import { PeopleFlex, PeopleDetails, UserImage } from "../styles/profile";
 import { ProfileCorner } from "../styles/common";
 
-const URL = process.env.REACT_APP_SERVER_URL;
+const URL = process.env.REACT_APP_BACKEND_URL;
 
 const Explore = () => {
   const [search, setSearch] = useState("");
