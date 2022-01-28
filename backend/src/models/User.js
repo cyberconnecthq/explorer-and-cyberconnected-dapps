@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
+
 module.exports = (sequelize) => {
     return sequelize.define('User', {
         id: {
@@ -7,47 +8,48 @@ module.exports = (sequelize) => {
             primaryKey: true,
             defaultValue: Sequelize.UUIDV4
         },
-        firstname: {
+        username: {
             type: DataTypes.STRING,
             allowNull: false,
+			defaultValue: () => "NewUser",
         },
-        lastname: {
-            type: DataTypes.STRING,
-            allowNull: false
+        nonce: {
+			type: DataTypes.INTEGER, // SQLITE will use INTEGER
+            allowNull: false,
+			defaultValue: () => Math.floor(Math.random() * 10000), // Initialize with a random nonce
         },
-        username: {
+        publicAddress: {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true
         },
         email: {
             type: DataTypes.STRING,
-            allowNull: false,
-            unique: true,
+            allowNull: true,
             validate: {
                 isEmail: true
             }
         },
-        password: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
         avatar: {
             type: DataTypes.STRING,
-            defaultValue: 'https://res.cloudinary.com/twitter-clone-media/image/upload/v1597737557/user_wt3nrc.png'
+            //defaultValue: 'https://res.cloudinary.com/twitter-clone-media/image/upload/v1597737557/user_wt3nrc.png'
+            defaultValue: '/public/images/avatar/strict-beauty.png'
         },
         cover: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            allowNull: true,
         },
         bio: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            allowNull: true,
         },
         location: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            allowNull: true,
         },
         dob: {
             type: DataTypes.DATEONLY,
-            allowNull: false,
+            allowNull: true,
         },
     });
 };

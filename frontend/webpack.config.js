@@ -7,7 +7,7 @@ module.exports = (env, argv) => {
   return {
     mode: "development",
     context: __dirname,
-    entry: "./src/index.js",
+    entry: "./src/index.jsx",
     output: {
       path: path.resolve(__dirname, "dist"),
       filename: "main.js",

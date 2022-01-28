@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const docs = require("./routes/docs");
+const auth = require("./routes/auth");
 const user = require("./routes/user");
 const follower = require("./routes/follower");
 const tweet = require("./routes/tweet");
@@ -23,13 +24,15 @@ app.use(function (req, res, next) {
 
     next();
 });
-app.use("/", docs);
-app.use("/user", user);
-app.use("/follow", follower);
-app.use("/tweet", tweet);
-app.use("/feed", feed);
-app.use("/explore", explore);
-app.use("/bookmarks", bookmarks);
+
+app.use("/api/", docs);
+app.use("/api/auth", auth);
+app.use("/api/user", user);
+app.use("/api/follow", follower);
+app.use("/api/tweet", tweet);
+app.use("/api/feed", feed);
+app.use("/api/explore", explore);
+app.use("/api/bookmarks", bookmarks);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`server started on port ${PORT}`));

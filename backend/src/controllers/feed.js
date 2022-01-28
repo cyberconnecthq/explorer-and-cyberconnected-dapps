@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
-const { User, Tweet, Follower, sequelize } = require("../sequelize");
-const { getMyRetweets, getMyLikes } = require("./user/globals");
+const { User, Tweet, Follower, sequelize } = require("../db");
+const { getMyRetweets, getMyLikes } = require("./user/extra");
 
 module.exports = {
   getFeed: async (req, res) => {
@@ -46,12 +46,11 @@ module.exports = {
     });
   },
   whoFollow: async (req, res) => {
-    console.log("follow");
     // query -> {userId}
     // Get my following and don't select
     const following = `SELECT Users.id FROM Users INNER JOIN Followers ON Users.id = Followers.followed WHERE follower = '${req.query.userId}'`;
     const whoFollow = await User.findAll({
-      attributes: ["id", "firstname", "lastname", "username", "avatar"],
+      attributes: ["id", "username", "avatar"],
       where: {
         id: {
           [Op.not]: req.query.userId,
@@ -80,7 +79,7 @@ module.exports = {
   },
   getTweets: async (following) => {
     const tweets = await User.findAll({
-      attributes: ["firstname", "lastname", "username", "avatar"],
+      attributes: ["username", "avatar"],
       include: {
         model: Tweet,
         required: true,
@@ -99,7 +98,7 @@ module.exports = {
       following.length ? following.map((el) => "'" + el + "'").toString() : null
     })`;
     const tweets = await User.findAll({
-      attributes: ["firstname", "lastname", "username", "avatar"],
+      attributes: [ "username", "avatar"],
       include: {
         model: Tweet,
         required: true,
@@ -118,7 +117,7 @@ module.exports = {
       following.length ? following.map((el) => "'" + el + "'").toString() : null
     })`;
     const tweets = await User.findAll({
-      attributes: ["firstname", "lastname", "username", "avatar"],
+      attributes: [ "username", "avatar"],
       include: {
         model: Tweet,
         required: true,

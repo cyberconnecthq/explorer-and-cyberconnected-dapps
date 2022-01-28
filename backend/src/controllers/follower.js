@@ -1,4 +1,4 @@
-const { User, Follower } = require("../sequelize");
+const { User, Follower } = require("../db");
 
 module.exports = {
   followUser: async (req, res) => {
@@ -51,8 +51,6 @@ module.exports = {
     const followers = await User.findAll({
       attributes: [
         "id",
-        "firstname",
-        "lastname",
         "username",
         "email",
         "avatar",
@@ -75,8 +73,6 @@ module.exports = {
     const following = await User.findAll({
       attributes: [
         "id",
-        "firstname",
-        "lastname",
         "username",
         "email",
         "avatar",

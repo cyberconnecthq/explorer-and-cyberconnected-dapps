@@ -1,4 +1,4 @@
-const { Tweet, User, Like, Comment, Retweet } = require("../../sequelize");
+const { Tweet, User, Like, Comment, Retweet } = require("../../db");
 const { addTweetValidation } = require("../../utils/validation");
 const upload = require("../upload");
 
@@ -10,7 +10,6 @@ module.exports = {
       return res.status(400).json({ errors: validation.error.details });
 
     upload(req.file, req.body.resource_type).then(async (media) => {
-      console.log(media)
       try {
         const tweet = await Tweet.create({
           userId: req.body.userId,
@@ -41,7 +40,7 @@ module.exports = {
   },
   getUserTweet: async (tweetId, username) => {
     const tweet = await User.findOne({
-      attributes: ["firstname", "lastname", "username", "avatar"],
+      attributes: ["username", "avatar"],
       where: {
         username: username,
       },
@@ -57,7 +56,6 @@ module.exports = {
     return tweet;
   },
   removeTweet: async (req, res) => {
-    console.log("removing", req.body);
     const { tweetId } = req.body;
     // body -> {tweetId}
     Promise.all([

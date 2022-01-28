@@ -76,11 +76,8 @@
         const addUser = {
             "type": "POST",
             "body": {
-                "firstname": "string:required",
-                "lastname": "string:required",
                 "username": "string:required",
-                "email": "string:required",
-                "password": "string:required",
+                "email": "string",
                 "avatar": "base64",
                 "cover": "base64",
                 "bio": "base64",
@@ -92,8 +89,6 @@
             "type": "PUT",
             "body": {
                 "id": "string:required",
-                "firstname": "string:required",
-                "lastname": "string:required",
                 "username": "string:required",
                 "avatar": "base64",
                 "cover": "base64",
@@ -102,13 +97,6 @@
                 "dob": "Date:required"
             }
         } 
-        const loginUser = {
-            "type": "POST",
-            "body": {
-                "user": "string:required",
-                "password": "string:required"
-            }
-        }
         const getTweets = {
             "type": "GET",   
         }

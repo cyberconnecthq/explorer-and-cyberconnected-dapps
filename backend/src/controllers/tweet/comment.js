@@ -1,12 +1,10 @@
-const { Comment, Tweet, User } = require("../../sequelize");
+const { Comment, Tweet, User } = require("../../db");
 const upload = require("../upload");
 
 module.exports = {
   addComment: async (req, res) => {
     // body -> {tweetId, userId, text}
-    console.log(req.body);
     upload(req.file, req.body.resource_type).then(async (media) => {
-      console.log(media);
       Promise.all([
         await Comment.create({
           tweetId: req.body.tweetId,
@@ -19,7 +17,6 @@ module.exports = {
           where: { id: req.body.tweetId },
         }),
       ]).then((values) => {
-        console.log(values);
         return res.status(200).json({ comment: values[0] });
       });
     });
@@ -35,14 +32,13 @@ module.exports = {
         where: { id: req.body.tweetId },
       }),
     ]).then((values) => {
-      console.log(values);
       return res.status(200).json({ comment: values[0] });
     });
   },
   getTweetComments: async (req, res) => {
     // body -> {tweetId}
     const comments = await User.findAll({
-      attributes: ["firstname", "lastname", "username", "avatar"],
+      attributes: ["username", "avatar"],
       include: {
         model: Comment,
         required: true,

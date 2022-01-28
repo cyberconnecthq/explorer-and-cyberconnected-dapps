@@ -6,8 +6,11 @@ module.exports = (file, resource_type) => {
     if (!resource_type) resolve({ secure_url: null });
     cloudinary.uploader
       .upload_stream({ resource_type }, (err, result) => {
-        console.log(err, result);
-        if (err) reject(err);
+        
+        if (err){
+          console.error(err);
+          reject(err);
+        } 
         resolve(result);
       })
       .end(file.buffer);

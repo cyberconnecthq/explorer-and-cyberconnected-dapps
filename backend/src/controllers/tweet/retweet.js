@@ -1,4 +1,4 @@
-const { Retweet, Tweet, User } = require("../../sequelize");
+const { Retweet, Tweet, User } = require("../../db");
 const {
   addRetweetValidation,
 } = require("../../utils/validation");
@@ -53,7 +53,7 @@ module.exports = {
   getTweetRetweets: async (req, res) => {
     // body -> {tweetId}
     const retweets = await User.findAll({
-      attributes: ["firstname", "lastname", "username", "avatar", "bio"],
+      attributes: ["username", "avatar", "bio"],
       include: {
         model: Retweet,
         required: true,

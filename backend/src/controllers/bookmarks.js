@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { Tweet, Bookmark, User, sequelize } = require("../sequelize");
+const { Tweet, Bookmark, User, sequelize } = require("../db");
 const { bookmarkValidation } = require("../utils/validation");
 
 module.exports = {
@@ -16,7 +16,7 @@ module.exports = {
     // query -> {userId}
     const tweetIds = `SELECT tweetId from Bookmarks where userId='${req.query.userId}'`;
     const tweets = await User.findAll({
-      attributes: ["firstname", "lastname", "username", "avatar"],
+      attributes: ["username", "avatar"],
       include: {
         model: Tweet,
         required: true,

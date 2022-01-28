@@ -1,4 +1,4 @@
-const { Like, Tweet, User } = require("../../sequelize");
+const { Like, Tweet, User } = require("../../db");
 
 module.exports = {
   likeTweet: async (req, res) => {
@@ -36,7 +36,7 @@ module.exports = {
   getTweetLikes: async (req, res) => {
     // body -> {tweetId}
     const likes = await User.findAll({
-      attributes: ["firstname", "lastname", "username", "avatar", "bio"],
+      attributes: [ "username", "avatar", "bio"],
       include: {
         model: Like,
         required: true,
