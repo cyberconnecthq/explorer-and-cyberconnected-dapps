@@ -95,7 +95,6 @@ export const request = async (url = '', data = {}) => {
   // Default options are marked with *
   const response = await fetch(url, {
     method: 'POST',
-    redirect: 'follow',
     mode: 'cors',
     cache: 'no-cache',
     headers: {
