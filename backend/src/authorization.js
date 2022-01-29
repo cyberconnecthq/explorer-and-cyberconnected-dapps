@@ -5,9 +5,8 @@ module.exports = {
     jwt.sign(
       {
         user: {
-          //publicAddress: user.publicAddress,
           //nonce: user.nonce,
-          id: user.id,
+          uid: user.uid,
         },
       },
       process.env.SECRET_KEY,

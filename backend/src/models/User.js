@@ -3,10 +3,9 @@ const { Sequelize, DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
     return sequelize.define('User', {
-        id: {
-            type: DataTypes.UUID,
+        uid: {
+            type: DataTypes.STRING,
             primaryKey: true,
-            defaultValue: Sequelize.UUIDV4
         },
         username: {
             type: DataTypes.STRING,
@@ -17,11 +16,6 @@ module.exports = (sequelize) => {
 			type: DataTypes.INTEGER, // SQLITE will use INTEGER
             allowNull: false,
 			defaultValue: () => Math.floor(Math.random() * 10000), // Initialize with a random nonce
-        },
-        publicAddress: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            unique: true
         },
         email: {
             type: DataTypes.STRING,

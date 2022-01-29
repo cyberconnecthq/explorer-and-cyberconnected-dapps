@@ -25,11 +25,11 @@ const URL = process.env.REACT_APP_BACKEND_URL;
 const Tweet = (props) => {
   const [tweet, setTweet] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { username, tweetId } = useParams();
+  const { uid, tweetId } = useParams();
 
   const user = useSelector((state) => state.user);
   const theme = useSelector((state) => state.theme);
-  const myId = user.id;
+  const myId = user.uid;
   const token = user.token;
 
   const location = useLocation();
@@ -37,7 +37,7 @@ const Tweet = (props) => {
   useEffect(() => {
     (async () => {
       const res = await axios.get(
-        `${URL}/api/tweet/get-tweet?username=${username}&tweetId=${tweetId}&myId=${myId}`
+        `${URL}/api/tweet/get-tweet?uid=${uid}&tweetId=${tweetId}&myId=${myId}`
       );
       setTweet(res.data.tweet);
     })();
@@ -53,7 +53,7 @@ const Tweet = (props) => {
       try {
         await axios.delete(`${URL}/api/tweet/${action_type}/remove`, {
           data: {
-            userId: myId,
+            uid: myId,
             tweetId: tweet["Tweets.id"],
           },
           headers: {
@@ -74,7 +74,7 @@ const Tweet = (props) => {
         await axios.post(
           `${URL}/api/tweet/${action_type}/add`,
           {
-            userId: myId,
+            uid: myId,
             tweetId: tweet["Tweets.id"],
           },
           {

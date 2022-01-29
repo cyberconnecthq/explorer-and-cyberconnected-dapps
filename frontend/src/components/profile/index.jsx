@@ -15,6 +15,7 @@ import { ProfileCorner } from "../styles/common";
 import Loading from "../loading";
 import { toast } from "react-toastify";
 import { SET_USER, SET_UPDATE } from "../../redux/actions";
+import { shortName,shortAddress } from "../cc-utils/bip39";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -24,20 +25,20 @@ const Profile = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSaveDisabled, setIsSaveDisabled] = useState(false);
 
-  const { userId, activity } = useParams();
+  const { uid, activity } = useParams();
   const storeUser = useSelector((state) => state.user);
   const refresh = useSelector((state) => state.update.refresh);
   const theme = useSelector((state) => state.theme);
-  const myId = storeUser.id;
+  const myId = storeUser.uid;
   const token = storeUser.token;
   const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
-      const res = await axios.get(`${URL}/api/user/get-user?userId=${userId}`);
+      const res = await axios.get(`${URL}/api/user/get-user?uid=${uid}`);
       setUser(res.data);
     })();
-  }, [userId, refresh]);
+  }, [uid, refresh]);
 
   const handleHeaderText = (text) => {
     setHeaderText(text);
@@ -46,7 +47,7 @@ const Profile = (props) => {
   const handleSubmit = async (data) => {
     setIsSaveDisabled(true);
     const formData = new FormData();
-    formData.append("userId", user.id);
+    formData.append("uid", user.uid);
     //formData.append("birth", data.birth);
     formData.append("bio", data.bio);
     formData.append("location", data.location);
@@ -117,7 +118,7 @@ const Profile = (props) => {
         return (
           <div>
             <Activity
-              url={`${URL}/api/user/get-tweets?userId=${user.id}&myId=${myId}`}
+              url={`${URL}/api/user/get-tweets?uid=${user.uid}&myId=${myId}`}
               dataKey="tweets"
               header="Tweets"
               handleHeaderText={handleHeaderText}
@@ -128,7 +129,7 @@ const Profile = (props) => {
         return (
           <div>
             <Activity
-              url={`${URL}/api/user/get-media?userId=${user.id}&myId=${myId}`}
+              url={`${URL}/api/user/get-media?uid=${user.uid}&myId=${myId}`}
               dataKey="media"
               header="Photos &amp; Videos"
               handleHeaderText={handleHeaderText}
@@ -139,7 +140,7 @@ const Profile = (props) => {
         return (
           <div>
             <Activity
-              url={`${URL}/api/user/get-likes?userId=${user.id}&myId=${myId}`}
+              url={`${URL}/api/user/get-likes?uid=${user.uid}&myId=${myId}`}
               dataKey="likes"
               header="Likes"
               handleHeaderText={handleHeaderText}
@@ -177,7 +178,7 @@ const Profile = (props) => {
           ></Cover>
           <ImgFlex>
             <Avatar backgroundImage={user.avatar} bg={theme.bg} />
-            {storeUser.id === user.id && (
+            {storeUser.uid === user.uid && (
               <Button bg={theme.bg} onClick={() => setIsModalOpen(true)}>
                 Edit profile
               </Button>
@@ -185,8 +186,8 @@ const Profile = (props) => {
           </ImgFlex>
         </div>
         <Info color={theme.color}>
-          <h2>@{user.username}</h2>
-          <p>{user.publicAddress}</p>
+          <h2>@{ user.username}</h2>
+          <p>{ shortAddress(user) }</p>
           {user.bio && <p>{user.bio}</p>}
           <Dates>
             {user.location && (

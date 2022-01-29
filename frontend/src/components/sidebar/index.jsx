@@ -14,7 +14,7 @@ const SideBar = () => {
 
   const user = useSelector((state) => state.user);
   const theme = useSelector((state) => state.theme);
-  const userId = user.id;
+  const uid = user.uid;
   const token = user.token;
   const refresh = useSelector((state) => state.update.refresh);
   const dispatch = useDispatch();
@@ -24,7 +24,7 @@ const SideBar = () => {
     const source = cancelToken.source();
     (async () => {
       try {
-        const res = await axios.get(`${URL}/api/feed/who-follow?userId=${userId}`, {
+        const res = await axios.get(`${URL}/api/feed/who-follow?uid=${uid}`, {
           cancelToken: source.token,
           headers: {
             Authorization: `Bearer ${token}`,
@@ -46,8 +46,8 @@ const SideBar = () => {
     await axios.post(
       `${URL}/api/follow`,
       {
-        followedId: whoFollow[idx].id,
-        followerId: userId,
+        followedId: whoFollow[idx].uid,
+        followerId: uid,
       },
       {
         headers: {
@@ -55,7 +55,7 @@ const SideBar = () => {
         },
       }
     );
-    const res = await axios.get(`${URL}/api/feed/who-follow?userId=${userId}`, {
+    const res = await axios.get(`${URL}/api/feed/who-follow?uid=${uid}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -79,7 +79,7 @@ const SideBar = () => {
           </p>
         )}
         {whoFollow.map((user, idx) => (
-          <Link to={`/profile/${user.id}`} key={user.id}>
+          <Link to={`/profile/${user.uid}`} key={user.uid}>
             <UserFlex color={theme.color} border={theme.border}>
               <img src={user.avatar} />
               <div>

@@ -25,7 +25,7 @@ const Retweet = (props) => {
       try {
         await axios.delete(`${URL}/api/tweet/retweet/remove`, {
           data: {
-            userId: myId,
+            uid: myId,
             tweetId: tweets[idx]["Tweets.id"],
           },
           headers: {
@@ -47,7 +47,7 @@ const Retweet = (props) => {
         await axios.post(
           `${URL}/api/tweet/retweet/add`,
           {
-            userId: myId,
+            uid: myId,
             tweetId: tweets[idx]["Tweets.id"],
           },
           {

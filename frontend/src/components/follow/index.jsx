@@ -13,6 +13,7 @@ import {
 import { ProfileCorner, Button } from "../styles/common";
 import Loading from "../loading";
 import { SET_UPDATE } from "../../redux/actions";
+import { shortName, shortAddress } from "../cc-utils/bip39";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -20,19 +21,19 @@ const Follow = () => {
   const [userData, setUserData] = useState(null);
   const [followDisabled, setFollowDisabled] = useState(false);
 
-  const { userId, activity } = useParams();
+  const { uid, activity } = useParams();
   const user = useSelector((state) => state.user);
   //const refresh = useSelector((state) => state.update.refresh);
   const theme = useSelector((state) => state.theme);
-  const myId = user.id;
+  const myId = user.uid;
   const token = user.token;
   const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
-      const user = await axios.get(`${URL}/api/user/get-user?userId=${userId}`);
+      const user = await axios.get(`${URL}/api/user/get-user?uid=${uid}`);
       const res = await axios.get(
-        `${URL}/api/follow/details?id=${user.data.id}&myId=${myId}`
+        `${URL}/api/follow/details?uid=${user.data.uid}&myId=${myId}`
       );
       setUserData({
         user: user.data,
@@ -48,13 +49,13 @@ const Follow = () => {
     })();
   }, []);
 
-  const handleFollow = async (e, id, idx, follow) => {
+  const handleFollow = async (e, uid, idx, follow) => {
     e.preventDefault();
     setFollowDisabled(true);
     await axios.post(
       `${URL}/api/follow`,
       {
-        followedId: id,
+        followedId: uid,
         followerId: myId,
       },
       {
@@ -97,12 +98,12 @@ const Follow = () => {
     {
       name: "followers",
       title: "Followers",
-      path: "/followers",
+      path: "followers",
     },
     {
       name: "following",
       title: "Following",
-      path: "/following",
+      path: "following",
     },
   ];
 
@@ -111,66 +112,66 @@ const Follow = () => {
   return (
     <ProfileCorner border={theme.border}>
       <ProfileHeader
-        heading={`${userData.user.username}`}
-        text={`@${userData.user.username}`}
+        heading={`@${userData.user.username}`}
+        text={`${shortAddress(userData.user)}`}
       />
       <Tabs tabList={tabList} />
       {!userData[activity].length ? (
         <EmptyMsg>
           {activity === "following"
-            ? `@${username} doesn't follow anyone!`
-            : `@${username} has no followers!`}
+            ? `@${shortName(uid)} doesn't follow anyone!`
+            : `@${shortName(uid)} has no followers!`}
         </EmptyMsg>
       ) : (
         <div>
-          {userData[activity].map((item, idx) => (
-            <Link key={item.id} to={`/profile/${item.username}`}>
+          {userData[activity].map((_user, idx) => (
+            <Link key={_user.uid} to={`/profile/${_user.uid}`}>
               <PeopleFlex
-                key={item.id}
+                key={_user.uid}
                 border={theme.border}
                 tweetHov={theme.tweetHov}
               >
                 <div>
-                  <UserImage src={item.avatar} />
+                  <UserImage src={_user.avatar} />
                 </div>
                 <div style={{ width: "100%" }}>
                   <PeopleDetails>
                     <div>
                       <object>
-                        <Link to={`/profile/${item.username}`}>
+                        <Link to={`/profile/${_user.uid}`}>
                           <h3 style={{ color: theme.color }}>
-                            {item.username} 
+                            {_user.username}
                           </h3>
                         </Link>
                       </object>
                       <object>
-                        <Link to={`/profile/${item.username}`}>
-                          <p>@{item.username}</p>
+                        <Link to={`/profile/${_user.uid}`}>
+                          <p>@{_user.username}</p>
                         </Link>
                       </object>
                     </div>
-                    {item.id !== myId && (
+                    {_user.uid !== myId && (
                       <React.Fragment>
-                        {item.isFollowing && (
+                        {_user.isFollowing && (
                           <Button
                             disabled={followDisabled}
                             onMouseEnter={() => handleMouseOver(idx)}
                             onMouseLeave={() => handleMouseOver(idx)}
                             onClick={(e) =>
-                              handleFollow(e, item.id, idx, false)
+                              handleFollow(e, _user.uid, idx, false)
                             }
                             bg="rgb(29, 161, 242)"
                             hoverBg="rgb(202,32,85)"
                             color="rgb(255,255,255)"
                             padding="2% 5%"
                           >
-                            {item.unfollow ? "Unfollow" : "Following"}
+                            {_user.unfollow ? "Unfollow" : "Following"}
                           </Button>
                         )}
-                        {!item.isFollowing && (
+                        {!_user.isFollowing && (
                           <Button
                             disabled={followDisabled}
-                            onClick={(e) => handleFollow(e, item.id, idx, true)}
+                            onClick={(e) => handleFollow(e, _user.uid, idx, true)}
                             bg="transparent"
                             hoverBg="rgba(29, 161, 242,0.1)"
                             color="rgb(29, 161, 242)"
@@ -184,7 +185,7 @@ const Follow = () => {
                     )}
                   </PeopleDetails>
                   <div>
-                    <p style={{color: theme.color}}>{item.bio}</p>
+                    <p style={{ color: theme.color }}>{_user.bio}</p>
                   </div>
                 </div>
               </PeopleFlex>

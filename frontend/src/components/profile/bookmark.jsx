@@ -26,7 +26,7 @@ const Bookmark = (props) => {
       await axios.post(
         `${URL}/api/bookmarks/add`,
         {
-          userId: myId,
+          uid: myId,
           tweetId: tweet["Tweets.id"],
         },
         {
@@ -48,7 +48,7 @@ const Bookmark = (props) => {
     setBookmarkDisabled(true);
     await axios.delete(`${URL}/api/bookmarks/remove`, {
       data: {
-        userId: myId,
+        uid: myId,
         tweetId: tweet["Tweets.id"],
       },
 

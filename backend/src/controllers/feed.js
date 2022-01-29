@@ -1,22 +1,22 @@
 const { Op } = require("sequelize");
 const { User, Tweet, Follower, sequelize } = require("../db");
-const { getMyRetweets, getMyLikes } = require("./user/extra");
+const { getMyRetweets, getMyLikes } = require("./user/tweet");
 
 module.exports = {
   getFeed: async (req, res) => {
-    // query -> {userId}
-    if (!req.query.userId)
-      return res.status(400).json({ errors: 'userId is required' });
+    // query -> {uid}
+    if (!req.query.uid)
+      return res.status(400).json({ errors: 'uid is required' });
 
-    module.exports.getMyFollowing(req.query.userId).then((response) => {
+    module.exports.getMyFollowing(req.query.uid).then((response) => {
       const following = [];
       response.forEach((el) => following.push(el.id));
       Promise.all([
         module.exports.getTweets(following),
         module.exports.getRetweets(following),
         module.exports.getLikes(following),
-        getMyLikes(req.query.userId),
-        getMyRetweets(req.query.userId),
+        getMyLikes(req.query.uid),
+        getMyRetweets(req.query.uid),
       ]).then((values) => {
         let retweetSet = new Set();
         let likeSet = new Set();
@@ -46,14 +46,14 @@ module.exports = {
     });
   },
   whoFollow: async (req, res) => {
-    // query -> {userId}
+    // query -> {uid}
     // Get my following and don't select
-    const following = `SELECT Users.id FROM Users INNER JOIN Followers ON Users.id = Followers.followed WHERE follower = '${req.query.userId}'`;
+    const following = `SELECT Users.uid FROM Users INNER JOIN Followers ON Users.uid = Followers.followed WHERE follower = '${req.query.uid}'`;
     const whoFollow = await User.findAll({
-      attributes: ["id", "username", "avatar"],
+      attributes: ["uid", "username", "avatar"],
       where: {
-        id: {
-          [Op.not]: req.query.userId,
+        uid: {
+          [Op.not]: req.query.uid,
           [Op.notIn]: sequelize.literal(`(${following})`),
         },
       },
@@ -61,16 +61,16 @@ module.exports = {
     });
     return res.status(200).json({ whoFollow });
   },
-  getMyFollowing: async (id) => {
+  getMyFollowing: async (uid) => {
     const users = await User.findAll({
-      attributes: ["id"],
+      attributes: ["uid"],
       include: {
         model: Follower,
         as: "Following",
         required: true,
         attributes: [],
         where: {
-          follower: id,
+          follower: uid,
         },
       },
       raw: true,
@@ -79,12 +79,12 @@ module.exports = {
   },
   getTweets: async (following) => {
     const tweets = await User.findAll({
-      attributes: ["username", "avatar"],
+      attributes: ["uid", "username", "avatar"],
       include: {
         model: Tweet,
         required: true,
         where: {
-          userId: {
+          uid: {
             [Op.in]: following,
           },
         },
@@ -94,11 +94,11 @@ module.exports = {
     return tweets;
   },
   getRetweets: async (following) => {
-    const tweetIds = `SELECT Tweets.id from Tweets INNER JOIN Retweets ON Tweets.id = Retweets.tweetId WHERE Retweets.userId IN (${
+    const tweetIds = `SELECT Tweets.id from Tweets INNER JOIN Retweets ON Tweets.id = Retweets.tweetId WHERE Retweets.uid IN (${
       following.length ? following.map((el) => "'" + el + "'").toString() : null
     })`;
     const tweets = await User.findAll({
-      attributes: [ "username", "avatar"],
+      attributes: [ "uid", "username", "avatar"],
       include: {
         model: Tweet,
         required: true,
@@ -113,11 +113,11 @@ module.exports = {
     return tweets;
   },
   getLikes: async (following) => {
-    const tweetIds = `SELECT Tweets.id from Tweets INNER JOIN Likes ON Tweets.id = Likes.tweetId WHERE Likes.userId IN (${
+    const tweetIds = `SELECT Tweets.id from Tweets INNER JOIN Likes ON Tweets.id = Likes.tweetId WHERE Likes.uid IN (${
       following.length ? following.map((el) => "'" + el + "'").toString() : null
     })`;
     const tweets = await User.findAll({
-      attributes: [ "username", "avatar"],
+      attributes: [ "uid","username", "avatar"],
       include: {
         model: Tweet,
         required: true,

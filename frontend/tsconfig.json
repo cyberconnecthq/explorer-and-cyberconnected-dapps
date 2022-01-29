@@ -20,6 +20,6 @@
       "@/components/*": ["src/components/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "src/components/cc-utils/bip39.js"],
   "exclude": ["node_modules"]
 }

@@ -4,8 +4,9 @@ const { User } = require("../db");
 module.exports = {
   searchUser: async (req, res) => {
     // query -> {search}
+    //important lkw
     const users = await User.findAll({
-      attributes: ["id","username", "avatar"],
+      attributes: ["uid","username", "avatar"],
       where: {
         [Op.or]: {
           username: {

@@ -5,7 +5,7 @@ const {
 
 module.exports = {
   addRetweet: async (req, res) => {
-    // body -> {userId, tweetId}
+    // body -> {uid, tweetId}
     // Joi validation checks
     const validation = addRetweetValidation(req.body);
     if (validation.error)
@@ -29,7 +29,7 @@ module.exports = {
     return res.status(200).json(retweet);
   },
   removeRetweet: async (req, res) => {
-    // body -> {userId, tweetId}
+    // body -> {uid, tweetId}
     // Joi validation checks
     const validation = addRetweetValidation(req.body);
     if (validation.error)
@@ -53,7 +53,7 @@ module.exports = {
   getTweetRetweets: async (req, res) => {
     // body -> {tweetId}
     const retweets = await User.findAll({
-      attributes: ["username", "avatar", "bio"],
+      attributes: ["uid", "username", "avatar", "bio"],
       include: {
         model: Retweet,
         required: true,

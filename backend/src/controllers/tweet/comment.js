@@ -3,12 +3,12 @@ const upload = require("../upload");
 
 module.exports = {
   addComment: async (req, res) => {
-    // body -> {tweetId, userId, text}
+    // body -> {tweetId, uid, text}
     upload(req.file, req.body.resource_type).then(async (media) => {
       Promise.all([
         await Comment.create({
           tweetId: req.body.tweetId,
-          userId: req.body.userId,
+          uid: req.body.uid,
           text: req.body.text,
           media: media.secure_url,
         }),
@@ -22,7 +22,7 @@ module.exports = {
     });
   },
   removeComment: async (req, res) => {
-    // body -> {tweetId, userId, id}
+    // body -> {tweetId, uid, id}
     Promise.all([
       await Comment.destroy({
         where: req.body,
@@ -38,7 +38,7 @@ module.exports = {
   getTweetComments: async (req, res) => {
     // body -> {tweetId}
     const comments = await User.findAll({
-      attributes: ["username", "avatar"],
+      attributes: ["uid","username", "avatar"],
       include: {
         model: Comment,
         required: true,

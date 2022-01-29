@@ -16,7 +16,7 @@ const BookMarks = () => {
         <p>@ {user.username}</p>
       </Header>
       <Activity
-        url={`${URL}/api/bookmarks?userId=${user.id}`}
+        url={`${URL}/api/bookmarks?uid=${user.uid}`}
         dataKey="bookmarks"
         removeBookmark
         isBookmark

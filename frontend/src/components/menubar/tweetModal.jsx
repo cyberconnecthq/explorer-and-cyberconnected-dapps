@@ -22,7 +22,7 @@ const TweetModal = (props) => {
   const addTweet = async () => {
     setIsTweetDisabled(true);
     const data = new FormData();
-    data.append("userId", user.id);
+    data.append("uid", user.uid);
     data.append("text", text);
     if (preview.media) data.append("media", preview.media);
     if (preview.image || preview.video)

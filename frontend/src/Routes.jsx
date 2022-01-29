@@ -74,34 +74,34 @@ const Routes = () => {
       <Switch>
         <PrivateRoute exact path="/" component={SignIn} homeAuthenticated />
         <PrivateRoute exact path="/home" component={withMenuBar(Home)} />
-        <Route path="/explore" component={withMenuBar(Explore)} />
+        <Route path="explore" component={withMenuBar(Explore)} />
         <PrivateRoute
-          path="/notifications"
+          path="notifications"
           component={withMenuBar(Notifications)}
         />
-        <PrivateRoute path="/messages" component={withMenuBar(Messages)} />
-        <PrivateRoute path="/bookmarks" component={withMenuBar(BookMarks)} />
-        <PrivateRoute path="/lists" component={withMenuBar(Lists)} />
+        <PrivateRoute path="messages" component={withMenuBar(Messages)} />
+        <PrivateRoute path="bookmarks" component={withMenuBar(BookMarks)} />
+        <PrivateRoute path="lists" component={withMenuBar(Lists)} />
         <Route
           exact
-          path="/profile/:userId"
+          path="/profile/:uid"
           component={withMenuBar(Profile)}
         />
         <Route
-          path="/profile/:userId/:activity"
+          path="/profile/:uid/:activity"
           component={withMenuBar(Profile)}
         />
         <Route
           exact
-          path="/:userId/status/:tweetId"
+          path="/:uid/status/:tweetId"
           component={withMenuBar(Tweet)}
         />
         <Route
-          path="/:userId/status/:tweetId/likes"
+          path="/:uid/status/:tweetId/likes"
           component={withMenuBar(withLikeModal(Tweet))}
         />
         <Route
-          path="/:userId/status/:tweetId/retweets"
+          path="/:uid/status/:tweetId/retweets"
           component={withMenuBar(withRetweetModal(Tweet))}
         />
         <Route component={withOnlyMenuBar(PageNotFound)} />

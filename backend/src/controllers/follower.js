@@ -19,8 +19,8 @@ module.exports = {
     // body -> {id, myId}
     // Get Followers and Following
     const values = await Promise.all([
-      module.exports.getFollowers(req.query.id),
-      module.exports.getFollowing(req.query.id),
+      module.exports.getFollowers(req.query.uid),
+      module.exports.getFollowing(req.query.uid),
       module.exports.getFollowers(req.query.myId),
       module.exports.getFollowing(req.query.myId),
     ]);
@@ -28,18 +28,18 @@ module.exports = {
     let following = values[1];
     const followersSet = new Set();
     const followingSet = new Set();
-    values[2].map((item) => followersSet.add(item.id));
-    values[3].map((item) => followingSet.add(item.id));
-    followers = followers.map((item) => {
-      let deepCopy = { ...item };
-      if (followersSet.has(item.id)) deepCopy.isFollower = true;
-      if (followingSet.has(item.id)) deepCopy.isFollowing = true;
+    values[2].map((_user) => followersSet.add(_user.uid));
+    values[3].map((_user) => followingSet.add(_user.uid));
+    followers = followers.map((_user) => {
+      let deepCopy = { ..._user };
+      if (followersSet.has(_user.uid)) deepCopy.isFollower = true;
+      if (followingSet.has(_user.uid)) deepCopy.isFollowing = true;
       return deepCopy;
     });
-    following = following.map((item) => {
-      let deepCopy = { ...item };
-      if (followersSet.has(item.id)) deepCopy.isFollower = true;
-      if (followingSet.has(item.id)) deepCopy.isFollowing = true;
+    following = following.map((_user) => {
+      let deepCopy = { ..._user };
+      if (followersSet.has(_user.uid)) deepCopy.isFollower = true;
+      if (followingSet.has(_user.uid)) deepCopy.isFollowing = true;
       return deepCopy;
     });
     return res.status(200).json({
@@ -47,10 +47,10 @@ module.exports = {
       following,
     });
   },
-  getFollowers: async (id) => {
+  getFollowers: async (uid) => {
     const followers = await User.findAll({
       attributes: [
-        "id",
+        "uid",
         "username",
         "email",
         "avatar",
@@ -62,17 +62,17 @@ module.exports = {
         required: true,
         attributes: [],
         where: {
-          followed: id,
+          followed: uid,
         },
       },
       raw: true,
     });
     return followers;
   },
-  getFollowing: async (id) => {
+  getFollowing: async (uid) => {
     const following = await User.findAll({
       attributes: [
-        "id",
+        "uid",
         "username",
         "email",
         "avatar",
@@ -84,7 +84,7 @@ module.exports = {
         required: true,
         attributes: [],
         where: {
-          follower: id,
+          follower: uid,
         },
       },
       raw: true,

@@ -8,6 +8,7 @@ import { SET_USER, SET_THEME } from "../../redux/actions";
 import { logo, motto } from "./paths";
 // import { Row, Col } from "../styles/common";
 import { Row, Col } from "antd";
+import { shortName } from "../cc-utils/bip39";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 let web3 = undefined; // Will hold the web3 instance
@@ -22,41 +23,6 @@ const SignIn = (props) => {
     dispatch({ type: SET_USER, payload: login.user });
     dispatch({ type: SET_THEME, payload: "default" });
     history.push("/home");
-  };
-
-  const _auth = ({ publicAddress, signature }) =>
-  fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/auth`, {
-      body: JSON.stringify({ publicAddress, signature }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-    }).then((response) => {
-      let res = response.json(); //promise
-      return res;
-    });
-
-  const _register = (publicAddress) =>
-  fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/add`, {
-      body: JSON.stringify({ publicAddress }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-    }).then((response) => response.json());
-
-  const _signMessage = async ({ publicAddress, nonce }) => {
-    try {
-      const signature = await web3.eth.personal.sign(
-        `I am signing my one-time nonce: ${nonce}`,
-        publicAddress,
-        "" // MetaMask will ignore the password argument here
-      );
-
-      return { publicAddress, signature };
-    } catch (err) {
-      throw new Error("You need to sign the message to be able to log in.");
-    }
   };
 
   const handleLogin = async () => {
@@ -80,24 +46,27 @@ const SignIn = (props) => {
       }
     }
 
-    const coinbase = await web3.eth.getCoinbase();
-    if (!coinbase) {
+    let _coinbase = await web3.eth.getCoinbase();
+    if (!_coinbase) {
       window.alert("Please activate MetaMask first.");
       return;
     }
 
-    const publicAddress = coinbase.toLowerCase();
+    const coinbase = _coinbase.substring(2);
+    const publicAddress = coinbase.toUpperCase();
+    console.log(publicAddress);
     setLoading(true);
 
-    // find existing user by publicAddress
+    //mainframe for auth with metamask.
+    // find existing user by id(publicAddress)
     fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/api/user/get?publicAddress=${publicAddress}`
+      `${process.env.REACT_APP_BACKEND_URL}/api/user/get?id=${publicAddress}`
     )
       .then((response) => {
         let users = response.json();
         return users;
       })
-      // If exist, retrieve him, or register new user by publicAddress.
+      // If exist, retrieve him, or add new user by publicAddress.
       .then((users) => {
         return users.length ? users[0] : _register(publicAddress);
       })
@@ -112,6 +81,55 @@ const SignIn = (props) => {
         setLoading(false);
       });
   };
+
+  const _register = (publicAddress) =>
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/add`, {
+      body: JSON.stringify({
+        uid: publicAddress,
+        username: shortName(publicAddress),
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    }).then((response) => {
+      if(response.ok){
+        return response.json();
+      }else{
+        throw new Error("User Add Failed.");
+      }
+    });
+
+  const _signMessage = async (_user) => {
+    const { uid, nonce } = _user;
+    try {
+      const SIGN_MSG = `CyberConnect Twitter Login : ${nonce}`;
+      const signature = await web3.eth.personal.sign(
+        SIGN_MSG,
+        "0x" + uid,
+        "" // MetaMask will ignore the password argument here
+      );
+      return { uid, signature };
+    } catch (err) {
+      throw new Error("You cancelled sign or Sign Error occured.");
+    }
+  };
+
+  const _auth = ({ uid, signature }) =>
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/auth`, {
+      body: JSON.stringify({ uid, signature }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    }).then((response) => {
+      if (response.ok) {
+        let res = response.json(); //promise
+        return res;
+      } else {
+        throw new Error(`Auth Error!`);
+      }
+    });
 
   return (
     <React.Fragment>

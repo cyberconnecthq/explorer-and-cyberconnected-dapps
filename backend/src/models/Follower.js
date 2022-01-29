@@ -8,11 +8,11 @@ module.exports = (sequelize) => {
       defaultValue: Sequelize.UUIDV4,
     },
     followed: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     follower: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING,
       allowNull: false,
     },
   });

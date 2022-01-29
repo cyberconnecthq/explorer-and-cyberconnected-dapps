@@ -12,7 +12,7 @@ module.exports = {
     upload(req.file, req.body.resource_type).then(async (media) => {
       try {
         const tweet = await Tweet.create({
-          userId: req.body.userId,
+          uid: req.body.uid,
           text: req.body.text,
           media: media.secure_url,
         });
@@ -23,9 +23,9 @@ module.exports = {
     });
   },
   getTweet: async (req, res) => {
-    // body -> {tweetId, userId, myId}
+    // body -> {tweetId, uid, myId}
     Promise.all([
-      module.exports.getUserTweet(req.query.tweetId, req.query.userId),
+      module.exports.getUserTweet(req.query.tweetId, req.query.uid),
       module.exports.isLikedByMe(req.query.tweetId, req.query.myId),
       module.exports.isRetweetedByMe(req.query.tweetId, req.query.myId),
     ]).then((values) => {
@@ -38,11 +38,11 @@ module.exports = {
   removeTweet: async (req, res) => {
     res.status(200).json({});
   },
-  getUserTweet: async (tweetId, userId) => {
+  getUserTweet: async (tweetId, uid) => {
     const tweet = await User.findOne({
-      attributes: ["id", "username", "avatar"],
+      attributes: ["uid", "username", "avatar"],
       where: {
-        id: userId,
+        uid: uid,
       },
       include: {
         model: Tweet,
@@ -67,20 +67,20 @@ module.exports = {
       return res.status(200).json({ tweet: values[0] });
     });
   },
-  isLikedByMe: async (tweetId, id) => {
+  isLikedByMe: async (tweetId, uid) => {
     const like = await Like.findOne({
       where: {
         tweetId,
-        userId: id,
+        uid: uid,
       },
     });
     return like;
   },
-  isRetweetedByMe: async (tweetId, id) => {
+  isRetweetedByMe: async (tweetId, uid) => {
     const retweet = await Retweet.findOne({
       where: {
         tweetId,
-        userId: id,
+        uid: uid,
       },
     });
     return retweet;

@@ -25,7 +25,7 @@ const Like = (props) => {
       try {
         await axios.delete(`${URL}/api/tweet/like/remove`, {
           data: {
-            userId: myId,
+            uid: myId,
             tweetId: tweets[idx]["Tweets.id"],
           },
           headers: {
@@ -47,7 +47,7 @@ const Like = (props) => {
         await axios.post(
           `${URL}/api/tweet/like/add`,
           {
-            userId: myId,
+            uid: myId,
             tweetId: tweets[idx]["Tweets.id"],
           },
           {

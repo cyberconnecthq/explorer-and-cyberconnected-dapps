@@ -37,20 +37,20 @@ User.hasMany(Follower, { as: "Followers", foreignKey: "follower" });
 User.hasMany(Follower, { as: "Following", foreignKey: "followed" });
 
 // User -> Tweet association
-User.hasMany(Tweet, { foreignKey: "userId" });
+User.hasMany(Tweet, { foreignKey: "uid" });
 // User -> Like association
-User.hasMany(Like, { foreignKey: "userId" });
+User.hasMany(Like, { foreignKey: "uid" });
 // User -> Retweet association
-User.hasMany(Retweet, { foreignKey: "userId" });
+User.hasMany(Retweet, { foreignKey: "uid" });
 // Tweet -> Like association
 Tweet.hasMany(Like, { foreignKey: "tweetId" });
 // Tweet -> Retweet association
 Tweet.hasMany(Retweet, { foreignKey: "tweetId" });
 // User -> Comment association
-User.hasMany(Comment, { foreignKey: "userId" });
+User.hasMany(Comment, { foreignKey: "uid" });
 // Tweet -> Bookmark association
 Tweet.hasMany(Bookmark, { foreignKey: "tweetId" });
-User.hasMany(Bookmark, { foreignKey: "userId" });
+User.hasMany(Bookmark, { foreignKey: "uid" });
 
 (async () => {
   try {

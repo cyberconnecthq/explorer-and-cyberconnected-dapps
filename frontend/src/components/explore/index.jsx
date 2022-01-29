@@ -63,25 +63,25 @@ const Explore = () => {
         )}
         {users && users.length && (
           <AutoComplete boxShadow={theme.boxShadow}>
-            {users.map((item) => (
-              <Link key={item.id} to={`/profile/${item.username}`}>
-                <PeopleFlex key={item.id}>
+            {users.map((_user) => (
+              <Link key={_user.uid} to={`/profile/${_user.uid}`}>
+                <PeopleFlex key={_user.uid}>
                   <div>
-                    <UserImage src={item.avatar} />
+                    <UserImage src={_user.avatar} />
                   </div>
                   <div style={{ width: "100%" }}>
                     <PeopleDetails>
                       <div>
                         <object>
-                          <Link to={`/profile/${item.username}`}>
-                            <p>@{item.username}</p>
+                          <Link to={`/profile/${_user.uid}`}>
+                            <p>@{_user.username}</p>
                           </Link>
                         </object>
                       </div>
                       {/* <div>Following</div> */}
                     </PeopleDetails>
                     <div>
-                      <p>{item.bio}</p>
+                      <p>{_user.bio}</p>
                     </div>
                   </div>
                 </PeopleFlex>

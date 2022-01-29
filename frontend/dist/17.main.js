@@ -1,14 +1,14 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[17],{
 
-/***/ "./src/components/notifications/index.jsx":
-/*!************************************************!*\
-  !*** ./src/components/notifications/index.jsx ***!
-  \************************************************/
+/***/ "./src/components/messages/index.jsx":
+/*!*******************************************!*\
+  !*** ./src/components/messages/index.jsx ***!
+  \*******************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ \"./node_modules/react-redux/es/index.js\");\n/* harmony import */ var _styles_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../styles/common */ \"./src/components/styles/common.jsx\");\n\n\n\n\nvar Notifications = function Notifications() {\n  var theme = Object(react_redux__WEBPACK_IMPORTED_MODULE_1__[\"useSelector\"])(function (state) {\n    return state.theme;\n  });\n  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_styles_common__WEBPACK_IMPORTED_MODULE_2__[\"ProfileCorner\"], {\n    border: theme.border\n  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_styles_common__WEBPACK_IMPORTED_MODULE_2__[\"Header\"], {\n    color: theme.color,\n    border: theme.border\n  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"h2\", null, \"Notifications\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"h2\", {\n    style: {\n      textAlign: \"center\",\n      color: theme.color\n    }\n  }, \"Coming soon!\"));\n};\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (Notifications);\n\n//# sourceURL=webpack:///./src/components/notifications/index.jsx?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ \"./node_modules/react-redux/es/index.js\");\n/* harmony import */ var _styles_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../styles/common */ \"./src/components/styles/common.jsx\");\n\n\n\n\nvar Messages = function Messages() {\n  var theme = Object(react_redux__WEBPACK_IMPORTED_MODULE_1__[\"useSelector\"])(function (state) {\n    return state.theme;\n  });\n  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_styles_common__WEBPACK_IMPORTED_MODULE_2__[\"ProfileCorner\"], {\n    border: theme.border\n  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_styles_common__WEBPACK_IMPORTED_MODULE_2__[\"Header\"], {\n    color: theme.color,\n    border: theme.border\n  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"h2\", null, \"Messages\")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"h2\", {\n    style: {\n      textAlign: \"center\",\n      color: theme.color\n    }\n  }, \"Coming soon!\"));\n};\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (Messages);\n\n//# sourceURL=webpack:///./src/components/messages/index.jsx?");
 
 /***/ }),
 

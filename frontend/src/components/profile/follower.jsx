@@ -12,15 +12,15 @@ const Follower = (props) => {
 
   const { user } = props;
 
-  const { username } = useParams();
-  const myId = useSelector((state) => state.user.id);
+  const { uid } = useParams();
+  const myId = useSelector((state) => state.user.uid);
   const theme = useSelector((state) => state.theme);
 
   useEffect(() => {
     // ComponentDidMount
     (async () => {
       const res = await axios.get(
-        `${URL}/api/follow/details?id=${user.id}&myId=${myId}`
+        `${URL}/api/follow/details?uid=${user.uid}&myId=${myId}`
       );
       setResponse({
         followers: res.data.followers,
@@ -34,7 +34,7 @@ const Follower = (props) => {
   return (
     <FollowFlex>
       <div>
-        <Link to={`/profile/${username}/following`}>
+        <Link to={`/profile/${uid}/following`}>
           <p>
             <span style={{ color: theme.color }}>
               {response.following.length}
@@ -44,7 +44,7 @@ const Follower = (props) => {
         </Link>
       </div>
       <div>
-        <Link to={`/profile/${username}/followers`}>
+        <Link to={`/profile/${uid}/followers`}>
           <p>
             <span style={{ color: theme.color }}>
               {response.followers.length}

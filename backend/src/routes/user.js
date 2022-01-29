@@ -1,25 +1,24 @@
 const jwt = require("express-jwt");
-const { config } = require("../config");
 const router = require("express").Router();
 const multer = require("multer");
 const { verifyJwt } = require("../authorization");
 
 const {
-  auth,
   find,
-  //get,
   register,
-  //patch,
-  ///////////////////////
-  //addUser,
   updateUser,
-  //loginUser,
   getUserByUserId,
+} = require("../controllers/user/user");
+
+const {
+  auth,
+} = require("../controllers/user/auth");
+
+const {
   getLikesByUserId,
   getTweetsByUserId,
   getMediaByUserId,
-} = require("../controllers/user/user");
-
+} = require("../controllers/user/tweet");
 
 
 ////////////////////////////////////////////////////////
@@ -28,16 +27,16 @@ router.route('/auth').post(auth);
 
 router.route("/get").get(find);
 
-/** GET /api/user/:userId */
+/** GET /api/user/:uid */
 /** Authenticated route */
-//router.route("/:userId").get(jwt(config), get);
+//router.route("/:uid").get(jwt(config), get);
 
 /** POST /api/user/add */
 router.route("/add").post(register);
 
-/** PATCH /api/user/:userId */
+/** PATCH /api/user/:uid */
 /** Authenticated route */
-//router.route("/:userId").patch(jwt(config), patch);
+//router.route("/:uid").patch(jwt(config), patch);
 
 ////////////////////////////////////////////////////////////////////
 /** /api/user  */
@@ -49,7 +48,7 @@ router.put(
   [verifyJwt, upload.fields([{ name: "avatar" }, { name: "cover" }])],
   updateUser
 );
-//router.post("/login-user", loginUser);
+
 router.get("/get-user", getUserByUserId);
 router.get("/get-tweets", getTweetsByUserId);
 router.get("/get-likes", getLikesByUserId);

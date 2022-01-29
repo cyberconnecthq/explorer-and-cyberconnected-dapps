@@ -7,7 +7,7 @@ import { ProfileCorner, Header } from "../styles/common";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 const Home = () => {
-  const userId = useSelector((state) => state.user.id);
+  const uid = useSelector((state) => state.user.uid);
   const theme = useSelector((state) => state.theme);
 
   return (
@@ -18,7 +18,7 @@ const Home = () => {
       <Tweet border={theme.border}>
         <TweetModal rows={3} />
       </Tweet>
-      <Activity url={`${URL}/api/feed?userId=${userId}`} feed />
+      <Activity url={`${URL}/api/feed?uid=${uid}`} feed />
     </ProfileCorner>
   );
 };

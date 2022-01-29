@@ -13,10 +13,10 @@ module.exports = {
     "createdAt",
   ],
   getBookmarks: async (req, res) => {
-    // query -> {userId}
-    const tweetIds = `SELECT tweetId from Bookmarks where userId='${req.query.userId}'`;
+    // query -> {uid}
+    const tweetIds = `SELECT tweetId from Bookmarks where uid='${req.query.uid}'`;
     const tweets = await User.findAll({
-      attributes: ["username", "avatar"],
+      attributes: ["uid", "username", "avatar"],
       include: {
         model: Tweet,
         required: true,
@@ -33,7 +33,7 @@ module.exports = {
     return res.status(200).json({ tweets });
   },
   addBookmark: async (req, res) => {
-    // body -> {userId, tweetId}
+    // body -> {uid, tweetId}
     const validation = bookmarkValidation(req.body);
     if (validation.error)
       return res.status(400).json({ errors: validation.error.details });
@@ -51,7 +51,7 @@ module.exports = {
     return res.status(200).json({ bookmark });
   },
   removeBookmark: async (req, res) => {
-    // body -> {userId, tweetId}
+    // body -> {uid, tweetId}
     const validation = bookmarkValidation(req.body);
     if (validation.error)
       return res.status(400).json({ errors: validation.error.details });

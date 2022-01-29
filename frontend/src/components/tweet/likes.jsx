@@ -12,7 +12,7 @@ const Likes = () => {
 
   const theme = useSelector(state => state.theme);
 
-  const { username, tweetId } = useParams();
+  const { uid, tweetId } = useParams();
   const history = useHistory();
   useEffect(() => {
     (async () => {
@@ -24,7 +24,7 @@ const Likes = () => {
   }, []);
 
   const handleClose = () => {
-    history.replace(`/${username}/status/${tweetId}`);
+    history.replace(`/${uid}/status/${tweetId}`);
   };
 
   return (
@@ -34,32 +34,32 @@ const Likes = () => {
       heading="Liked by"
       children={
         <div>
-          {likes.map((item) => (
-            <Link key={item["Likes.id"]} to={`/profile/${item.username}`}>
-              <PeopleFlex key={item.id} border={theme.border}>
+          {likes.map((_user) => (
+            <Link key={_user["Likes.id"]} to={`/profile/${_user.uid}`}>
+              <PeopleFlex key={_user.uid} border={theme.border}>
                 <div>
-                  <UserImage src={item.avatar} />
+                  <UserImage src={_user.avatar} />
                 </div>
                 <div style={{ width: "100%" }}>
                   <PeopleDetails>
                     <div>
                       <object>
-                        <Link to={`/profile/${item.username}`}>
+                        <Link to={`/profile/${_user.uid}`}>
                           <h3 style={{color: theme.color}}>
-                            {item.username}
+                            {_user.username}
                           </h3>
                         </Link>
                       </object>
                       <object>
-                        <Link to={`/profile/${item.username}`}>
-                          <p>@{item.username}</p>
+                        <Link to={`/profile/${_user.uid}`}>
+                          <p>@{_user.username}</p>
                         </Link>
                       </object>
                     </div>
                     {/* <div>Following</div> */}
                   </PeopleDetails>
                   <div>
-                    <p style={{color: theme.color}}>{item.bio}</p>
+                    <p style={{color: theme.color}}>{_user.bio}</p>
                   </div>
                 </div>
               </PeopleFlex>
