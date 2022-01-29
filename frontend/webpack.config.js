@@ -59,7 +59,6 @@ module.exports = (env, argv) => {
     },
     resolve: {
       extensions: [".js", ".jsx", ".ts", ".tsx", ".json"],
- 
     },
     plugins: [
       new HtmlWebPackPlugin({
@@ -75,7 +74,7 @@ module.exports = (env, argv) => {
                 }).parsed
               )
             : JSON.stringify(dotenv.config().parsed),
-      })
+      }),
     ],
   };
 };

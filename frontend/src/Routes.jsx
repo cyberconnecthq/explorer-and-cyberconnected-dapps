@@ -68,20 +68,19 @@ const Routes = () => {
       </Col>
     </Row>
   );
-
   return (
     <HashRouter>
       <Switch>
-        <PrivateRoute exact path="/" component={SignIn} homeAuthenticated />
+        <PrivateRoute exact path="/" component={SignIn} isHome />
         <PrivateRoute exact path="/home" component={withMenuBar(Home)} />
-        <Route path="explore" component={withMenuBar(Explore)} />
+        <Route path="/explore" component={withMenuBar(Explore)} />
         <PrivateRoute
-          path="notifications"
+          path="/notifications"
           component={withMenuBar(Notifications)}
         />
-        <PrivateRoute path="messages" component={withMenuBar(Messages)} />
-        <PrivateRoute path="bookmarks" component={withMenuBar(BookMarks)} />
-        <PrivateRoute path="lists" component={withMenuBar(Lists)} />
+        <PrivateRoute path="/messages" component={withMenuBar(Messages)} />
+        <PrivateRoute path="/bookmarks" component={withMenuBar(BookMarks)} />
+        <PrivateRoute path="/lists" component={withMenuBar(Lists)} />
         <Route
           exact
           path="/profile/:uid"

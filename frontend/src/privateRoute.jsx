@@ -4,19 +4,26 @@ import { useSelector } from "react-redux";
 import { Route, Redirect } from "react-router-dom";
 
 const PrivateRoute = (props) => {
-  const { homeAuthenticated } = props;
+  const { isHome } = props;
+
   const token = useSelector((state) => {
     return state.user.token;
   });
   let isAuthenticated = false;
   try {
-    jwt.verify(token, process.env.REACT_APP_SECRET_KEY);
-    isAuthenticated = true;
+    if (token) {
+      //jwt.verify(token, process.env.REACT_APP_SECRET_KEY);
+      isAuthenticated = true;
+    } else {
+      console.log("no token");
+      isAuthenticated = false;
+    }
   } catch (err) {
+    console.error(err);
     isAuthenticated = false;
   }
 
-  if (homeAuthenticated) {
+  if (isHome) {
     return isAuthenticated ? (
       <Redirect to={{ pathname: "/home" }} />
     ) : (
