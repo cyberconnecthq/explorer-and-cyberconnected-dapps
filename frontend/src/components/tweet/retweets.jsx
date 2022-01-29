@@ -12,7 +12,7 @@ const Retweet = () => {
 
   const theme = useSelector((state) => state.theme);
 
-  const { username, tweetId } = useParams();
+  const { userId, tweetId } = useParams();
   const history = useHistory();
   useEffect(() => {
     (async () => {
@@ -24,7 +24,7 @@ const Retweet = () => {
   }, []);
 
   const handleClose = () => {
-    history.replace(`/${username}/status/${tweetId}`);
+    history.replace(`/${userId}/status/${tweetId}`);
   };
 
   return (

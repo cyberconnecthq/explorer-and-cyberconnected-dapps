@@ -24,7 +24,7 @@ const Profile = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSaveDisabled, setIsSaveDisabled] = useState(false);
 
-  const { username, activity } = useParams();
+  const { userId, activity } = useParams();
   const storeUser = useSelector((state) => state.user);
   const refresh = useSelector((state) => state.update.refresh);
   const theme = useSelector((state) => state.theme);
@@ -34,10 +34,10 @@ const Profile = (props) => {
 
   useEffect(() => {
     (async () => {
-      const res = await axios.get(`${URL}/api/user/get-user?username=${username}`);
+      const res = await axios.get(`${URL}/api/user/get-user?userId=${userId}`);
       setUser(res.data);
     })();
-  }, [username, refresh]);
+  }, [userId, refresh]);
 
   const handleHeaderText = (text) => {
     setHeaderText(text);
@@ -47,12 +47,12 @@ const Profile = (props) => {
     setIsSaveDisabled(true);
     const formData = new FormData();
     formData.append("userId", user.id);
-    formData.append("dob", data.dob);
+    //formData.append("birth", data.birth);
     formData.append("bio", data.bio);
     formData.append("location", data.location);
     if (typeof data.avatar === "object") formData.append("avatar", data.avatar);
     if (typeof data.cover === "object") formData.append("cover", data.cover);
-    const res = await axios.put(`${URL}/api/user/edit-user`, formData, {
+    const res = await axios.put(`${URL}/api/user/update`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -64,7 +64,7 @@ const Profile = (props) => {
       type: SET_USER,
       payload: {
         ...storeUser,
-        dob: data.dob,
+        //birth: data.birth,
         bio: data.bio,
         location: data.location,
         avatar: data.avatar,
@@ -76,12 +76,13 @@ const Profile = (props) => {
 
   if (user === null) return <Loading />;
 
-  const dob = new Date(user.dob);
+  //const birth = new Date(user.birth);
   const joinedAt = new Date(user.createdAt);
-  const dobPath = [
+  /*
+  const birthPath = [
     "M7.75 11.083c-.414 0-.75-.336-.75-.75C7 7.393 9.243 5 12 5c.414 0 .75.336.75.75s-.336.75-.75.75c-1.93 0-3.5 1.72-3.5 3.833 0 .414-.336.75-.75.75z",
     "M20.75 10.333c0-5.01-3.925-9.083-8.75-9.083s-8.75 4.074-8.75 9.083c0 4.605 3.32 8.412 7.605 8.997l-1.7 1.83c-.137.145-.173.357-.093.54.08.182.26.3.46.3h4.957c.198 0 .378-.118.457-.3.08-.183.044-.395-.092-.54l-1.7-1.83c4.285-.585 7.605-4.392 7.605-8.997zM12 17.917c-3.998 0-7.25-3.402-7.25-7.584S8.002 2.75 12 2.75s7.25 3.4 7.25 7.583-3.252 7.584-7.25 7.584z",
-  ];
+  ];*/
   const joinPath = [
     "M19.708 2H4.292C3.028 2 2 3.028 2 4.292v15.416C2 20.972 3.028 22 4.292 22h15.416C20.972 22 22 20.972 22 19.708V4.292C22 3.028 20.972 2 19.708 2zm.792 17.708c0 .437-.355.792-.792.792H4.292c-.437 0-.792-.355-.792-.792V6.418c0-.437.354-.79.79-.792h15.42c.436 0 .79.355.79.79V19.71z",
   ];
@@ -98,12 +99,12 @@ const Profile = (props) => {
     {
       name: "media",
       title: "Media",
-      path: "/media",
+      path: "media",
     },
     {
       name: "likes",
       title: "Likes",
-      path: "/likes",
+      path: "likes",
     },
   ];
 
@@ -165,10 +166,7 @@ const Profile = (props) => {
         />
       )}
       <ProfileCorner border={theme.border}>
-        <ProfileHeader
-          heading={`${user.username} `}
-          text={headerText}
-        />
+        <ProfileHeader heading={`@${user.username} `} text={headerText} />
         <div>
           <Cover
             bg={theme.border}
@@ -187,10 +185,8 @@ const Profile = (props) => {
           </ImgFlex>
         </div>
         <Info color={theme.color}>
-          <h2>
-            {user.username} 
-          </h2>
-          <p>@{user.username}</p>
+          <h2>@{user.username}</h2>
+          <p>{user.publicAddress}</p>
           {user.bio && <p>{user.bio}</p>}
           <Dates>
             {user.location && (
@@ -204,18 +200,21 @@ const Profile = (props) => {
                 <span>{user.location}</span>
               </div>
             )}
-            <div>
+            {/*
+             <div>
               <Icon
-                d={dobPath}
+                d={birthPath}
                 width="18.75"
                 height="18.75"
                 fill="rgb(101, 119, 134)"
               />
               <span>
-                Born {dob.toLocaleString("default", { month: "long" })}{" "}
-                {dob.getDate()}, {dob.getFullYear()}
+                Born {birth.toLocaleString("default", { month: "long" })}{" "}
+                {birth.getDate()}, {birth.getFullYear()}
               </span>
             </div>
+           
+            */}
             <div>
               <Icon
                 d={joinPath}

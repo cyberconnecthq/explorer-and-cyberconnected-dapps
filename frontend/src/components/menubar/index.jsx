@@ -86,7 +86,7 @@ const MenuBar = () => {
         {Object.keys(paths).map((item) => {
           return (
             <NavLink
-              to={item === "profile" ? `/${item}/${user.username}` : `/${item}`}
+              to={item === "profile" ? `/${item}/${user.id}` : `/${item}`}
               activeClassName="selected"
               key={item}
             >

@@ -20,18 +20,17 @@ const Follow = () => {
   const [userData, setUserData] = useState(null);
   const [followDisabled, setFollowDisabled] = useState(false);
 
-  const { username, activity } = useParams();
+  const { userId, activity } = useParams();
   const user = useSelector((state) => state.user);
-  const refresh = useSelector((state) => state.update.refresh);
+  //const refresh = useSelector((state) => state.update.refresh);
   const theme = useSelector((state) => state.theme);
   const myId = user.id;
   const token = user.token;
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // ComponentDidMount
     (async () => {
-      const user = await axios.get(`${URL}/api/user/get-user?username=${username}`);
+      const user = await axios.get(`${URL}/api/user/get-user?userId=${userId}`);
       const res = await axios.get(
         `${URL}/api/follow/details?id=${user.data.id}&myId=${myId}`
       );

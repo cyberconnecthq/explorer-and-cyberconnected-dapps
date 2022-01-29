@@ -7,7 +7,7 @@ const Tabs = (props) => {
   // TabList -> [{path,name,title}]
   const { tabList } = props;
   const theme = useSelector((state) => state.theme);
-  const { username, activity } = useParams();
+  const { userId, activity } = useParams();
   const activeStyle = {
     borderBottom: "2px solid rgb(29,161,242)",
     color: "rgb(29,161,242)",
@@ -18,8 +18,8 @@ const Tabs = (props) => {
       {tabList.map((tab) => {
         const to =
           tab.name === "tweets"
-            ? `/profile/${username}`
-            : `/profile/${username}${tab.path}`;
+            ? `/profile/${userId}`
+            : `/profile/${userId}/${tab.path}`;
         return (
           <Link
             key={tab.name}

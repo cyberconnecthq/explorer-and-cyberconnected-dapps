@@ -42,7 +42,7 @@ module.exports = {
   },
   getUserTweets: async (id, tweetAttributes) => {
     let tweets = await User.findAll({
-      attributes: ["username", "avatar"],
+      attributes: ["username", "id", "avatar"],
       include: {
         model: Tweet,
         required: true,

@@ -15,7 +15,6 @@ let web3 = undefined; // Will hold the web3 instance
 const SignIn = (props) => {
   const [loading, setLoading] = useState(false); // Loading button state
   const history = useHistory();
-  const profile = useSelector((state) => state.profile);
   const dispatch = useDispatch();
 
   const onLoggedIn = (login) => {
@@ -26,7 +25,7 @@ const SignIn = (props) => {
   };
 
   const _auth = ({ publicAddress, signature }) =>
-  fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth`, {
+  fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/auth`, {
       body: JSON.stringify({ publicAddress, signature }),
       headers: {
         "Content-Type": "application/json",
@@ -92,7 +91,7 @@ const SignIn = (props) => {
 
     // find existing user by publicAddress
     fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/api/user?publicAddress=${publicAddress}`
+      `${process.env.REACT_APP_BACKEND_URL}/api/user/get?publicAddress=${publicAddress}`
     )
       .then((response) => {
         let users = response.json();
@@ -104,7 +103,7 @@ const SignIn = (props) => {
       })
       //On retrieved user, sign message in Popup MetaMask confirmation modal.
       .then(_signMessage)
-      // Send signature to backend on the /auth route
+      // Send signature to backend on the /user/auth route
       .then(_auth)
       // Pass accessToken back to parent component (to save it in localStorage)
       .then(onLoggedIn)
@@ -155,8 +154,11 @@ const SignIn = (props) => {
                 height="41.25px"
                 fill="rgb(29,161,242)"
               />
-              <h1>See what's happening in the world right now</h1>
-              <p>Join twitter today.</p>
+              <h1>CyberConnect Twitter</h1>
+              <p>What's happening in the world now?</p>
+              <p>Twitter says that.</p>
+              <p>Join with only Wallets</p>
+              <p>with no email, no password, no social account.</p>
               <Button
                 bg="rgb(29,160,240)"
                 color="rgb(255,255,255)"

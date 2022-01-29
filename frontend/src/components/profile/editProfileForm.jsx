@@ -8,18 +8,13 @@ import UploadButton from "../uploadButton";
 
 const validate = (data) => {
   const errors = {};
-  if (!data.dob) errors.dob = "Date of birth required";
+  //if (!data.birth) errors.birth = "Date of birth required";
   if (!data.bio) data.bio = "";
   if (!data.location) data.location = "";
   return errors;
 };
 
-const Input = ({
-  input,
-  type,
-  placeholder,
-  meta: { touched, error },
-}) => {
+const Input = ({ input, type, placeholder, meta: { touched, error } }) => {
   const theme = useSelector((state) => state.theme);
   return (
     <React.Fragment>
@@ -154,14 +149,17 @@ let EditProfileForm = (props) => {
           placeholder="Location"
         />
       </div>
+     {/*    
       <div style={{ marginBottom: "5%" }}>
         <Field
           type="date"
-          name="dob"
+          name="birth"
           component={Input}
           placeholder="Birth Date"
         />
       </div>
+      */}
+   
       <Button
         type="submit"
         bg="rgb(29, 161, 242)"

@@ -23,9 +23,9 @@ module.exports = {
     });
   },
   getTweet: async (req, res) => {
-    // body -> {tweetId, username, myId}
+    // body -> {tweetId, userId, myId}
     Promise.all([
-      module.exports.getUserTweet(req.query.tweetId, req.query.username),
+      module.exports.getUserTweet(req.query.tweetId, req.query.userId),
       module.exports.isLikedByMe(req.query.tweetId, req.query.myId),
       module.exports.isRetweetedByMe(req.query.tweetId, req.query.myId),
     ]).then((values) => {
@@ -38,11 +38,11 @@ module.exports = {
   removeTweet: async (req, res) => {
     res.status(200).json({});
   },
-  getUserTweet: async (tweetId, username) => {
+  getUserTweet: async (tweetId, userId) => {
     const tweet = await User.findOne({
-      attributes: ["username", "avatar"],
+      attributes: ["id", "username", "avatar"],
       where: {
-        username: username,
+        id: userId,
       },
       include: {
         model: Tweet,

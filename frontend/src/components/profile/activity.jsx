@@ -25,7 +25,7 @@ const Activity = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tweetId, setTweetId] = useState(null);
 
-  const { username } = useParams();
+  const { userId } = useParams();
   const user = useSelector((state) => state.user);
   const myId = user.id;
   const token = user.token;
@@ -53,6 +53,7 @@ const Activity = (props) => {
   }, [url, refresh]);
 
   const getData = async (source) => {
+    console.log(url);
     try {
       const res = await axios.get(url, {
         cancelToken: source.token,
@@ -99,9 +100,7 @@ const Activity = (props) => {
   if (!tweets.length)
     return (
       <EmptyMsg>
-        {feed
-          ? "You are all caught up!"
-          : `@${username} has no ${dataKey} yet!`}
+        {feed ? "You are all caught up!" : `@${userId} has no ${dataKey} yet!`}
       </EmptyMsg>
     );
   return (
@@ -115,13 +114,16 @@ const Activity = (props) => {
           padding="15px"
         />
       )}
+
       {tweets.map((tweet, idx) => {
         const date = new Date(tweet["Tweets.createdAt"]);
+        //console.log(tweet)
         return (
-          <React.Fragment>
+          <React.Fragment key={idx}>
+            <p>{idx}</p>
             <Link
               key={tweet["Tweets.id"]}
-              to={`/${tweet.username}/status/${tweet["Tweets.id"]}`}
+              to={`/${tweet.userId}/status/${tweet["Tweets.id"]}`}
             >
               <PeopleFlex hover border={theme.border} tweetHov={theme.tweetHov}>
                 <User>
@@ -131,10 +133,8 @@ const Activity = (props) => {
                   <TweetDetails color={theme.color}>
                     {/* <object> to hide nested <a> warning */}
                     <object>
-                      <Link to={`/profile/${tweet.username}`}>
-                        <h3>
-                          {tweet.username} 
-                        </h3>
+                      <Link to={`/profile/${tweet.userId}`}>
+                        <h3>@{tweet.userId}</h3>
                       </Link>
                     </object>
                     <p
@@ -145,7 +145,8 @@ const Activity = (props) => {
                         maxWidth: "18%",
                       }}
                     >
-                      @{tweet.username}
+                      {/*{tweet.username}{tweet.userId}*/}
+                     
                     </p>
                     <span>
                       {date.toLocaleString("default", { month: "short" })}{" "}

@@ -5,7 +5,7 @@ module.exports = {
     const schema = Joi.object({
       username: Joi.string().required(),
       email: Joi.string().email().required(),
-      dob: Joi.date().required(),
+      birth: Joi.date().required(),
     }).options({ abortEarly: false });
     const { error, value } = schema.validate(data);
     return { error, value };

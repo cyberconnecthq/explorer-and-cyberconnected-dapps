@@ -3,7 +3,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const docs = require("./routes/docs");
-const auth = require("./routes/auth");
 const user = require("./routes/user");
 const follower = require("./routes/follower");
 const tweet = require("./routes/tweet");
@@ -26,7 +25,6 @@ app.use(function (req, res, next) {
 });
 
 app.use("/api/", docs);
-app.use("/api/auth", auth);
 app.use("/api/user", user);
 app.use("/api/follow", follower);
 app.use("/api/tweet", tweet);

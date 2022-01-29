@@ -84,24 +84,24 @@ const Routes = () => {
         <PrivateRoute path="/lists" component={withMenuBar(Lists)} />
         <Route
           exact
-          path="/profile/:username"
+          path="/profile/:userId"
           component={withMenuBar(Profile)}
         />
         <Route
-          path="/profile/:username/:activity"
+          path="/profile/:userId/:activity"
           component={withMenuBar(Profile)}
         />
         <Route
           exact
-          path="/:username/status/:tweetId"
+          path="/:userId/status/:tweetId"
           component={withMenuBar(Tweet)}
         />
         <Route
-          path="/:username/status/:tweetId/likes"
+          path="/:userId/status/:tweetId/likes"
           component={withMenuBar(withLikeModal(Tweet))}
         />
         <Route
-          path="/:username/status/:tweetId/retweets"
+          path="/:userId/status/:tweetId/retweets"
           component={withMenuBar(withRetweetModal(Tweet))}
         />
         <Route component={withOnlyMenuBar(PageNotFound)} />
