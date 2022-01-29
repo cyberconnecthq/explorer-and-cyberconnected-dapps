@@ -1,12 +1,10 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # production
-frontend/dist/**/*
-backend/dist/**/*
+dist
 
 # dependencies
 node_modules
-dist
 
 # testing
 coverage
