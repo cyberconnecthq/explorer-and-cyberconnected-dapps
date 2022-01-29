@@ -1,6 +1,6 @@
 import ConnectionsTable from '@/components/ConnectionsTable';
 import { Box, Flex } from '@chakra-ui/react';
-import { connections_data } from "./connections.data";
+import { connections_data } from "../context/connections.data";
 import ConnectionsGraph from '../components/ConnectionsGraph'
 
 const ConnectionsPage = () => {

@@ -1,6 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { Box, Flex, Tooltip } from "@chakra-ui/react";
-import { is_follower, is_following } from "../pages/connections.data";
+import { is_follower, is_following } from "../context/connections.data";
 import Identicon from 'react-identicons';
 
 function ConnectionsTable(props) {
