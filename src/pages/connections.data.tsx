@@ -1,6 +1,14 @@
 export const IS_FOLLOWER = 0b1;
 export const IS_FOLLOWING = 0b10;
 
+export function is_follower(x : number) {
+  return (x & IS_FOLLOWER) == IS_FOLLOWER;
+}
+export function is_following(x : number) {
+  return (x & IS_FOLLOWING) == IS_FOLLOWING;
+}
+
+
 export const connections_data = {
   "0x0017f7adf1b404298efa3015ca0b56961fea4c34": 1,
   "0x058c802a37b0cece77277a2776b56909e3cd3838": 3,
