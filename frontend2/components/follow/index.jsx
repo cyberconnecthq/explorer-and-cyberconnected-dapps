@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import { useRouter } from "next/router";
+import {useParams, useHistory} from "../useRouter";
+
+import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import ProfileHeader from "../profileHeader";
 import Tabs from "../tabs";
@@ -125,7 +128,7 @@ const Follow = () => {
       ) : (
         <div>
           {userData[activity].map((_user, idx) => (
-            <Link key={_user.uid} to={`/profile/${_user.uid}`}>
+            <Link key={_user.uid} href={`/profile/${_user.uid}`} >
               <PeopleFlex
                 key={_user.uid}
                 border={theme.border}
@@ -138,14 +141,14 @@ const Follow = () => {
                   <PeopleDetails>
                     <div>
                       <object>
-                        <Link to={`/profile/${_user.uid}`}>
+                        <Link href={`/profile/${_user.uid}`} >
                           <h3 style={{ color: theme.color }}>
                             {_user.username}
                           </h3>
                         </Link>
                       </object>
                       <object>
-                        <Link to={`/profile/${_user.uid}`}>
+                        <Link href={`/profile/${_user.uid}`} >
                           <p>@{_user.username}</p>
                         </Link>
                       </object>

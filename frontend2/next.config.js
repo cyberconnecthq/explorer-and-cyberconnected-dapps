@@ -1,33 +1,14 @@
 /** @type {import('next').NextConfig} */
 
 module.exports = {
-  //reactStrictMode: true,
-  reactStrictMode: false,
-  webpack5: true,
-  webpack: (config) => {
-    config.resolve.fallback = {
-      fs: false,
-      process: false,
-      path: false,
-      os: false,
-      util: false,
-      stream: false,
-      buffer: false,
-      crypto: false,
-    };
-    return config;
+  reactStrictMode: true,
+  env: {
+    mode: 'development',
+    REACT_APP_BACKEND_URL:"http://localhost:5000",
+    REACT_APP_SECRET_KEY:"verysecretkey",
+  },
+  images: {
+    domains: ['res.cloudinary.com'],
   },
 };
 
-module.exports = {
-  webpack: (config, { isServer }) => {
-    // Fixes npm packages that depend on `fs` module
-    if (!isServer) {
-      config.node = {
-        fs: "empty",
-      };
-    }
-
-    return config;
-  },
-};

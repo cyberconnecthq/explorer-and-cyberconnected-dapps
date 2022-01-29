@@ -1,13 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Default } from "./styles/default";
 
 const PageNotFound = () => {
   return (
     <Default>
-      <h1>Sorry, that page doesn't exist!</h1>
+      <h1>Sorry, that page doesn&apos;t exist!</h1>
       <p>
-        Why not try a <Link to={"/explore"}>search</Link> to find something
+        Why not try a <Link href={"/explore"} >search</Link> to find something
         else?
       </p>
     </Default>

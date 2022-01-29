@@ -1,5 +1,7 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import Link from "next/link";
+import {useRouter} from "next/router";
+import {useParams, useHistory} from "./useRouter";
 import { useSelector } from "react-redux";
 import { Tab } from "./styles/profile";
 
@@ -23,6 +25,7 @@ const Tabs = (props) => {
         return (
           <Link
             key={tab.name}
+            href={to}
             to={to}
             replace={true}
             style={

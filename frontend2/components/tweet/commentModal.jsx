@@ -4,6 +4,7 @@ import axios from "axios";
 import UploadButton from "../uploadButton";
 import { Flex, Button } from "../styles/modal";
 import { SET_UPDATE } from "../../redux/actions";
+import Image from "next/image";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -51,12 +52,14 @@ const CommentModal = (props) => {
   return (
     <Flex bg={theme.bg} color={theme.color}>
       <div>
-        <img
-          src={user.avatar}
-          width="49px"
-          height="49px"
-          style={{ borderRadius: "50%" }}
-        />
+        {user.avatar && (
+          <Image
+            src={user.avatar}
+            width="49px"
+            height="49px"
+            style={{ borderRadius: "50%" }}
+          />
+        )}
       </div>
       <div style={{ width: "100%" }}>
         <textarea
@@ -72,7 +75,7 @@ const CommentModal = (props) => {
         ></textarea>
         <div style={{ marginBottom: "10px" }}>
           {preview.image && (
-            <img src={preview.image} style={{ width: "100%" }} />
+            <Image src={preview.image} style={{ width: "100%" }} />
           )}
           {preview.video && (
             <video

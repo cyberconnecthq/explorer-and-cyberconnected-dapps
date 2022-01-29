@@ -1,8 +1,9 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import {useRouter} from "next/router";
 import { useSelector } from "react-redux";
 import Icon from "./icon";
 import { Header, HeaderWrapper, BackBtn } from "./styles/profile";
+import { useParams, useHistory } from "./useRouter";
 
 const ProfileHeader = (props) => {
   const { heading, text } = props;
@@ -15,7 +16,7 @@ const ProfileHeader = (props) => {
     <HeaderWrapper border={theme.border}>
       <Header bg={theme.bg} color={theme.color}>
         <div>
-          <BackBtn onClick={history.goBack}>
+          <BackBtn onClick={history.back}>
             <Icon
               d={backIconPaths}
               width="22.5px"

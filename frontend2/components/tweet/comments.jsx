@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import Link from "next/link";
+import {useRouter} from "next/router";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Loading from "../loading";
 import { PeopleFlex, UserImage, TweetDetails } from "../styles/profile";
-import { isImage, isVideo } from "../../media";
+import { isImage, isVideo } from "../media";
+import { useParams, useHistory } from "../useRouter";
+import Image from "next/image";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -37,7 +40,7 @@ const Comments = () => {
               <TweetDetails color={theme.color}>
                 {/* <object> to hide nested <a> warning */}
                 <object>
-                  <Link to={`/profile/${comment.username}`}>
+                  <Link href={`/profile/${comment.username}`} >
                     <h3>
                       {comment.username} 
                     </h3>
@@ -54,7 +57,7 @@ const Comments = () => {
               <div style={{color:theme.color}}>{comment["Comments.text"]}</div>
               {comment["Comments.media"] &&
                 isImage(comment["Comments.media"]) && (
-                  <img
+                  <Image
                     src={comment["Comments.media"]}
                     style={{ width: "100%" }}
                   />

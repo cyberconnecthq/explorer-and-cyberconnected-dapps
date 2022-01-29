@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import {useRouter} from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import Follower from "./follower";
@@ -15,7 +15,9 @@ import { ProfileCorner } from "../styles/common";
 import Loading from "../loading";
 import { toast } from "react-toastify";
 import { SET_USER, SET_UPDATE } from "../../redux/actions";
-import { shortName,shortAddress } from "../cc-utils/bip39";
+import { shortName, shortAddress } from "../cc-utils/bip39";
+import { useParams, useHistory } from "../useRouter";
+
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -154,20 +156,19 @@ const Profile = (props) => {
     <React.Fragment>
       {isModalOpen && (
         <Modal
-          children={
-            <EditProfileForm
-              onSubmit={handleSubmit}
-              initialValues={user}
-              isSaveDisabled={isSaveDisabled}
-            />
-          }
           handleClose={() => setIsModalOpen(false)}
           padding="15px"
           heading="Edit profile"
-        />
+        >
+          <EditProfileForm
+            onSubmit={handleSubmit}
+            initialValues={user}
+            isSaveDisabled={isSaveDisabled}
+          />
+        </Modal>
       )}
       <ProfileCorner border={theme.border}>
-        <ProfileHeader heading={`@${user.username} `} text={headerText} />
+        <ProfileHeader heading={`@${user.username}==== `} text={headerText} />
         <div>
           <Cover
             bg={theme.border}
@@ -186,8 +187,8 @@ const Profile = (props) => {
           </ImgFlex>
         </div>
         <Info color={theme.color}>
-          <h2>@{ user.username}</h2>
-          <p>{ shortAddress(user) }</p>
+          <h2>@{user.username}</h2>
+          <p>{shortAddress(user)}</p>
           {user.bio && <p>{user.bio}</p>}
           <Dates>
             {user.location && (

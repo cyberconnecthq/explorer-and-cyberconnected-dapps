@@ -21,6 +21,6 @@
     "**/*.jsx",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "components/privateRoute.jsx--"  ],
   "exclude": ["node_modules"]
 }

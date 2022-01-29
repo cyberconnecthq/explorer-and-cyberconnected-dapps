@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import Image from "next/image";
+import { useParams, useHistory } from "../useRouter";
 import { useSelector } from "react-redux";
 import Like from "./like";
 import Retweet from "./retweet";
@@ -12,7 +15,7 @@ import {
   User,
   UserImage,
 } from "../styles/profile";
-import { isImage, isVideo } from "../../media";
+import { isImage, isVideo } from "../media";
 import Loading from "../loading";
 import Bookmark from "./bookmark";
 import Modal from "../modal";
@@ -106,13 +109,9 @@ const Activity = (props) => {
   return (
     <React.Fragment>
       {isModalOpen && (
-        <Modal
-          children={
-            <CommentModal handleClose={handleClose} tweetId={tweetId} />
-          }
-          handleClose={handleClose}
-          padding="15px"
-        />
+        <Modal handleClose={handleClose} padding="15px">
+          <CommentModal handleClose={handleClose} tweetId={tweetId} />
+        </Modal>
       )}
 
       {tweets.map((tweet, idx) => {
@@ -121,9 +120,9 @@ const Activity = (props) => {
         return (
           <React.Fragment key={idx}>
             <p>{idx}</p>
-            <Link
+            <Link 
               key={tweet["Tweets.id"]}
-              to={`/${tweet.uid}/status/${tweet["Tweets.id"]}`}
+              href={`/${tweet.uid}/status/${tweet["Tweets.id"]}`}
             >
               <PeopleFlex hover border={theme.border} tweetHov={theme.tweetHov}>
                 <User>
@@ -133,7 +132,7 @@ const Activity = (props) => {
                   <TweetDetails color={theme.color}>
                     {/* <object> to hide nested <a> warning */}
                     <object>
-                      <Link to={`/profile/${tweet.uid}`}>
+                      <Link href={`/profile/${tweet.uid}`} >
                         <h3>@{tweet.username}</h3>
                       </Link>
                     </object>
@@ -146,7 +145,6 @@ const Activity = (props) => {
                       }}
                     >
                       {/*{tweet.username}{tweet.uid}*/}
-                     
                     </p>
                     <span>
                       {date.toLocaleString("default", { month: "short" })}{" "}
@@ -159,9 +157,10 @@ const Activity = (props) => {
                     {tweet["Tweets.text"]}
                   </div>
                   {tweet["Tweets.media"] && isImage(tweet["Tweets.media"]) && (
-                    <img
+                    <Image
                       src={tweet["Tweets.media"]}
                       style={{ width: "100%" }}
+                      width={20} height={20}
                     />
                   )}
                   {tweet["Tweets.media"] && isVideo(tweet["Tweets.media"]) && (

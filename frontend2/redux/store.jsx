@@ -10,7 +10,7 @@ import themeReducer from "./reducers/theme";
 
 const persistConfig = {
   key: "root",
-  //blacklist: ["form"],
+  blacklist: ["form"],
   //white: ["form"],
   //storage: storage,
   storage: session,
@@ -28,7 +28,7 @@ const appReducer = persistReducer(
 
 const store = createStore(
   appReducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  //window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 /*
 const store = createStore(appReducer);

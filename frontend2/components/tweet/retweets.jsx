@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams, useHistory } from "react-router-dom";
+//import { Link, useParams, useHistory } from "react-router-dom";
+import Link from "next/link";
+import {useRouter} from "next/router";
+import { useParams, useHistory } from "../useRouter";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Modal from "../modal";
@@ -32,42 +35,39 @@ const Retweet = () => {
       padding="0 0 80px 0"
       handleClose={handleClose}
       heading="Retweeted by"
-      children={
-        <div>
-          {retweets.map((_user) => (
-            <Link key={_user["Retweets.id"]} to={`/profile/${_user.uid}`}>
-              <PeopleFlex key={_user.uid} border={theme.border}>
-                <div>
-                  <UserImage src={_user.avatar} />
-                </div>
-                <div style={{ width: "100%" }}>
-                  <PeopleDetails>
-                    <div>
-                      <object>
-                        <Link to={`/profile/${_user.uid}`}>
-                          <h3 style={{ color: theme.color }}>
-                            {_user.username}
-                          </h3>
-                        </Link>
-                      </object>
-                      <object>
-                        <Link to={`/profile/${_user.uid}`}>
-                          <p>@{_user.username}</p>
-                        </Link>
-                      </object>
-                    </div>
-                    {/* <div>Following</div> */}
-                  </PeopleDetails>
+    >
+      <div>
+        {retweets.map((_user) => (
+          <Link key={_user["Retweets.id"]} href={`/profile/${_user.uid}`} >
+            <PeopleFlex key={_user.uid} border={theme.border}>
+              <div>
+                <UserImage src={_user.avatar} />
+              </div>
+              <div style={{ width: "100%" }}>
+                <PeopleDetails>
                   <div>
-                    <p style={{ color: theme.color }}>{_user.bio}</p>
+                    <object>
+                      <Link href={`/profile/${_user.uid}`} >
+                        <h3 style={{ color: theme.color }}>{_user.username}</h3>
+                      </Link>
+                    </object>
+                    <object>
+                      <Link href={`/profile/${_user.uid}`} >
+                        <p>@{_user.username}</p>
+                      </Link>
+                    </object>
                   </div>
+                  {/* <div>Following</div> */}
+                </PeopleDetails>
+                <div>
+                  <p style={{ color: theme.color }}>{_user.bio}</p>
                 </div>
-              </PeopleFlex>
-            </Link>
-          ))}
-        </div>
-      }
-    />
+              </div>
+            </PeopleFlex>
+          </Link>
+        ))}
+      </div>
+    </Modal>
   );
 };
 

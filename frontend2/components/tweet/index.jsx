@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation,useHistory } from "../useRouter";
+import  Link from "next/link";
+import  {useRouter} from "next/router";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import ProfileHeader from "../profileHeader";
@@ -13,12 +15,14 @@ import {
   UserImage,
 } from "../styles/tweet";
 import { ProfileCorner, ActivityBox, ActivityIcon } from "../styles/common";
-import { isImage, isVideo } from "../../media";
+import Image from "next/image";
+import { isImage, isVideo } from "../media";
 import Loading from "../loading";
 import Modal from "../modal";
 import CommentModal from "./commentModal";
 import Comments from "./comments";
 import TweetActivity from "./activity";
+
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -110,13 +114,9 @@ const Tweet = (props) => {
   return (
     <ProfileCorner border={theme.border}>
       {isModalOpen && (
-        <Modal
-          children={
-            <CommentModal handleClose={handleClose} tweetId={tweetId} />
-          }
-          handleClose={handleClose}
-          padding="15px"
-        />
+        <Modal handleClose={handleClose} padding="15px">
+          <CommentModal handleClose={handleClose} tweetId={tweetId} />
+        </Modal>
       )}
       <ProfileHeader heading="Tweet" />
       <TweetWrapper>
@@ -126,7 +126,7 @@ const Tweet = (props) => {
               <UserImage src={tweet.avatar} />
             </div>
             <div>
-              <Link to={`/profile/${tweet.username}`}>
+              <Link href={`/profile/${tweet.username}`} >
                 <h3 style={{ color: theme.color }}>{tweet.username} </h3>
                 <p>@{tweet.username}</p>
               </Link>
@@ -135,7 +135,7 @@ const Tweet = (props) => {
           <TweetText>
             <p style={{ color: theme.color }}>{tweet["Tweets.text"]}</p>
             {tweet["Tweets.media"] && isImage(tweet["Tweets.media"]) && (
-              <img src={tweet["Tweets.media"]} style={{ width: "100%" }} />
+              <Image src={tweet["Tweets.media"]} style={{ width: "100%" }} />
             )}
             {tweet["Tweets.media"] && isVideo(tweet["Tweets.media"]) && (
               <video
@@ -155,10 +155,10 @@ const Tweet = (props) => {
             </div>
           </TweetText>
           <ActivityInfo color={theme.color}>
-            <Link to={`${location.pathname}/retweets`} replace>
+            <Link href={`${location.pathname}/retweets`} replace >
               <h4>{tweet["Tweets.retweetsCount"]}</h4> <span>Retweets</span>
             </Link>
-            <Link to={`${location.pathname}/likes`} replace>
+            <Link href={`${location.pathname}/likes`} replace >
               <h4>{tweet["Tweets.likesCount"]}</h4> <span>Likes</span>
             </Link>
           </ActivityInfo>

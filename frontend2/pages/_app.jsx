@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import redux from "../lib/redux/store";
-import { SET_THEME } from "../lib/redux/actions";
+import redux from "../redux/store";
+import { SET_THEME } from "../redux/actions";
 import "./_app.css";
 import "react-toastify/dist/ReactToastify.css";
 

@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, NavLink, useHistory } from "react-router-dom";
+import Link from "next/link";
+//import NavLink from "next/link";
+import {useRouter} from "next/router";
 import Icon from "../icon";
 import Modal from "../modal";
 import { Header, MenuItem, MenuTitle, Button } from "../styles/menubar";
 import TweetModal from "./tweetModal";
 import { LOGOUT_USER, SET_THEME } from "../../redux/actions";
+import { useParams, useHistory } from "../useRouter";
 
 const MenuBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,18 +63,21 @@ const MenuBar = () => {
   const handleClose = () => {
     setIsModalOpen(false);
   };
+  /*<NavLink
+              to={item === "profile" ? `/${item}/${user.uid}` : `/${item}`}
+              activeClassName="selected"
+              key={item}
+            >*/
 
   return (
     <React.Fragment>
       {isModalOpen && (
-        <Modal
-          children={<TweetModal handleClose={handleClose} />}
-          handleClose={handleClose}
-          padding="15px"
-        />
+        <Modal handleClose={handleClose} padding="15px">
+          <TweetModal handleClose={handleClose} />
+        </Modal>
       )}
       <Header>
-        <Link to="/home">
+        <Link href="/home" >
           <MenuItem logo>
             <div>
               <Icon
@@ -85,10 +91,10 @@ const MenuBar = () => {
         </Link>
         {Object.keys(paths).map((item) => {
           return (
-            <NavLink
-              to={item === "profile" ? `/${item}/${user.uid}` : `/${item}`}
+            <Link
+            href={item === "profile" ? `/${item}/${user.uid}` : `/${item}`}
               activeClassName="selected"
-              key={item}
+              key={item} 
             >
               <MenuItem className="active" color={theme.color}>
                 <div>
@@ -101,7 +107,7 @@ const MenuBar = () => {
                   <MenuTitle>{item}</MenuTitle>
                 </div>
               </MenuItem>
-            </NavLink>
+            </Link>
           );
         })}
         <MenuItem

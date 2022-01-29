@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
+import Image from "next/image";
 import { toast } from "react-toastify";
 import UploadButton from "../uploadButton";
 import { Flex, Button } from "../styles/modal";
@@ -53,12 +54,14 @@ const TweetModal = (props) => {
     <React.Fragment>
       <Flex bg={theme.bg} color={theme.color}>
         <div>
-          <img
-            src={user.avatar}
-            width="49px"
-            height="49px"
-            style={{ borderRadius: "50%" }}
-          />
+          {user.avatar && (
+            <Image
+              src={user.avatar}
+              width="49px"
+              height="49px"
+              style={{ borderRadius: "50%" }}
+            />
+          )}
         </div>
         <div style={{ width: "100%" }}>
           <textarea
@@ -74,7 +77,7 @@ const TweetModal = (props) => {
           ></textarea>
           <div style={{ marginBottom: "10px" }}>
             {preview.image && (
-              <img src={preview.image} style={{ width: "100%" }} />
+              <Image src={preview.image} style={{ width: "100%" }} />
             )}
             {preview.video && (
               <video

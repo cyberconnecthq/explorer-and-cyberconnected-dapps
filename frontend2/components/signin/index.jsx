@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import {useRouter} from "next/router";
+import { useParams, useHistory } from "../useRouter";
 import { useSelector, useDispatch } from "react-redux";
 import Web3 from "web3";
 import Icon from "../icon";
@@ -175,7 +176,7 @@ const SignIn = (props) => {
                 fill="rgb(29,161,242)"
               />
               <h1>CyberConnect Twitter</h1>
-              <p>What's happening in the world now?</p>
+              <p>What&apos;s happening in the world now?</p>
               <p>Twitter says that.</p>
               <p>Join with only Wallets</p>
               <p>with no email, no password, no social account.</p>

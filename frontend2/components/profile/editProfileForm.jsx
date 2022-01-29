@@ -30,7 +30,7 @@ const Input = ({ input, type, placeholder, meta: { touched, error } }) => {
   );
 };
 
-let EditProfileForm = (props) => {
+const _EditProfileForm = (props) => {
   const [cover, setCover] = useState(props.initialValues.cover);
   const [avatar, setAvatar] = useState(props.initialValues.avatar);
 
@@ -70,7 +70,7 @@ let EditProfileForm = (props) => {
           backgroundSize: "cover",
         }}
       >
-        {/* {cover && <img src={cover} />} */}
+        {/* {cover && <Image src={cover} />} */}
         <Field
           type="file"
           name="cover"
@@ -174,9 +174,9 @@ let EditProfileForm = (props) => {
   );
 };
 
-EditProfileForm = reduxForm({
+const EditProfileForm = reduxForm({
   form: "editprofile",
   validate,
-})(EditProfileForm);
+})(_EditProfileForm);
 
 export default EditProfileForm;

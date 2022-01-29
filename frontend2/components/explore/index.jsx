@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Icon from "../icon";
@@ -64,7 +64,7 @@ const Explore = () => {
         {users && users.length && (
           <AutoComplete boxShadow={theme.boxShadow}>
             {users.map((_user) => (
-              <Link key={_user.uid} to={`/profile/${_user.uid}`}>
+              <Link key={_user.uid} href={`/profile/${_user.uid}`} >
                 <PeopleFlex key={_user.uid}>
                   <div>
                     <UserImage src={_user.avatar} />
@@ -73,7 +73,7 @@ const Explore = () => {
                     <PeopleDetails>
                       <div>
                         <object>
-                          <Link to={`/profile/${_user.uid}`}>
+                          <Link href={`/profile/${_user.uid}`} >
                             <p>@{_user.username}</p>
                           </Link>
                         </object>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
+import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { SideBarBox, Header, Users, UserFlex, Button } from "../styles/sidebar";
@@ -79,13 +80,11 @@ const SideBar = () => {
           </p>
         )}
         {whoFollow.map((user, idx) => (
-          <Link to={`/profile/${user.uid}`} key={user.uid}>
+          <Link href={`/profile/${user.uid}`} key={user.uid} >
             <UserFlex color={theme.color} border={theme.border}>
-              <img src={user.avatar} />
+              {user.avatar && <Image src={user.avatar} />}
               <div>
-                <h3>
-                  {user.username} 
-                </h3>
+                <h3>{user.username}</h3>
                 <p>@{user.username}</p>
               </div>
               <div style={{ marginLeft: "auto" }}>
