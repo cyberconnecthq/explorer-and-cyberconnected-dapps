@@ -20,6 +20,6 @@
       "@/components/*": ["src/components/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components/Header", "src/pages/connections.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components/Header", "src/pages/connections.js", "src/components/ConnectionsGraph.js"],
   "exclude": ["node_modules"]
 }
