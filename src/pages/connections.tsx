@@ -3,9 +3,9 @@ import { isValidAddr } from '@/utils/helper';
 import { followListInfoQuery, searchUserInfoQuery } from '@/utils/query';
 import { FIRST, NAME_SPACE, NETWORK } from '@/utils/settings';
 import theme from '@/utils/theme';
-import { FollowListInfoResp, SearchUserInfoResp, ConnectionsData } from '@/utils/types';
+import { ConnectionsData, FollowListInfoResp, SearchUserInfoResp } from '@/utils/types';
 import { Box, ChakraProvider, Flex, Heading, Input } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import ConnectionsGraph from '../components/ConnectionsGraph';
 import { connections_data } from "../context/connections.data";
 
@@ -24,7 +24,6 @@ const ConnectionsPage = () => {
         });
         if (resp) {
             setSearchAddrInfo(resp);
-            console.log(resp);
         }
     };
 
@@ -44,7 +43,6 @@ const ConnectionsPage = () => {
             if (connection_index === -1 || connection_index === undefined) {
                 connections?.push(fing);
             } else {
-                console.log("index: " + connection_index);
                 if(connections == undefined) {
                     connections = [];
                 }
@@ -72,8 +70,6 @@ const ConnectionsPage = () => {
         });
         if (resp) {
             setFollowListInfo(resp);
-            console.log("Follow List Info: ");
-            console.log(resp);
         }
     };
 
@@ -89,23 +85,41 @@ const ConnectionsPage = () => {
         }
     };
 
+    const [height, setHeight] = useState(200);
+    const [width, setWidth] = useState(200);
+    const graphRef = useRef<HTMLDivElement | null>(null);
+    const onResize = useEffect(() => {
+        if (graphRef !== null && graphRef.current !== null) {
+            setHeight(graphRef.current.getBoundingClientRect().height);
+            setWidth(graphRef.current.getBoundingClientRect().width);
+        }
+        window.onresize = () => {
+            if(graphRef !== null && graphRef.current !== null) {
+                setHeight(graphRef.current.getBoundingClientRect().height);
+                setWidth(graphRef.current.getBoundingClientRect().width);
+            }
+        };
+    },[setWidth, setHeight, graphRef])
+
     return (
         <ChakraProvider theme={theme}>
-            <Box p={6} backgroundColor='black'>
-                <Box p={6} rounded='md' margin='auto' bgColor='white'>
-                    <Box mb={3}>
+            <Box p={6} backgroundColor='black' height='100vh' minHeight='500px'>
+                <Flex p={6} rounded='md' margin='auto' bgColor='white' direction='column' height='100%'>
+                    <Box mb={3} flex={0}>
                         <Heading as='h2' size='xs' textColor='gray.500' mt={2} mb={0}>Address: </Heading>
                         <Input name="address" bgColor='gray.300' value={address} onChange={(e) => handleInputChange(e.target.value)}></Input>
                     </Box>
-                    <Flex>
-                        <Box w='30em'>
+                    <Flex flex={1} minHeight='300px' alignItems='stretch' gap={5}>
+                        <Box flexBasis='26em' flexGrow={0} overflow='auto'>
                             <ConnectionsTable connections={connections} />
                         </Box>
-                        <Box w='30em'>
-                            <ConnectionsGraph connections={connections} />
+                        <Box flexGrow={1} display={['none', 'none', 'flex']} p={5} rounded='md' backgroundColor='black' overflow='hidden' ref={graphRef}>
+                            <Box height='100%' width='100%' >
+                                <ConnectionsGraph connections={connections} width={width} height={height} />
+                            </Box>
                         </Box>
                     </Flex>
-                </Box>
+                </Flex>
             </Box>
         </ChakraProvider>
     )

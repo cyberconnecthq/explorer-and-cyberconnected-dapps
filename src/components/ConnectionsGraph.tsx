@@ -1,5 +1,6 @@
 import dynamic from 'next/dynamic';
 import { ConnectionsData } from "@/utils/types";
+import { Box } from '@chakra-ui/react';
 const NoSSRForceGraph = dynamic(() => import('./ForceGraph'), {
   ssr: false,
 });
@@ -41,16 +42,20 @@ function get_color(node:any, props: ConnectionsData){
 
 interface ConnectionsGraphProps {
     connections: ConnectionsData;
+    width: number;
+    height: number;
 }
 
 export default function ConnectionsGraph(props: ConnectionsGraphProps) {
   return (
-    // TODO: https://github.com/ctrlplusb/react-sizeme
-    <NoSSRForceGraph
-      width={400}
-      nodeLabel='id'
-      graphData={genTree(props.connections)}
-      nodeAutoColorBy={n => get_color(n, props.connections)}
-    />
+    <Box w='100%' h='100%' minHeight='300px'>
+      <NoSSRForceGraph
+        width={props.width}
+        height={props.height}
+        nodeLabel='id'
+        graphData={genTree(props.connections)}
+        nodeAutoColorBy={n => get_color(n, props.connections)}
+      />
+    </Box>
   );
 }
