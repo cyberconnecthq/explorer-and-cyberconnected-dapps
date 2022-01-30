@@ -13,10 +13,7 @@ import { followListInfoQuery, searchUserInfoQuery } from '@/utils/query';
 import { FollowListInfoResp, SearchUserInfoResp, Network } from '@/utils/types';
 import { formatAddress, removeDuplicate, isValidAddr } from '@/utils/helper';
 import { useWeb3 } from '@/context/web3Context';
-
-const NAME_SPACE = 'CyberConnect';
-const NETWORK = Network.ETH;
-const FIRST = 10; // The number of users in followings/followers list for each fetch
+import { NAME_SPACE, NETWORK, FIRST } from '@/utils/settings'
 
 const Home: NextPage = () => {
   const { address, cyberConnect } = useWeb3();
