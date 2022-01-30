@@ -31,26 +31,6 @@ const ConnectionsPage = () => {
     const [followListInfo, setFollowListInfo] =
         useState<FollowListInfoResp | null>(null);
 
-    // Get the current user followings and followers list
-    const initFollowListInfo = async () => {
-        if (!address) {
-            return;
-        }
-
-        const resp = await followListInfoQuery({
-            address,
-            namespace: NAME_SPACE,
-            network: NETWORK,
-            followingFirst: FIRST,
-            followerFirst: FIRST,
-        });
-        if (resp) {
-            setFollowListInfo(resp);
-            console.log("Follow List Info: ");
-            console.log(resp);
-        }
-    };
-
     const [connections, setConnections] = useState<ConnectionsData>({data: []});
     useEffect(() => {
         // TODO: it should be done querying the info for each follower because if there are more than query maximum (FIRST=1000) it could be missing in the list
@@ -77,6 +57,26 @@ const ConnectionsPage = () => {
     }, [followListInfo]);
 
     useEffect(() => {
+        // Get the current user followings and followers list
+        const initFollowListInfo = async () => {
+            if (!address) {
+                return;
+            }
+
+        const resp = await followListInfoQuery({
+            address,
+            namespace: NAME_SPACE,
+            network: NETWORK,
+            followingFirst: FIRST,
+            followerFirst: FIRST,
+        });
+        if (resp) {
+            setFollowListInfo(resp);
+            console.log("Follow List Info: ");
+            console.log(resp);
+        }
+    };
+
         initFollowListInfo();
     }, [address]);
 

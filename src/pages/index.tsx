@@ -134,23 +134,6 @@ const Home: NextPage = () => {
     setSearchLoading(false);
   };
 
-  // Get the current user followings and followers list
-  const initFollowListInfo = async () => {
-    if (!address) {
-      return;
-    }
-
-    const resp = await followListInfoQuery({
-      address,
-      namespace: NAME_SPACE,
-      network: NETWORK,
-      followingFirst: FIRST,
-      followerFirst: FIRST,
-    });
-    if (resp) {
-      setFollowListInfo(resp);
-    }
-  };
 
   const fetchMore = async (type: 'followings' | 'followers') => {
     if (!address || !followListInfo) {
@@ -199,6 +182,23 @@ const Home: NextPage = () => {
   };
 
   useEffect(() => {
+    // Get the current user followings and followers list
+    const initFollowListInfo = async () => {
+      if (!address) {
+        return;
+      }
+
+      const resp = await followListInfoQuery({
+        address,
+        namespace: NAME_SPACE,
+        network: NETWORK,
+        followingFirst: FIRST,
+        followerFirst: FIRST,
+      });
+      if (resp) {
+        setFollowListInfo(resp);
+      }
+    };
     initFollowListInfo();
   }, [address]);
 
@@ -219,6 +219,7 @@ const Home: NextPage = () => {
             className={styles.link}
             href="https://docs.cyberconnect.me/"
             target="_blank"
+            rel="noreferrer"
           >
             CyberConnect
           </a>{' '}
