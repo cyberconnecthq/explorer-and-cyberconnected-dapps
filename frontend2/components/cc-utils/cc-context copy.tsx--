@@ -17,7 +17,7 @@ const CCContext = React.createContext<ICCConext>({
   cyberConnect: null,
 });
 
-export const useCCContext = () => {
+export const useCC = () => {
   const ccc = useContext(CCContext);
   return ccc;
 };

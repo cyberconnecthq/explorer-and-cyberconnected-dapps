@@ -47,21 +47,20 @@ const SignIn = (props) => {
       }
     }
 
-    let _coinbase = await web3.eth.getCoinbase();
-    if (!_coinbase) {
+    let _accountAddress = await web3.eth.getCoinbase();
+    if (!_accountAddress) {
       window.alert("Please activate MetaMask first.");
       return;
     }
 
-    const coinbase = _coinbase.substring(2);
-    const publicAddress = coinbase.toUpperCase();
-    console.log(publicAddress);
+    const accountUid = _accountAddress.substring(2).toUpperCase();
+    console.log(accountUid);
     setLoading(true);
 
     //mainframe for auth with metamask.
     // find existing user by id(publicAddress)
     fetch(
-      `${process.env.REACT_APP_BACKEND_URL}/api/user/get?id=${publicAddress}`
+      `${process.env.REACT_APP_BACKEND_URL}/api/user/get?id=${accountUid}`
     )
       .then((response) => {
         let users = response.json();
@@ -69,10 +68,10 @@ const SignIn = (props) => {
       })
       // If exist, retrieve him, or add new user by publicAddress.
       .then((users) => {
-        return users.length ? users[0] : _register(publicAddress);
+        return users.length ? users[0] : _register(accountUid);
       })
       //On retrieved user, sign message in Popup MetaMask confirmation modal.
-      .then(_signMessage)
+      .then(_signNonceMessage)
       // Send signature to backend on the /user/auth route
       .then(_auth)
       // Pass accessToken back to parent component (to save it in localStorage)
@@ -83,11 +82,11 @@ const SignIn = (props) => {
       });
   };
 
-  const _register = (publicAddress) =>
+  const _register = (accountUid) =>
     fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/add`, {
       body: JSON.stringify({
-        uid: publicAddress,
-        username: shortName(publicAddress),
+        uid: accountUid,
+        username: shortName(accountUid),
       }),
       headers: {
         "Content-Type": "application/json",
@@ -101,7 +100,7 @@ const SignIn = (props) => {
       }
     });
 
-  const _signMessage = async (_user) => {
+  const _signNonceMessage = async (_user) => {
     const { uid, nonce } = _user;
     try {
       const SIGN_MSG = `CyberConnect Twitter Login : ${nonce}`;

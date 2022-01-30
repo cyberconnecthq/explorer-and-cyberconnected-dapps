@@ -3,19 +3,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import redux from "../redux/store";
-import { SET_THEME } from "../redux/actions";
-import "./_app.css";
 import "react-toastify/dist/ReactToastify.css";
-
+import { StyledEngineProvider } from "@mui/material";
 import { useRouter } from "next/router";
 
-export async function getServerSideProps(context) {
-  return {
-    props: {}, // will be passed to the page component as props
-  }
-}
-
+import redux from "../redux/store";
+import { SET_THEME } from "../redux/actions";
+import { CCContextProvider } from "../components/cc-utils/ccProvider";
+import { UserProvider } from "../components/signin/userProvider";
+import "./_app.css";
 
 const Wrapper = ({ WrappedComponent, ...pageProps }) => {
   const theme = useSelector((state) => state.theme);
@@ -25,7 +21,7 @@ const Wrapper = ({ WrappedComponent, ...pageProps }) => {
     if (Object.keys(theme).length === 0)
       dispatch({ type: SET_THEME, payload: "default" });
   }, []);
-  
+
   return (
     <React.Suspense fallback={<div>Loading...</div>}>
       <ToastContainer hideProgressBar />
@@ -36,17 +32,24 @@ const Wrapper = ({ WrappedComponent, ...pageProps }) => {
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Provider store={redux.store}>
-      <PersistGate loading={null} persistor={redux.persistor}>
-        <Wrapper WrappedComponent={Component} {...pageProps} />
-      </PersistGate>
-    </Provider>
+    <StyledEngineProvider injectFirst>
+      <Provider store={redux.store}>
+        <PersistGate loading={null} persistor={redux.persistor}>
+          <CCContextProvider>
+            <UserProvider>
+              <Wrapper WrappedComponent={Component} {...pageProps} />
+            </UserProvider>
+          </CCContextProvider>
+        </PersistGate>
+      </Provider>
+    </StyledEngineProvider>
   );
 }
 
-/*
-function Post() {
-  const router = useRouter();
-  const { slug } = router.query;
-}*/
+export async function getServerSideProps(context) {
+  return {
+    props: {}, // will be passed to the page component as props
+  };
+}
+
 export default MyApp;

@@ -21,6 +21,6 @@
     "**/*.jsx",
     "**/*.ts",
     "**/*.tsx"
-, "components/privateRoute.jsx--"  ],
+, "components/privateRoute.jsx"  , "components/cc-utils/cc-context copy.tsx--"],
   "exclude": ["node_modules"]
 }
