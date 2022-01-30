@@ -52,3 +52,12 @@ export enum Network {
   ETH = 'ETH',
   SOLANA = 'SOLANA',
 }
+
+export interface ConnectionData {
+  address: string,
+  is_follower: boolean,
+  is_following: boolean
+}
+export interface ConnectionsData {
+  data: ConnectionData[]
+}

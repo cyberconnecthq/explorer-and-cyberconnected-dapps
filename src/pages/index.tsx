@@ -13,10 +13,7 @@ import { followListInfoQuery, searchUserInfoQuery } from '@/utils/query';
 import { FollowListInfoResp, SearchUserInfoResp, Network } from '@/utils/types';
 import { formatAddress, removeDuplicate, isValidAddr } from '@/utils/helper';
 import { useWeb3 } from '@/context/web3Context';
-
-const NAME_SPACE = 'CyberConnect';
-const NETWORK = Network.ETH;
-const FIRST = 10; // The number of users in followings/followers list for each fetch
+import { NAME_SPACE, NETWORK, FIRST } from '@/utils/settings'
 
 const Home: NextPage = () => {
   const { address, cyberConnect } = useWeb3();
@@ -137,23 +134,6 @@ const Home: NextPage = () => {
     setSearchLoading(false);
   };
 
-  // Get the current user followings and followers list
-  const initFollowListInfo = async () => {
-    if (!address) {
-      return;
-    }
-
-    const resp = await followListInfoQuery({
-      address,
-      namespace: NAME_SPACE,
-      network: NETWORK,
-      followingFirst: FIRST,
-      followerFirst: FIRST,
-    });
-    if (resp) {
-      setFollowListInfo(resp);
-    }
-  };
 
   const fetchMore = async (type: 'followings' | 'followers') => {
     if (!address || !followListInfo) {
@@ -202,6 +182,23 @@ const Home: NextPage = () => {
   };
 
   useEffect(() => {
+    // Get the current user followings and followers list
+    const initFollowListInfo = async () => {
+      if (!address) {
+        return;
+      }
+
+      const resp = await followListInfoQuery({
+        address,
+        namespace: NAME_SPACE,
+        network: NETWORK,
+        followingFirst: FIRST,
+        followerFirst: FIRST,
+      });
+      if (resp) {
+        setFollowListInfo(resp);
+      }
+    };
     initFollowListInfo();
   }, [address]);
 
@@ -222,6 +219,7 @@ const Home: NextPage = () => {
             className={styles.link}
             href="https://docs.cyberconnect.me/"
             target="_blank"
+            rel="noreferrer"
           >
             CyberConnect
           </a>{' '}
