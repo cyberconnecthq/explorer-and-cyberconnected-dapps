@@ -7,12 +7,14 @@ import Icon from "../icon";
 import Modal from "../modal";
 import { Header, MenuItem, MenuTitle, Button } from "../styles/menubar";
 import TweetModal from "./tweetModal";
-import { LOGOUT_USER, SET_THEME } from "../../redux/actions";
+import { SET_THEME } from "../../redux/actions";
 import { useParams, useHistory } from "../useRouter";
+import useWLogin from "../signin/provider";
+
 
 const MenuBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const user = useSelector((state) => state.user);
+  const {user} = useWLogin();
   const theme = useSelector((state) => state.theme);
   const mode = theme.mode;
   const dispatch = useDispatch();

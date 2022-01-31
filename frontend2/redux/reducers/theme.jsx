@@ -1,4 +1,4 @@
-import { SET_THEME, LOGOUT_USER } from "../actions";
+import { SET_THEME } from "../actions";
 
 const availThemes = {
   default: {

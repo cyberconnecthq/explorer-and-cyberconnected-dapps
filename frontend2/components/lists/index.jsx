@@ -1,9 +1,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { ProfileCorner, Header } from "../styles/common";
+import useWLogin from "../signin/provider";
 
 const Lists = () => {
-  const user = useSelector((state) => state.user);
+  const {user} = useWLogin();
   const theme = useSelector((state) => state.theme);
   return (
     <ProfileCorner border={theme.border}>

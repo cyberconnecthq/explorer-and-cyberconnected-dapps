@@ -4,10 +4,12 @@ import TweetModal from "../menubar/tweetModal";
 import Activity from "../profile/activity";
 import { Tweet } from "../styles/home";
 import { ProfileCorner, Header } from "../styles/common";
+import useWLogin from "../signin/provider";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 const Home = () => {
-  const uid = useSelector((state) => state.user.uid);
+  const {user}= useWLogin();
+  const uid = user.uid;
   const theme = useSelector((state) => state.theme);
 
   return (

@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import Web3 from "web3";
-import { shortName } from "../cc-utils/bip39";
+import { shortName } from "../cyber-connect/bip39";
+import Web3Modal from "web3modal";
+import { ethers } from "ethers";
+import CyberConnect from "@cyberlab/cyberconnect";
 
 let web3 = undefined;
 const _defaultUser = {};
@@ -11,25 +14,69 @@ const _context = React.createContext({
   isLogined: false,
   isLoading: false,
   user: _defaultUser,
+  setUser: () => undefined,
+
+  connectWallet: async () => undefined,
+  address: "",
+  ens: "",
+  cyberConnect: null,
+  followListInfo: null,
 });
 
-export const useUser = () => {
+const useUser = () => {
   return useContext(_context);
 };
-
+export default useUser;
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(_defaultUser);
   const [isLogined, setLogined] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
-  const logout = () => {
+  const [address, setAddress] = useState("");
+  const [ens, setEns] = useState("");
+  const [cyberConnect, setCyberConnect] = useState(null);
+  const [followListInfo, setFollowListInfo] = useState(null);
+
+  const logout = useCallback(() => {
     setLoading(false);
     setLogined(false);
     setUser(_defaultUser);
-  };
+  }, []);
 
-  const login = async () => {
+  const _initCyberConnect = useCallback((provider) => {
+    const _cyberConnect = new CyberConnect({
+      provider,
+      namespace: "CyberConnect",
+    });
+
+    setCyberConnect(_cyberConnect);
+  }, []);
+
+  const connectWallet = useCallback(async () => {
+    try {
+      const web3Modal = new Web3Modal({
+        network: "mainnet",
+        cacheProvider: true,
+        providerOptions: {},
+      });
+
+      const web3instance = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(web3instance);
+      const signer = provider.getSigner();
+      const address = await signer.getAddress();
+      const ens = await provider.lookupAddress(address);
+
+      setAddress(address);
+      setEns(ens);
+      _initCyberConnect(provider);
+    } catch (err) {
+      alert("Error: connectWallet");
+      throw err;
+    }
+  }, [_initCyberConnect]);
+
+  const login = useCallback(async () => {
     // Check if MetaMask is installed
     if (!window.ethereum) {
       window.alert("Please install MetaMask first.");
@@ -74,8 +121,8 @@ export const UserProvider = ({ children }) => {
         setLoading(false);
       });
 
-    const _register = (accountUid) =>
-      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/add`, {
+    const _register = async (accountUid) => {
+      return fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/add`, {
         body: JSON.stringify({
           uid: accountUid,
           username: shortName(accountUid),
@@ -91,11 +138,12 @@ export const UserProvider = ({ children }) => {
           throw new Error("User Add Failed.");
         }
       });
+    };
 
     const _signNonceMessage = async (_user) => {
       const { uid, nonce } = _user;
       try {
-        const SIGN_MSG = `CyberConnect Twitter Login : ${nonce}`;
+        const SIGN_MSG = `Wallet Login : ${nonce}`;
         const signature = await web3.eth.personal.sign(
           SIGN_MSG,
           "0x" + uid,
@@ -108,8 +156,8 @@ export const UserProvider = ({ children }) => {
       }
     };
 
-    const _auth = ({ uid, signature }) =>
-      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/auth`, {
+    const _auth = async ({ uid, signature }) => {
+      return fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/auth`, {
         body: JSON.stringify({ uid, signature }),
         headers: {
           "Content-Type": "application/json",
@@ -124,20 +172,29 @@ export const UserProvider = ({ children }) => {
           throw new Error(`Auth Error!`);
         }
       });
-  };
+    };
 
-  const _onLoggedIn = (res) => {
-    setUser(res.user);
-    setLoading(false);
-    setLogined(true);
-  };
+    const _onLoggedIn = (res) => {
+      setUser(res.user);
+      setLoading(false);
+    };
+  }, [address]);
+
+  if (isLoading === false) {
+    if (user.uid) {
+      setLogined(true);
+    } else {
+      setLogined(false);
+    }
+  }
 
   return (
     <_context.Provider
       value={{
-        login,
-        logout,
+        login: login,
+        logout: logout,
         user,
+        setUser,
         isLogined,
         isLoading,
       }}

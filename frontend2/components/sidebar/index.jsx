@@ -6,6 +6,7 @@ import axios from "axios";
 import { SideBarBox, Header, Users, UserFlex, Button } from "../styles/sidebar";
 import Loading from "../loading";
 import { SET_UPDATE } from "../../redux/actions";
+import useWLogin from "../signin/provider";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -13,7 +14,7 @@ const SideBar = () => {
   const [whoFollow, setWhoFollow] = useState(null);
   const [isFollowDisabled, setFollowDisabled] = useState(false);
 
-  const user = useSelector((state) => state.user);
+  const {user} = useWLogin();
   const theme = useSelector((state) => state.theme);
   const uid = user.uid;
   const token = user.token;

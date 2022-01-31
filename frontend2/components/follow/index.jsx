@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import {useParams, useHistory} from "../useRouter";
+import { useParams, useHistory } from "../useRouter";
 
 import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
@@ -16,7 +16,7 @@ import {
 import { ProfileCorner, Button } from "../styles/common";
 import Loading from "../loading";
 import { SET_UPDATE } from "../../redux/actions";
-import { shortName, shortAddress } from "../cc-utils/bip39";
+import { shortName, shortAddress } from "../cyber-connect/bip39";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -25,7 +25,7 @@ const Follow = () => {
   const [followDisabled, setFollowDisabled] = useState(false);
 
   const { uid, activity } = useParams();
-  const user = useSelector((state) => state.user);
+  const { user } = useUser();
   //const refresh = useSelector((state) => state.update.refresh);
   const theme = useSelector((state) => state.theme);
   const myId = user.uid;
@@ -34,17 +34,19 @@ const Follow = () => {
 
   useEffect(() => {
     (async () => {
-      const user = await axios.get(`${URL}/api/user/get-user?uid=${uid}`);
-      const res = await axios.get(
-        `${URL}/api/follow/details?uid=${user.data.uid}&myId=${myId}`
+      const { data: user } = await axios.get(
+        `${URL}/api/user/get-user?uid=${uid}`
+      );
+      const { data: res } = await axios.get(
+        `${URL}/api/follow/details?uid=${user.uid}&myId=${myId}`
       );
       setUserData({
-        user: user.data,
-        following: res.data.following.map((item) => ({
+        user,
+        following: res.following.map((item) => ({
           ...item,
           unfollow: false,
         })),
-        followers: res.data.followers.map((item) => ({
+        followers: res.followers.map((item) => ({
           ...item,
           unfollow: false,
         })),
@@ -128,7 +130,7 @@ const Follow = () => {
       ) : (
         <div>
           {userData[activity].map((_user, idx) => (
-            <Link key={_user.uid} href={`/profile/${_user.uid}`} >
+            <Link key={_user.uid} href={`/profile/${_user.uid}`}>
               <PeopleFlex
                 key={_user.uid}
                 border={theme.border}
@@ -141,14 +143,14 @@ const Follow = () => {
                   <PeopleDetails>
                     <div>
                       <object>
-                        <Link href={`/profile/${_user.uid}`} >
+                        <Link href={`/profile/${_user.uid}`}>
                           <h3 style={{ color: theme.color }}>
                             {_user.username}
                           </h3>
                         </Link>
                       </object>
                       <object>
-                        <Link href={`/profile/${_user.uid}`} >
+                        <Link href={`/profile/${_user.uid}`}>
                           <p>@{_user.username}</p>
                         </Link>
                       </object>
@@ -174,7 +176,9 @@ const Follow = () => {
                         {!_user.isFollowing && (
                           <Button
                             disabled={followDisabled}
-                            onClick={(e) => handleFollow(e, _user.uid, idx, true)}
+                            onClick={(e) =>
+                              handleFollow(e, _user.uid, idx, true)
+                            }
                             bg="transparent"
                             hoverBg="rgba(29, 161, 242,0.1)"
                             color="rgb(29, 161, 242)"

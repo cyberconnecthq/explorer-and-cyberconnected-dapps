@@ -9,8 +9,9 @@ import { useRouter } from "next/router";
 
 import redux from "../redux/store";
 import { SET_THEME } from "../redux/actions";
-import { CCContextProvider } from "../components/cc-utils/ccProvider";
-import { UserProvider } from "../components/signin/userProvider";
+import { WalletProvider } from "../components/wallet/provider";
+import { WLoginProvider } from "../components/signin/provider";
+import { CCProvider } from "../components/cyber-connect/provider";
 import "./_app.css";
 
 const Wrapper = ({ WrappedComponent, ...pageProps }) => {
@@ -35,11 +36,13 @@ function MyApp({ Component, pageProps }) {
     <StyledEngineProvider injectFirst>
       <Provider store={redux.store}>
         <PersistGate loading={null} persistor={redux.persistor}>
-          <CCContextProvider>
-            <UserProvider>
-              <Wrapper WrappedComponent={Component} {...pageProps} />
-            </UserProvider>
-          </CCContextProvider>
+          <WalletProvider>
+            <WLoginProvider>
+              <CCProvider>
+                <Wrapper WrappedComponent={Component} {...pageProps} />
+              </CCProvider>
+            </WLoginProvider>
+          </WalletProvider>
         </PersistGate>
       </Provider>
     </StyledEngineProvider>

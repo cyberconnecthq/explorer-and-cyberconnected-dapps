@@ -20,6 +20,8 @@ import Loading from "../loading";
 import Bookmark from "./bookmark";
 import Modal from "../modal";
 import CommentModal from "../tweet/commentModal";
+import useWLogin from "../signin/provider";
+
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -29,7 +31,7 @@ const Activity = (props) => {
   const [tweetId, setTweetId] = useState(null);
 
   const { uid } = useParams();
-  const user = useSelector((state) => state.user);
+  const {user} = useWLogin();
   const myId = user.uid;
   const token = user.token;
   const refresh = useSelector((state) => state.update.refresh);

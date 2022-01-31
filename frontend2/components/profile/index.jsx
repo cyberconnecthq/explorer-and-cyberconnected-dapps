@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import Follower from "./follower";
@@ -14,10 +14,10 @@ import { Info, Dates, Cover, Avatar, ImgFlex, Button } from "../styles/profile";
 import { ProfileCorner } from "../styles/common";
 import Loading from "../loading";
 import { toast } from "react-toastify";
-import { SET_USER, SET_UPDATE } from "../../redux/actions";
-import { shortName, shortAddress } from "../cc-utils/bip39";
+import { SET_UPDATE } from "../../redux/actions";
+import { shortName, shortAddress } from "../cyber-connect/bip39";
 import { useParams, useHistory } from "../useRouter";
-
+import useWLogin from "../signin/provider";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -28,7 +28,7 @@ const Profile = (props) => {
   const [isSaveDisabled, setIsSaveDisabled] = useState(false);
 
   const { uid, activity } = useParams();
-  const storeUser = useSelector((state) => state.user);
+  const {storeUser} = useWLogin();
   const refresh = useSelector((state) => state.update.refresh);
   const theme = useSelector((state) => state.theme);
   const myId = storeUser.uid;
@@ -63,16 +63,12 @@ const Profile = (props) => {
     setIsSaveDisabled(false);
     setIsModalOpen(false);
     toast("Profile was edited successfully");
-    dispatch({
-      type: SET_USER,
-      payload: {
-        ...storeUser,
-        //birth: data.birth,
-        bio: data.bio,
-        location: data.location,
-        avatar: data.avatar,
-        cover: data.cover,
-      },
+    setUser({
+      ...user,
+      bio: data.bio,
+      location: data.location,
+      avatar: data.avatar,
+      cover: data.cover,
     });
     dispatch({ type: SET_UPDATE });
   };

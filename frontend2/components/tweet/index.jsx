@@ -22,6 +22,7 @@ import Modal from "../modal";
 import CommentModal from "./commentModal";
 import Comments from "./comments";
 import TweetActivity from "./activity";
+import useWLogin from "../signin/provider";
 
 
 const URL = process.env.REACT_APP_BACKEND_URL;
@@ -31,7 +32,7 @@ const Tweet = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { uid, tweetId } = useParams();
 
-  const user = useSelector((state) => state.user);
+  const {user} = useWLogin();
   const theme = useSelector((state) => state.theme);
   const myId = user.uid;
   const token = user.token;
