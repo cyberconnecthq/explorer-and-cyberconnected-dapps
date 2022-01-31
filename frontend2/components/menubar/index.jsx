@@ -1,28 +1,28 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Link from "next/link";
+import ALink from "../alink";
 //import NavLink from "next/link";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import Icon from "../icon";
 import Modal from "../modal";
 import { Header, MenuItem, MenuTitle, Button } from "../styles/menubar";
-import TweetModal from "./tweetModal";
+import TweetModal from "./tweet-modal";
 import { SET_THEME } from "../../redux/actions";
 import { useParams, useHistory } from "../useRouter";
-import useWLogin from "../signin/provider";
-
+import useWLogin from "../../providers/signin-provider";
 
 const MenuBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {user} = useWLogin();
+  const { user, logout: _logout } = useWLogin();
   const theme = useSelector((state) => state.theme);
   const mode = theme.mode;
   const dispatch = useDispatch();
   const history = useHistory();
 
   const handleLogout = () => {
-    dispatch({ type: LOGOUT_USER });
-    history.replace("/");
+    _logout();
+    //dispatch({ type: LOGOUT_USER });
+    //history.replace("/");
   };
 
   const brand = [
@@ -79,7 +79,7 @@ const MenuBar = () => {
         </Modal>
       )}
       <Header>
-        <Link href="/home" >
+        <ALink href="/home">
           <MenuItem logo>
             <div>
               <Icon
@@ -90,13 +90,13 @@ const MenuBar = () => {
               />
             </div>
           </MenuItem>
-        </Link>
+        </ALink>
         {Object.keys(paths).map((item) => {
           return (
-            <Link
-            href={item === "profile" ? `/${item}/${user.uid}` : `/${item}`}
+            <ALink
+              href={item === "profile" ? `/${item}/${user.uid}` : `/${item}`}
               activeClassName="selected"
-              key={item} 
+              key={item}
             >
               <MenuItem className="active" color={theme.color}>
                 <div>
@@ -109,7 +109,7 @@ const MenuBar = () => {
                   <MenuTitle>{item}</MenuTitle>
                 </div>
               </MenuItem>
-            </Link>
+            </ALink>
           );
         })}
         <MenuItem

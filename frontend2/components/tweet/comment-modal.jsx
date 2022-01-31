@@ -5,7 +5,7 @@ import UploadButton from "../uploadButton";
 import { Flex, Button } from "../styles/modal";
 import { SET_UPDATE } from "../../redux/actions";
 import Image from "next/image";
-import useWLogin from "../signin/provider";
+import useWLogin from "../../providers/signin-provider";
 
 
 const URL = process.env.REACT_APP_BACKEND_URL;

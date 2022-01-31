@@ -8,7 +8,6 @@ const { User } = require("../../db");
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports = {
   auth: (req, res, next) => {
-    console.log(req.body);
     const { signature, uid } = req.body;
     if (!signature || !uid)
       return res
@@ -25,8 +24,7 @@ module.exports = {
             res.status(401).send({
               error: `User with id ${uid} is not found in database`,
             });
-
-            return null;
+            throw new Error(`User with id ${uid} is not found in database`);
           }
 
           return user;
@@ -34,15 +32,8 @@ module.exports = {
         ////////////////////////////////////////////////////
         // Step 2: Verify digital signature
         ////////////////////////////////////////////////////
-        .then((user) => {
-          if (!(user instanceof User)) {
-            // Should not happen, we should have already sent the response
-            throw new Error(
-              'User is not defined in "Verify digital signature".'
-            );
-          }
-
-          const SIGN_MSG = `Wallet Login : ${user.nonce}`;
+        .then(async (user) => {
+         const SIGN_MSG = `Wallet Login : ${user.nonce}`;
 
           // We now are in possession of msg, id and signature. We
           // will use a helper from eth-sig-util to extract the address from the signature
@@ -55,7 +46,7 @@ module.exports = {
 
           // The signature verification is successful if the address found with
           // sigUtil.recoverPersonalSignature matches the initial id
-          const recover = _recover.substring(2).toUpperCase();//0x
+          const recover = _recover.substring(2).toUpperCase(); //0x
           if (recover === uid) {
             return user;
           } else {
@@ -69,15 +60,7 @@ module.exports = {
         ////////////////////////////////////////////////////
         // Step 3: Generate a new nonce for the user
         ////////////////////////////////////////////////////
-        .then((user) => {
-          if (!(user instanceof User)) {
-            // Should not happen, we should have already sent the response
-
-            throw new Error(
-              'User is not defined in "Generate a new nonce for the user".'
-            );
-          }
-
+        .then(async (user) => {
           user.nonce = Math.floor(Math.random() * 10000);
           return user.save();
         })

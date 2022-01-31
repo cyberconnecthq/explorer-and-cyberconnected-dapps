@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
+import ALink from "../alink";
 import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { SideBarBox, Header, Users, UserFlex, Button } from "../styles/sidebar";
 import Loading from "../loading";
 import { SET_UPDATE } from "../../redux/actions";
-import useWLogin from "../signin/provider";
+import useWLogin from "../../providers/signin-provider";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -81,7 +81,7 @@ const SideBar = () => {
           </p>
         )}
         {whoFollow.map((user, idx) => (
-          <Link href={`/profile/${user.uid}`} key={user.uid} >
+          <ALink href={`/profile/${user.uid}`} key={user.uid} >
             <UserFlex color={theme.color} border={theme.border}>
               {user.avatar && <Image src={user.avatar} />}
               <div>
@@ -97,7 +97,7 @@ const SideBar = () => {
                 </Button>
               </div>
             </UserFlex>
-          </Link>
+          </ALink>
         ))}
       </Users>
     </SideBarBox>

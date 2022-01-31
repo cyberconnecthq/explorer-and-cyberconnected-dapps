@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Link from "next/link";
+import ALink from "../alink";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { useParams, useHistory } from "../useRouter";
@@ -19,8 +19,8 @@ import { isImage, isVideo } from "../media";
 import Loading from "../loading";
 import Bookmark from "./bookmark";
 import Modal from "../modal";
-import CommentModal from "../tweet/commentModal";
-import useWLogin from "../signin/provider";
+import CommentModal from "../tweet/comment-modal";
+import useWLogin from "../../providers/signin-provider";
 
 
 const URL = process.env.REACT_APP_BACKEND_URL;
@@ -58,7 +58,6 @@ const Activity = (props) => {
   }, [url, refresh]);
 
   const getData = async (source) => {
-    console.log(url);
     try {
       const res = await axios.get(url, {
         cancelToken: source.token,
@@ -118,11 +117,9 @@ const Activity = (props) => {
 
       {tweets.map((tweet, idx) => {
         const date = new Date(tweet["Tweets.createdAt"]);
-        //console.log(tweet)
         return (
           <React.Fragment key={idx}>
-            <p>{idx}</p>
-            <Link 
+            <ALink 
               key={tweet["Tweets.id"]}
               href={`/${tweet.uid}/status/${tweet["Tweets.id"]}`}
             >
@@ -134,9 +131,9 @@ const Activity = (props) => {
                   <TweetDetails color={theme.color}>
                     {/* <object> to hide nested <a> warning */}
                     <object>
-                      <Link href={`/profile/${tweet.uid}`} >
+                      <ALink href={`/profile/${tweet.uid}`} >
                         <h3>@{tweet.username}</h3>
-                      </Link>
+                      </ALink>
                     </object>
                     <p
                       style={{
@@ -210,7 +207,7 @@ const Activity = (props) => {
                   </TweetDetails>
                 </div>
               </PeopleFlex>
-            </Link>
+            </ALink>
           </React.Fragment>
         );
       })}

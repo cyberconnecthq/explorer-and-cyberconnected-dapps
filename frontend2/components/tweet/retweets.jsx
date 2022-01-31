@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 //import { Link, useParams, useHistory } from "react-router-dom";
-import Link from "next/link";
+import ALink from "../alink";
 import {useRouter} from "next/router";
 import { useParams, useHistory } from "../useRouter";
 import { useSelector } from "react-redux";
@@ -38,7 +38,7 @@ const Retweet = () => {
     >
       <div>
         {retweets.map((_user) => (
-          <Link key={_user["Retweets.id"]} href={`/profile/${_user.uid}`} >
+          <ALink key={_user["Retweets.id"]} href={`/profile/${_user.uid}`} >
             <PeopleFlex key={_user.uid} border={theme.border}>
               <div>
                 <UserImage src={_user.avatar} />
@@ -47,14 +47,14 @@ const Retweet = () => {
                 <PeopleDetails>
                   <div>
                     <object>
-                      <Link href={`/profile/${_user.uid}`} >
+                      <ALink href={`/profile/${_user.uid}`} >
                         <h3 style={{ color: theme.color }}>{_user.username}</h3>
-                      </Link>
+                      </ALink>
                     </object>
                     <object>
-                      <Link href={`/profile/${_user.uid}`} >
+                      <ALink href={`/profile/${_user.uid}`} >
                         <p>@{_user.username}</p>
-                      </Link>
+                      </ALink>
                     </object>
                   </div>
                   {/* <div>Following</div> */}
@@ -64,7 +64,7 @@ const Retweet = () => {
                 </div>
               </div>
             </PeopleFlex>
-          </Link>
+          </ALink>
         ))}
       </div>
     </Modal>

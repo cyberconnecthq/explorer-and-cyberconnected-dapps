@@ -4,20 +4,20 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import Follower from "./follower";
 import Icon from "../icon";
-import ProfileHeader from "../profileHeader";
+import ProfileHeader from "../profile-header";
 import Tabs from "../tabs";
 import Follow from "../follow/index";
 import Activity from "./activity";
 import Modal from "../modal";
-import EditProfileForm from "./editProfileForm";
+import EditProfileForm from "./edit-profile-form";
 import { Info, Dates, Cover, Avatar, ImgFlex, Button } from "../styles/profile";
 import { ProfileCorner } from "../styles/common";
 import Loading from "../loading";
 import { toast } from "react-toastify";
 import { SET_UPDATE } from "../../redux/actions";
-import { shortName, shortAddress } from "../cyber-connect/bip39";
+import { shortName, shortAddress } from "../../lib/bip39";
 import { useParams, useHistory } from "../useRouter";
-import useWLogin from "../signin/provider";
+import useWLogin from "../../providers/signin-provider";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -28,7 +28,7 @@ const Profile = (props) => {
   const [isSaveDisabled, setIsSaveDisabled] = useState(false);
 
   const { uid, activity } = useParams();
-  const {storeUser} = useWLogin();
+  const { user: storeUser } = useWLogin();
   const refresh = useSelector((state) => state.update.refresh);
   const theme = useSelector((state) => state.theme);
   const myId = storeUser.uid;
@@ -164,7 +164,7 @@ const Profile = (props) => {
         </Modal>
       )}
       <ProfileCorner border={theme.border}>
-        <ProfileHeader heading={`@${user.username}==== `} text={headerText} />
+        <ProfileHeader heading={`@${user.username}`} text={headerText} />
         <div>
           <Cover
             bg={theme.border}

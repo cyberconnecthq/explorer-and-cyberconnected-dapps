@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { ProfileCorner, Header } from "../styles/common";
-import useWLogin from "../signin/provider";
+import useWLogin from "../../providers/signin-provider";
 
 const Lists = () => {
   const {user} = useWLogin();

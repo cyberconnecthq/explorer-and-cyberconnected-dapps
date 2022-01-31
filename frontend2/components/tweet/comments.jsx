@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import {useRouter} from "next/router";
+import ALink from "../alink";
+import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Loading from "../loading";
@@ -40,11 +40,9 @@ const Comments = () => {
               <TweetDetails color={theme.color}>
                 {/* <object> to hide nested <a> warning */}
                 <object>
-                  <Link href={`/profile/${comment.username}`} >
-                    <h3>
-                      {comment.username} 
-                    </h3>
-                  </Link>
+                  <ALink href={`/profile/${comment.uid}`}>
+                    <h3>{comment.username}</h3>
+                  </ALink>
                 </object>
                 <p>@{comment.username}</p>
                 <span>
@@ -54,7 +52,9 @@ const Comments = () => {
                     date.getFullYear()}
                 </span>
               </TweetDetails>
-              <div style={{color:theme.color}}>{comment["Comments.text"]}</div>
+              <div style={{ color: theme.color }}>
+                {comment["Comments.text"]}
+              </div>
               {comment["Comments.media"] &&
                 isImage(comment["Comments.media"]) && (
                   <Image

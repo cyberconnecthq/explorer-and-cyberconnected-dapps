@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
-//import { Link, useParams, useHistory } from "react-router-dom";
-import Link from "next/link";
-import {useRouter} from "next/router";
+import ALink from "../alink";
 import { useParams, useHistory } from "../useRouter";
-import Image from "next/image";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Modal from "../modal";
@@ -35,7 +32,7 @@ const Likes = () => {
     <Modal padding="0 0 80px 0" handleClose={handleClose} heading="Liked by">
       <div>
         {likes.map((_user) => (
-          <Link key={_user["Likes.id"]} href={`/profile/${_user.uid}`} >
+          <ALink key={_user["Likes.id"]} href={`/profile/${_user.uid}`} >
             <PeopleFlex key={_user.uid} border={theme.border}>
               <div>
                 <UserImage src={_user.avatar} />
@@ -44,14 +41,14 @@ const Likes = () => {
                 <PeopleDetails>
                   <div>
                     <object>
-                      <Link href={`/profile/${_user.uid}`} >
+                      <ALink href={`/profile/${_user.uid}`} >
                         <h3 style={{ color: theme.color }}>{_user.username}</h3>
-                      </Link>
+                      </ALink>
                     </object>
                     <object>
-                      <Link href={`/profile/${_user.uid}`} >
+                      <ALink href={`/profile/${_user.uid}`} >
                         <p>@{_user.username}</p>
-                      </Link>
+                      </ALink>
                     </object>
                   </div>
                   {/* <div>Following</div> */}
@@ -61,7 +58,7 @@ const Likes = () => {
                 </div>
               </div>
             </PeopleFlex>
-          </Link>
+          </ALink>
         ))}
       </div>
     </Modal>

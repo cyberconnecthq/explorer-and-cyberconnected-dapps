@@ -6,13 +6,13 @@ import { combineReducers } from "redux";
 import { reducer as formReducer } from "redux-form";
 import updateReducer from "./reducers/update";
 import themeReducer from "./reducers/theme";
+import userReducer from "./reducers/user";
 
 const persistConfig = {
   key: "root",
   blacklist: ["form"],
   //white: ["form"],
-  //storage: storage,
-  storage: session,
+  storage: session,//storage,
 };
 
 const appReducer = persistReducer(
@@ -20,17 +20,15 @@ const appReducer = persistReducer(
   combineReducers({
     update: updateReducer,
     theme: themeReducer,
+    user: userReducer,
     form: formReducer,
   })
 );
 
-const store = createStore(
-  appReducer,
+export const store = createStore(
+  appReducer
   //window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
-/*
-const store = createStore(appReducer);
-*/
-const persistor = persistStore(store);
 
-export default { store, persistor };
+export const persistor = persistStore(store);
+

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import {useRouter} from "next/router";
+import ALink from "../alink";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { FollowFlex } from "../styles/profile";
-import theme from "../../redux/reducers/theme";
 import { useParams, useHistory } from "../useRouter";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
@@ -36,24 +34,24 @@ const Follower = (props) => {
   return (
     <FollowFlex>
       <div>
-        <Link href={`/profile/${uid}/following`} >
+        <ALink href={`/profile/${uid}/following`} >
           <p>
             <span style={{ color: theme.color }}>
               {response.following.length}
             </span>{" "}
             <span>Following</span>
           </p>
-        </Link>
+        </ALink>
       </div>
       <div>
-        <Link href={`/profile/${uid}/followers`} >
+        <ALink href={`/profile/${uid}/followers`} >
           <p>
             <span style={{ color: theme.color }}>
               {response.followers.length}
             </span>{" "}
             <span>Followers</span>
           </p>
-        </Link>
+        </ALink>
       </div>
     </FollowFlex>
   );

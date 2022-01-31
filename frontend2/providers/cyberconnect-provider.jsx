@@ -1,16 +1,9 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import {
-  followListInfoQuery,
-  searchUserInfoQuery,
-} from "./query";
-import {
-  FollowListInfoResp,
-  SearchUserInfoResp,
-  Network,
-} from "./types";
+import { followListInfoQuery, searchUserInfoQuery } from "../lib/cyber-connect/query";
+import { FollowListInfoResp, SearchUserInfoResp, Network } from "../lib/cyber-connect/types";
 
 import CyberConnect from "@cyberlab/cyberconnect";
-import useWallet from "../wallet/provider";
+import useWallet from "./wallet-provider";
 
 const NAME_SPACE = "CyberConnect";
 const NETWORK = "ETH";
@@ -38,73 +31,79 @@ export const CCProvider = ({ children }) => {
   const [followLoading, setFollowLoading] = useState(false);
 
   const follow = useCallback(
-    async (toAddr) => {
+    (toAddr) => {
       if (!cyberConnect) {
         return;
       }
+      const _f = async () => {
+        try {
+          setFollowLoading(true);
 
-      try {
-        setFollowLoading(true);
+          // Execute connect if the current user is not following the toAddr.
+          await cyberConnect.connect(toAddr);
 
-        // Execute connect if the current user is not following the toAddr.
-        await cyberConnect.connect(toAddr);
-
-        // Add the new following to the current user followings list
-        setFollowListInfo((prev) => {
-          let newList = removeDuplicate(prev.followings.list.concat([toAddr]));
-          return !!prev
-            ? {
-                ...prev,
-                followings: {
-                  ...prev.followings,
-                  list: newList,
-                },
-                followingCount: newList.length,
-              }
-            : prev;
-        });
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setFollowLoading(false);
-      }
+          // Add the new following to the current user followings list
+          setFollowListInfo((prev) => {
+            let newList = removeDuplicate(
+              prev.followings.list.concat([toAddr])
+            );
+            return !!prev
+              ? {
+                  ...prev,
+                  followings: {
+                    ...prev.followings,
+                    list: newList,
+                  },
+                  followingCount: newList.length,
+                }
+              : prev;
+          });
+        } catch (e) {
+          console.error(e);
+        } finally {
+          setFollowLoading(false);
+        }
+      };
+      _f();
     },
     [cyberConnect]
   );
 
   const unfollow = useCallback(
-    async (toAddr) => {
+    (toAddr) => {
       if (!cyberConnect) {
         return;
       }
+      const _f = async () => {
+        try {
+          setFollowLoading(true);
 
-      try {
-        setFollowLoading(true);
+          // Execute connect if the current user is not following the toAddr.
+          await cyberConnect.disconnect(toAddr);
 
-        // Execute connect if the current user is not following the toAddr.
-        await cyberConnect.disconnect(toAddr);
-
-        // Add the new following to the current user followings list
-        setFollowListInfo((prev) => {
-          let newList = prev.followings.list.filter((user) => {
-            return user.address !== toAddr;
+          // Add the new following to the current user followings list
+          setFollowListInfo((prev) => {
+            let newList = prev.followings.list.filter((user) => {
+              return user.address !== toAddr;
+            });
+            return !!prev
+              ? {
+                  ...prev,
+                  followings: {
+                    ...prev.followings,
+                    list: newList,
+                  },
+                  followingCount: newList.length,
+                }
+              : prev;
           });
-          return !!prev
-            ? {
-                ...prev,
-                followings: {
-                  ...prev.followings,
-                  list: newList,
-                },
-                followingCount: newList.length,
-              }
-            : prev;
-        });
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setFollowLoading(false);
-      }
+        } catch (e) {
+          console.error(e);
+        } finally {
+          setFollowLoading(false);
+        }
+      };
+      _f();
     },
     [cyberConnect]
   );

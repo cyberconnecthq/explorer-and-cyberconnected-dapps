@@ -7,22 +7,33 @@ import "react-toastify/dist/ReactToastify.css";
 import { StyledEngineProvider } from "@mui/material";
 import { useRouter } from "next/router";
 
-import redux from "../redux/store";
+import { store, persistor } from "../redux/store";
 import { SET_THEME } from "../redux/actions";
-import { WalletProvider } from "../components/wallet/provider";
-import { WLoginProvider } from "../components/signin/provider";
-import { CCProvider } from "../components/cyber-connect/provider";
+import { WalletProvider } from "../providers/wallet-provider";
+import { WLoginProvider } from "../providers/signin-provider";
+import { CCProvider } from "../providers/cyberconnect-provider";
+import useWLogin from "../providers/signin-provider";
 import "./_app.css";
 
 const Wrapper = ({ WrappedComponent, ...pageProps }) => {
   const theme = useSelector((state) => state.theme);
   const dispatch = useDispatch();
+  const { isLogined } = useWLogin();
   const router = useRouter();
+
   useEffect(() => {
     if (Object.keys(theme).length === 0)
       dispatch({ type: SET_THEME, payload: "default" });
   }, []);
 
+  if (!isLogined && router.pathname != "/") {
+    router.replace("/");
+    return <div>This is the Contact Us Page</div>;
+  }
+  if (isLogined && router.pathname == "/") {
+    router.replace("/home");
+    return <div>This is the Contact Us Page</div>;
+  }
   return (
     <React.Suspense fallback={<div>Loading...</div>}>
       <ToastContainer hideProgressBar />
@@ -31,11 +42,11 @@ const Wrapper = ({ WrappedComponent, ...pageProps }) => {
   );
 };
 
-function MyApp({ Component, pageProps }) {
+function CCTwitterApp({ Component, pageProps }) {
   return (
     <StyledEngineProvider injectFirst>
-      <Provider store={redux.store}>
-        <PersistGate loading={null} persistor={redux.persistor}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
           <WalletProvider>
             <WLoginProvider>
               <CCProvider>
@@ -55,4 +66,4 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default MyApp;
+export default CCTwitterApp;

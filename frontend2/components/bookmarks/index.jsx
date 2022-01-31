@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { ProfileCorner, Header } from "../styles/common";
 import Activity from "../profile/activity";
-import  useWLogin from "../signin/provider";
+import  useWLogin from "../../providers/signin-provider";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation,useHistory } from "../useRouter";
-import  Link from "next/link";
-import  {useRouter} from "next/router";
+import { useParams, useLocation, useHistory } from "../useRouter";
+import ALink from "../alink";
+import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import ProfileHeader from "../profileHeader";
+import ProfileHeader from "../profile-header";
 import Icon from "../icon";
 import {
   TweetWrapper,
@@ -19,11 +19,10 @@ import Image from "next/image";
 import { isImage, isVideo } from "../media";
 import Loading from "../loading";
 import Modal from "../modal";
-import CommentModal from "./commentModal";
+import CommentModal from "./comment-modal";
 import Comments from "./comments";
 import TweetActivity from "./activity";
-import useWLogin from "../signin/provider";
-
+import useWLogin from "../../providers/signin-provider";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -32,7 +31,7 @@ const Tweet = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { uid, tweetId } = useParams();
 
-  const {user} = useWLogin();
+  const { user } = useWLogin();
   const theme = useSelector((state) => state.theme);
   const myId = user.uid;
   const token = user.token;
@@ -127,10 +126,10 @@ const Tweet = (props) => {
               <UserImage src={tweet.avatar} />
             </div>
             <div>
-              <Link href={`/profile/${tweet.username}`} >
-                <h3 style={{ color: theme.color }}>{tweet.username} </h3>
-                <p>@{tweet.username}</p>
-              </Link>
+              <ALink href={`/profile/${tweet.uid}`}>
+                  <h3 style={{ color: theme.color }}>{tweet.username} </h3>
+                  <p>@{tweet.username}</p>
+              </ALink>
             </div>
           </Flex>
           <TweetText>
@@ -156,12 +155,12 @@ const Tweet = (props) => {
             </div>
           </TweetText>
           <ActivityInfo color={theme.color}>
-            <Link href={`${location.pathname}/retweets`} replace >
-              <h4>{tweet["Tweets.retweetsCount"]}</h4> <span>Retweets</span>
-            </Link>
-            <Link href={`${location.pathname}/likes`} replace >
-              <h4>{tweet["Tweets.likesCount"]}</h4> <span>Likes</span>
-            </Link>
+            <ALink href={`${location.pathname}/retweets`} replace>
+                <h4>{tweet["Tweets.retweetsCount"]}</h4> <span>Retweets</span>
+            </ALink>
+            <ALink href={`${location.pathname}/likes`} replace>
+                <h4>{tweet["Tweets.likesCount"]}</h4> <span>Likes</span>
+            </ALink>
           </ActivityInfo>
           <Activity>
             <div onClick={() => setIsModalOpen(true)}>

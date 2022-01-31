@@ -3,9 +3,9 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { useParams, useHistory } from "../useRouter";
 
-import Link from "next/link";
+import ALink from "../alink";
 import { useSelector, useDispatch } from "react-redux";
-import ProfileHeader from "../profileHeader";
+import ProfileHeader from "../profile-header";
 import Tabs from "../tabs";
 import {
   PeopleFlex,
@@ -16,7 +16,8 @@ import {
 import { ProfileCorner, Button } from "../styles/common";
 import Loading from "../loading";
 import { SET_UPDATE } from "../../redux/actions";
-import { shortName, shortAddress } from "../cyber-connect/bip39";
+import { shortName, shortAddress } from "../../lib/bip39";
+import useWLogin from "../../providers/signin-provider";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -25,7 +26,7 @@ const Follow = () => {
   const [followDisabled, setFollowDisabled] = useState(false);
 
   const { uid, activity } = useParams();
-  const { user } = useUser();
+  const { user } = useWLogin();
   //const refresh = useSelector((state) => state.update.refresh);
   const theme = useSelector((state) => state.theme);
   const myId = user.uid;
@@ -101,14 +102,14 @@ const Follow = () => {
 
   const tabList = [
     {
-      name: "followers",
-      title: "Followers",
-      path: "followers",
-    },
-    {
       name: "following",
       title: "Following",
       path: "following",
+    },
+    {
+      name: "followers",
+      title: "Followers",
+      path: "followers",
     },
   ];
 
@@ -130,7 +131,7 @@ const Follow = () => {
       ) : (
         <div>
           {userData[activity].map((_user, idx) => (
-            <Link key={_user.uid} href={`/profile/${_user.uid}`}>
+            <ALink key={_user.uid} href={`/profile/${_user.uid}`}>
               <PeopleFlex
                 key={_user.uid}
                 border={theme.border}
@@ -143,16 +144,16 @@ const Follow = () => {
                   <PeopleDetails>
                     <div>
                       <object>
-                        <Link href={`/profile/${_user.uid}`}>
+                        <ALink href={`/profile/${_user.uid}`}>
                           <h3 style={{ color: theme.color }}>
                             {_user.username}
                           </h3>
-                        </Link>
+                        </ALink>
                       </object>
                       <object>
-                        <Link href={`/profile/${_user.uid}`}>
+                        <ALink href={`/profile/${_user.uid}`}>
                           <p>@{_user.username}</p>
-                        </Link>
+                        </ALink>
                       </object>
                     </div>
                     {_user.uid !== myId && (
@@ -196,7 +197,7 @@ const Follow = () => {
                   </div>
                 </div>
               </PeopleFlex>
-            </Link>
+            </ALink>
           ))}
         </div>
       )}

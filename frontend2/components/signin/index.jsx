@@ -7,19 +7,20 @@ import { LogoWrapper, Motto, Button, Flex } from "../styles/signin";
 import { SET_THEME } from "../../redux/actions";
 import { logo, motto } from "./paths";
 import { Row, Col } from "antd";
-import useWLogin from "./provider";
+import useWLogin from "../../providers/signin-provider";
 
 const LogIn = (props) => {
-  const { loading, login, isLogined, isLoading, user } = useWLogin(); // Loading button state
+  const { logout, login, isLogined, isLoading, user } = useWLogin(); // Loading button state
   const history = useHistory();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user.uid) {
+    if (isLogined) {
       dispatch({ type: SET_THEME, payload: "default" });
-      history.push("/home");
-    } else {
+      //history.push("/home");
+      history.replace("/home");
     }
-  }, [user]);
+  }, [isLogined]);
 
   return (
     <React.Fragment>
@@ -73,7 +74,7 @@ const LogIn = (props) => {
                 hovbg="rgb(26, 146, 220)"
                 onClick={login}
               >
-                Login &amp; Sign up
+                Sign In
               </Button>
             </div>
           </Flex>

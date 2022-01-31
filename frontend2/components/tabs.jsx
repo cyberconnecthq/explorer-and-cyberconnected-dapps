@@ -1,7 +1,7 @@
 import React from "react";
-import Link from "next/link";
-import {useRouter} from "next/router";
-import {useParams, useHistory} from "./useRouter";
+import ALink from "./alink";
+import { useRouter } from "next/router";
+import { useParams, useHistory } from "./useRouter";
 import { useSelector } from "react-redux";
 import { Tab } from "./styles/profile";
 
@@ -23,7 +23,7 @@ const Tabs = (props) => {
             ? `/profile/${uid}`
             : `/profile/${uid}/${tab.path}`;
         return (
-          <Link
+          <ALink
             key={tab.name}
             href={to}
             to={to}
@@ -36,7 +36,7 @@ const Tabs = (props) => {
             }
           >
             <div>{tab.title}</div>
-          </Link>
+          </ALink>
         );
       })}
     </Tab>

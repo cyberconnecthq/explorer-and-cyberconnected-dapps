@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "next/link";
+import ALink from "./alink";
 import { Default } from "./styles/default";
 
 const PageNotFound = () => {
@@ -7,7 +7,7 @@ const PageNotFound = () => {
     <Default>
       <h1>Sorry, that page doesn&apos;t exist!</h1>
       <p>
-        Why not try a <Link href={"/explore"} >search</Link> to find something
+        Why not try a <ALink href={"/explore"} >search</ALink> to find something
         else?
       </p>
     </Default>

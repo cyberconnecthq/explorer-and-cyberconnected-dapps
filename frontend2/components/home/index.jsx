@@ -1,10 +1,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import TweetModal from "../menubar/tweetModal";
+import TweetModal from "../menubar/tweet-modal";
 import Activity from "../profile/activity";
 import { Tweet } from "../styles/home";
 import { ProfileCorner, Header } from "../styles/common";
-import useWLogin from "../signin/provider";
+import useWLogin from "../../providers/signin-provider";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 const Home = () => {

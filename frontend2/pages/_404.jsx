@@ -1,4 +1,4 @@
-import PageNotFound from "../components/pageNotFound";
+import PageNotFound from "../components/page-not-found";
 import { WithOnlyMenuBar } from "../components/wrappers";
 
 const _404 = (props) => {
