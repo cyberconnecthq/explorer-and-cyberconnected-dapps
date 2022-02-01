@@ -2,14 +2,14 @@ import React from "react";
 import { Row, Col } from "antd";
 import { useSelector } from "react-redux";
 
-import MenuBar from "./menubar/index";
+import MenuBar from "./menubar";
 import Likes from "./tweet/likes";
 import Retweet from "./tweet/retweets";
-import SideBar from "./sidebar/index";
+import SideBar from "./sidebar";
 
-
-export const WithMenuBar = ({ Comp, props }) => {
+export const WithMenuBar = (props) => {
   const theme = useSelector((state) => state.theme);
+  const { children, ...others } = props;
   return (
     <React.Fragment>
       <Row style={{ background: theme.bg }}>
@@ -17,7 +17,7 @@ export const WithMenuBar = ({ Comp, props }) => {
           <MenuBar />
         </Col>
         <Col lg={9} md={19} xs={19}>
-          <Comp {...props} />
+          {children}
         </Col>
         <Col lg={8} md={0} xs={0}>
           <SideBar />
@@ -27,32 +27,35 @@ export const WithMenuBar = ({ Comp, props }) => {
   );
 };
 
-export const WithLikeModal = ({ Comp, props }) => {
+export const WithLikeModal = (props) => {
+  const { children, ...others } = props;
   return (
     <React.Fragment>
       <Likes />
-      <Comp {...props} />
+      {children}
     </React.Fragment>
   );
 };
 
-export const WithRetweetModal = ({ Comp, props }) => {
+export const WithRetweetModal = (props) => {
+  const { children, ...others } = props;
   return (
     <React.Fragment>
       <Retweet />
-      <Comp {...props} />
+      {children}
     </React.Fragment>
   );
 };
 
-export const WithOnlyMenuBar = ({ Comp, props }) => {
+export const WithOnlyMenuBar = (props) => {
+  const { children, ...others } = props;
   return (
     <Row>
       <Col md={7} xs={5}>
         <MenuBar />
       </Col>
       <Col md={17} xs={19}>
-        <Comp {...props} />
+        {children}
       </Col>
     </Row>
   );

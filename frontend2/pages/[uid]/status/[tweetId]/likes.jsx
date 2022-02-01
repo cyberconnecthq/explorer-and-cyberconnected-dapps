@@ -1,10 +1,12 @@
-import Tweet from "../../../../components/tweet/index";
+import Tweet from "../../../../components/tweet";
 import { WithMenuBar, WithLikeModal } from "../../../../components/wrappers";
 
 const comp = (props) => {
   return (
     <WithMenuBar>
-      <WithLikeModal Comp={Tweet} {...props} />
+      <WithLikeModal>
+        <Tweet {...props}></Tweet>
+      </WithLikeModal>
     </WithMenuBar>
   );
 };

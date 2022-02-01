@@ -69,6 +69,7 @@ const Retweet = (props) => {
 
   return (
     <ActivityBox
+      title="retweet"
       onClick={(event) => handleRetweet(event, idx)}
       disabled={retweetDisabled}
       hoverColor="rgb(23,191,99)"

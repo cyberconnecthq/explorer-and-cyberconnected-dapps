@@ -3,9 +3,11 @@ import { ActivityBox, ActivityIcon } from "../styles/common";
 import Icon from "../icon";
 
 const Activity = (props) => {
-  const { handleClick, hoverColor, hoverBg, path, fill, noPadding } = props;
+  const { handleClick, hoverColor, hoverBg, path, fill, noPadding, title } =
+    props;
   return (
     <ActivityBox
+      title={title}
       onClick={handleClick}
       hoverColor={hoverColor}
       hoverBg={hoverBg}

@@ -1,8 +1,22 @@
-import Messages from "../components/messages/index";
-import {WithMenuBar} from "../components/wrappers";
+import React from "react";
+import { useSelector } from "react-redux";
+import { WithMenuBar } from "../components/wrappers";
+import { ProfileCorner, Header } from "../components/styles/common";
 
-const comp = (props) => {
-  return <WithMenuBar Comp={Messages} {...props} />;
+const Messages = () => {
+  const theme = useSelector((state) => state.theme);
+  return (
+    <WithMenuBar>
+      <ProfileCorner border={theme.border}>
+        <Header color={theme.color} border={theme.border}>
+          <h2>Messages</h2>
+        </Header>
+        <h2 style={{ textAlign: "center", color: theme.color }}>
+          Coming soon!
+        </h2>
+      </ProfileCorner>
+    </WithMenuBar>
+  );
 };
 
 export async function getServerSideProps(context) {
@@ -10,4 +24,5 @@ export async function getServerSideProps(context) {
     props: {}, // will be passed to the page component as props
   };
 }
-export default comp;
+
+export default Messages;

@@ -69,6 +69,7 @@ const Like = (props) => {
 
   return (
     <ActivityBox
+      title="like"
       onClick={(event) => handleLike(event, idx)}
       disabled={likeDisabled}
       hoverColor="rgb(224,36,94)"

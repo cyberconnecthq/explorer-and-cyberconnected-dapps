@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-import UploadButton from "../uploadButton";
+import UploadButton from "../upload-button";
 import { Flex, Button } from "../styles/modal";
 import { SET_UPDATE } from "../../redux/actions";
 import Image from "next/image";
@@ -55,7 +55,7 @@ const CommentModal = (props) => {
     <Flex bg={theme.bg} color={theme.color}>
       <div>
         {user.avatar && (
-          <Image
+          <img
             src={user.avatar}
             width="49px"
             height="49px"
@@ -77,7 +77,7 @@ const CommentModal = (props) => {
         ></textarea>
         <div style={{ marginBottom: "10px" }}>
           {preview.image && (
-            <Image src={preview.image} style={{ width: "100%" }} />
+            <img src={preview.image} style={{ width: "100%" }} />
           )}
           {preview.video && (
             <video

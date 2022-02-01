@@ -4,7 +4,7 @@ import { Field, reduxForm } from "redux-form";
 import { Cover, Avatar, ImgFlex } from "../styles/profile";
 import { StyledInput, Button } from "../styles/common";
 import { Error } from "../styles/signin";
-import UploadButton from "../uploadButton";
+import UploadButton from "../upload-button";
 
 const validate = (data) => {
   const errors = {};
@@ -70,7 +70,7 @@ const _EditProfileForm = (props) => {
           backgroundSize: "cover",
         }}
       >
-        {/* {cover && <Image src={cover} />} */}
+        {cover && <img src={cover} />} 
         <Field
           type="file"
           name="cover"

@@ -63,6 +63,7 @@ const Bookmark = (props) => {
 
   return (
     <ActivityBox
+      title="bookmark"
       hoverColor="rgb(29,161,242)"
       hoverBg="rgba(29,161,242,0.1)"
       onClick={removeBookmark ? handleRemoveBookmark : handleBookmark}

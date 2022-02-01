@@ -3,7 +3,7 @@ import ALink from "../alink";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { FollowFlex } from "../styles/profile";
-import { useParams, useHistory } from "../useRouter";
+import { useParams, useHistory } from "../use-router";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 

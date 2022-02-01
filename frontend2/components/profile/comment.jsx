@@ -11,7 +11,8 @@ const Comment = (props) => {
   const { tweets, tweet, idx, updateDetails, myId, getData, onClick } = props;
   return (
     <ActivityBox
-      hoverColor="rgb(29,161,242)"
+    title="comment"
+    hoverColor="rgb(29,161,242)"
       hoverBg="rgba(29,161,242,0.1)"
       onClick={onClick}
     >

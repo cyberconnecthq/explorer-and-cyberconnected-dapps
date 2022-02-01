@@ -126,7 +126,7 @@ export const WLoginProvider = ({ children }) => {
     const _signNonceMessage = async (_user) => {
       const { uid, nonce } = _user;
       try {
-        const SIGN_MSG = `Wallet Login : ${nonce}`;
+        const SIGN_MSG = `CyberConnect Twitter Login : ${nonce}`;
         const signature = await signer.signMessage(
           SIGN_MSG,
           "0x" + uid,

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useParams, useHistory } from "../useRouter";
+import { useParams, useHistory } from "../use-router";
 
 import ALink from "../alink";
 import { useSelector, useDispatch } from "react-redux";

@@ -1,10 +1,12 @@
-import Tweet from "../../../../components/tweet/index";
+import Tweet from "../../../../components/tweet";
 import { WithMenuBar, WithRetweetModal } from "../../../../components/wrappers";
 
 const comp = (props) => {
   return (
     <WithMenuBar>
-      <WithRetweetModal Comp={Tweet} {...props} />
+      <WithRetweetModal>
+        <Tweet {...props}></Tweet>
+      </WithRetweetModal>
     </WithMenuBar>
   );
 };

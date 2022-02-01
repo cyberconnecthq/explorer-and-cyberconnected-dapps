@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ALink from "../alink";
-import { useParams, useHistory } from "../useRouter";
+import { useParams, useHistory } from "../use-router";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Modal from "../modal";

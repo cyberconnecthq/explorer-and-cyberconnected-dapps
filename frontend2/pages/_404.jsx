@@ -3,7 +3,11 @@ import { WithOnlyMenuBar } from "../components/wrappers";
 
 const _404 = (props) => {
   //  return <h1>404 - Page Not Found</h1>;
-  return <WithOnlyMenuBar Comp={PageNotFound} {...props} />;
+  return (
+    <WithOnlyMenuBar>
+      <PageNotFound {...props}></PageNotFound>
+    </WithOnlyMenuBar>
+  );
 };
 
 export async function getServerSideProps(context) {

@@ -6,7 +6,7 @@ import Follower from "./follower";
 import Icon from "../icon";
 import ProfileHeader from "../profile-header";
 import Tabs from "../tabs";
-import Follow from "../follow/index";
+import Follow from "../follow";
 import Activity from "./activity";
 import Modal from "../modal";
 import EditProfileForm from "./edit-profile-form";
@@ -16,7 +16,7 @@ import Loading from "../loading";
 import { toast } from "react-toastify";
 import { SET_UPDATE } from "../../redux/actions";
 import { shortName, shortAddress } from "../../lib/bip39";
-import { useParams, useHistory } from "../useRouter";
+import { useParams, useHistory } from "../use-router";
 import useWLogin from "../../providers/signin-provider";
 
 const URL = process.env.REACT_APP_BACKEND_URL;

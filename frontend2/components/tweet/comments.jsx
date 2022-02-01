@@ -6,7 +6,7 @@ import axios from "axios";
 import Loading from "../loading";
 import { PeopleFlex, UserImage, TweetDetails } from "../styles/profile";
 import { isImage, isVideo } from "../media";
-import { useParams, useHistory } from "../useRouter";
+import { useParams, useHistory } from "../use-router";
 import Image from "next/image";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
@@ -57,7 +57,7 @@ const Comments = () => {
               </div>
               {comment["Comments.media"] &&
                 isImage(comment["Comments.media"]) && (
-                  <Image
+                  <img
                     src={comment["Comments.media"]}
                     style={{ width: "100%" }}
                   />

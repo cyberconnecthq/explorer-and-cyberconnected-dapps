@@ -1,8 +1,12 @@
-import Profile from "../../../components/profile/index";
-import {WithMenuBar} from "../../../components/wrappers";
+import Profile from "../../../components/profile";
+import { WithMenuBar } from "../../../components/wrappers";
 
 const comp = (props) => {
-  return <WithMenuBar Comp={Profile} {...props} />;
+  return (
+    <WithMenuBar>
+      <Profile {...props} />
+    </WithMenuBar>
+  );
 };
 
 export async function getServerSideProps(context) {

@@ -3,7 +3,7 @@ import axios from "axios";
 import ALink from "../alink";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { useParams, useHistory } from "../useRouter";
+import { useParams, useHistory } from "../use-router";
 import { useSelector } from "react-redux";
 import Like from "./like";
 import Retweet from "./retweet";
@@ -156,7 +156,7 @@ const Activity = (props) => {
                     {tweet["Tweets.text"]}
                   </div>
                   {tweet["Tweets.media"] && isImage(tweet["Tweets.media"]) && (
-                    <Image
+                    <img
                       src={tweet["Tweets.media"]}
                       style={{ width: "100%" }}
                       width={20} height={20}

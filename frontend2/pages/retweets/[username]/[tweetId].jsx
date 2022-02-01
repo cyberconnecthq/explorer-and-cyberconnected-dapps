@@ -1,10 +1,13 @@
-import Tweet from "../../../components/tweet/index";
-import {WithMenuBar} from "../../../components/wrappers";
+import Tweet from "../../../components/tweet";
+import { WithMenuBar } from "../../../components/wrappers";
 
 const comp = (props) => {
-  return <WithMenuBar Comp={Tweet} {...props} />;
+  return (
+    <WithMenuBar>
+      <Tweet {...props}></Tweet>
+    </WithMenuBar>
+  );
 };
-
 
 export async function getServerSideProps(context) {
   return {
