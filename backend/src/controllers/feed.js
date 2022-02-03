@@ -6,7 +6,7 @@ module.exports = {
   getFeed: async (req, res) => {
     // query -> {uid}
     if (!req.query.uid)
-      return res.status(400).json({ errors: 'uid is required' });
+      return res.status(400).json({ errors: "uid is required" });
 
     module.exports.getMyFollowing(req.query.uid).then((response) => {
       const following = [];
@@ -45,7 +45,8 @@ module.exports = {
       });
     });
   },
-  whoFollow: async (req, res) => {
+
+  whoToFollow: async (req, res) => {
     // query -> {uid}
     // Get my following and don't select
     const following = `SELECT Users.uid FROM Users INNER JOIN Followers ON Users.uid = Followers.followed WHERE follower = '${req.query.uid}'`;
@@ -61,6 +62,7 @@ module.exports = {
     });
     return res.status(200).json({ whoFollow });
   },
+
   getMyFollowing: async (uid) => {
     const users = await User.findAll({
       attributes: ["uid"],
@@ -77,6 +79,7 @@ module.exports = {
     });
     return users;
   },
+
   getTweets: async (following) => {
     const tweets = await User.findAll({
       attributes: ["uid", "username", "avatar"],
@@ -98,7 +101,7 @@ module.exports = {
       following.length ? following.map((el) => "'" + el + "'").toString() : null
     })`;
     const tweets = await User.findAll({
-      attributes: [ "uid", "username", "avatar"],
+      attributes: ["uid", "username", "avatar"],
       include: {
         model: Tweet,
         required: true,
@@ -117,7 +120,7 @@ module.exports = {
       following.length ? following.map((el) => "'" + el + "'").toString() : null
     })`;
     const tweets = await User.findAll({
-      attributes: [ "uid","username", "avatar"],
+      attributes: ["uid", "username", "avatar"],
       include: {
         model: Tweet,
         required: true,
