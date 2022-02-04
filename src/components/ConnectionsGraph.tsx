@@ -20,41 +20,6 @@ function genTree(cd: ConnectionsData){
   };
 }
 
-function get_color(node:any, props: ConnectionsData, address: string){
-  const n = props.data.find(x => x.address == node.id);
-  console.log(address);
-  console.log(node.id);
-  if (n!== undefined ) {
-    if(node.id !== undefined && node.id == address) {
-      console.log('here: ');
-      return "0";
-    }
-    if (n.is_follower){
-      if(n.is_following){
-        // follower and following
-        return "2";
-      } else {
-        // // follower
-        return "3";
-      }
-    } else {
-      // following
-      return "4";
-    }
-  } else {
-    // own node
-    return "5";
-  }
-}
-
-// function get_size(node:any, highlightAddress:string): number{
-//   if(node.id == highlightAddress) {
-//     return 8;
-//   } else {
-//     return 4;
-//   }
-// }
-
 interface ConnectionsGraphProps {
     connections: ConnectionsData;
     width: number;
