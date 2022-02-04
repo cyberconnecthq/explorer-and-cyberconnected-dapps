@@ -5,7 +5,7 @@ import { FIRST, NAME_SPACE, NETWORK } from '@/utils/settings';
 import theme from '@/utils/theme';
 import { ConnectionsData, FollowListInfoResp, SearchUserInfoResp } from '@/utils/types';
 import { Box, ChakraProvider, Flex, Heading, Input } from '@chakra-ui/react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import ConnectionsGraph from '../components/ConnectionsGraph';
 import { connections_data } from "../context/connections.data";
 
@@ -101,6 +101,9 @@ const ConnectionsPage = () => {
         };
     },[setWidth, setHeight, graphRef])
 
+    const [highlightAddress, setHighlightAddress] = useState("0x80d17a81edbb64bc1f467955d5c6d92969e70f1c");
+    const setHighlightCallback = useCallback((str)=>setHighlightAddress(str), []);
+
     return (
         <ChakraProvider theme={theme}>
             <Box p={6} backgroundColor='black' height='100vh' minHeight='500px'>
@@ -111,11 +114,11 @@ const ConnectionsPage = () => {
                     </Box>
                     <Flex flex={1} minHeight='300px' alignItems='stretch' gap={5}>
                         <Box flexBasis='26em' flexGrow={0} overflow='auto'>
-                            <ConnectionsTable connections={connections} />
+                            <ConnectionsTable connections={connections} highlightAddress={highlightAddress} setHighlight={setHighlightCallback} />
                         </Box>
-                        <Box flexGrow={1} display={['none', 'none', 'flex']} p={5} rounded='md' backgroundColor='black' overflow='hidden' ref={graphRef}>
+                        <Box flexGrow={1} display={['none', 'none', 'flex']} p={5} rounded='md' backgroundColor='white' overflow='hidden' ref={graphRef}>
                             <Box height='100%' width='100%' >
-                                <ConnectionsGraph connections={connections} width={width} height={height} />
+                                <ConnectionsGraph connections={connections} width={width} height={height} highlightAddress={highlightAddress} setHighlight={setHighlightCallback} />
                             </Box>
                         </Box>
                     </Flex>

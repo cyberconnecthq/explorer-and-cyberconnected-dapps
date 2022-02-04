@@ -1,11 +1,12 @@
+import { ConnectionsData } from "@/utils/types";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { Box, Flex, Tooltip } from "@chakra-ui/react";
-import { is_follower, is_following } from "../context/connections.data";
 import Identicon from 'react-identicons';
-import { ConnectionsData } from "@/utils/types";
 
 interface ConnectionsTableProps {
-    connections: ConnectionsData;
+    connections: ConnectionsData,
+    highlightAddress: string,
+    setHighlight: (highlightAddress: string) => void,
 }
 
 function ConnectionsTable(props : ConnectionsTableProps) {
@@ -18,6 +19,7 @@ function ConnectionsTable(props : ConnectionsTableProps) {
                     maxW='33em'
                     gap={0}
                     key={entry.address}
+                    bgColor={props.highlightAddress == entry.address ? 'gray.300' : 'white'}
                 >
                     <Box>
                         <Flex minW='4em' alignItems='center' mx={-3}>
@@ -35,6 +37,8 @@ function ConnectionsTable(props : ConnectionsTableProps) {
                         key={entry.address}
                         wordBreak='break-all'
                         fontFamily='monospace'
+                        onClick={() => props.setHighlight(entry.address)}
+                        cursor='pointer'
                     >
                         {entry.address}
                     </Box>
