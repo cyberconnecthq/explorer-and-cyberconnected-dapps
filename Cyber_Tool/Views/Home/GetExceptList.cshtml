@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Cyber Social";
+}
+@model List<CyberPageItem>
+
+<div>
+    <div class="alert alert-success" role="alert">
+        The address which you are not following but followed you.
+    </div>
+    <div class="alert alert-warning" role="alert">
+        Last address is the author's address, you can choose not follow the address.
+    </div>
+    @if (Model.Count > 0)
+    {
+        <p>Total count: @Model.Count</p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Eth/Sol Address
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Address)
+                        </td>
+                        <td>
+                            <a target="_blank" href="@item.AddressLink">Follow</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <h3>You are following all addresses.</h3>
+    }
+</div>

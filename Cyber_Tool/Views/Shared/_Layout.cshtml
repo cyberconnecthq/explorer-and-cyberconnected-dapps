@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Cyber Social</title>
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
+    <link rel="stylesheet" href="~/lib/semantic/semantic.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+
+    <div class="ui fixed inverted menu">
+        <div class="ui container">
+            <a href="/" class="header item">
+                Cyber Social
+            </a>
+            <a href="#" class="item" onclick="openContacts();">Contacts</a>
+            <a href="#" class="item" onclick="openSpace();">Space</a>
+            <div class="right item">
+                <div class="ui action left icon input">
+                    <i class="search icon"></i>
+                    <input type="text" id="mainSearchBox" placeholder="Enter eth address">
+                    <button class="ui button" onclick="mainSearchFun($('#mainSearchBox').val());">Explore</button>
+                </div>
+            </div>
+            <a class="item" id="link_connect" onclick="connectWallet();">Connect</a>
+            @*<a class="item"  href="#" id="link_Name"></a>*@
+            <div class="ui dropdown item" tabindex="0">
+                <span id="link_Name"></span>
+                <i class="dropdown icon"></i>
+                <div class="menu inverted">
+                    <div class="item" onclick="disconnect();">Disconnect</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui main" style="min-height:700px;">
+        <div class="ui container">
+            <h1>&nbsp;</h1>
+            <h3></h3>
+            @RenderBody()
+            <h6>&nbsp;</h6>
+        </div>
+
+    </div>
+
+    <div class="ui inverted  vertical footer segment">
+        <div class="ui center aligned container">
+            <div class="ui horizontal small divided link list">
+                Copyright © @(DateTime.Now.Year) Cyber Social powered by Cyber Connect/JayJiang.eth
+            </div>
+        </div>
+    </div>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @*<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
+    <script src="~/lib/semantic/semantic.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script type="text/javascript">
+        $(function () {
+            $('.ui.dropdown').dropdown({});
+
+            // set username
+            var cookie_address = getCookie("address");
+            var identity;
+            if (cookie_address != null && cookie_address !== 'undefined') {
+                identity = JSON.parse(getCookie(cookie_address));
+                if (identity != null && identity !== 'undefined') {
+                    $("#link_connect").hide();
+                    $("#link_Name").parent().show();
+                    if (identity.domain.length > 0) {
+                        $("#link_Name").text(shortAddress(identity.domain));
+                    } else {
+                        $("#link_Name").text(shortAddress(cookie_address));
+                    }
+                } else {
+                    $("#link_Name").parent().hide();
+                    $("#link_connect").show();
+                }
+            } else {
+                $("#link_Name").parent().hide();
+                $("#link_connect").show();
+            }
+        })
+    </script>
+</body>
+</html>
