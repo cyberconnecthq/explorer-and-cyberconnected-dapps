@@ -1,0 +1,95 @@
+﻿@{
+    ViewData["Title"] = "Cyber Feeds";
+}
+
+@model List<FeedsViewModel>
+
+@if (Model.Count <= 0)
+{
+    <div class="ui yellow message">
+        <div class="header">
+            Warning
+        </div>
+        <p>Your followings has no Nft.</p>
+    </div>
+}
+else
+{
+    <div class="ui info message">
+        <div class="header">
+            info
+        </div>
+        <p>This is a demo, now it only display poap NFTs, I will add more contract latter. And it will display top 200 records.</p>
+    </div>
+}
+
+<div class="ui feed">
+    @{
+        bool isFirst = true;
+    }
+    @foreach (var feedModel in Model)
+    {
+        <div class="event">
+            <div class="label">
+                <img src="@feedModel.User_ImgUrl">
+            </div>
+            <div class="content">
+                <div class="date">
+                    @feedModel.Feed_CreateTime
+                </div>
+                <div class="summary">
+                    <a>@feedModel.User_Name</a> get a poap
+                </div>
+                <div class="extra" title="@feedModel.NFT_Message">
+                    @(feedModel.NFT_Message.Length>300? feedModel.NFT_Message.Substring(0,300)+"...": feedModel.NFT_Message)
+                </div>
+                <div class="extra images">
+                    <a><img src="@feedModel.NFT_ImgUrl"></a>
+                </div>
+                <div class="meta">
+                    <div class="ui rating heart" data-max-rating="5"></div>
+                </div>
+                @*@if (isFirst)
+                    {
+                    isFirst = false;
+                    <div class="ui comments">
+                    <div class="comment">
+                    <a class="avatar">
+                    <img src="/Content/defaultAvatar.jpg">
+                    </a>
+                    <div class="content">
+                    <a class="author">jayjiang.eth</a>
+                    <div class="metadata">
+                    <div class="date">2 days ago</div>
+                    </div>
+                    <div class="text">
+                    This is for test.
+                    </div>
+                    <div class="actions">
+                    <a class="reply active">Reply</a>
+                    </div>
+                    <form class="ui reply form">
+                    <div class="field">
+                    <textarea></textarea>
+                    </div>
+                    <div class="ui primary submit labeled icon button">
+                    <i class="icon edit"></i>Add Reply
+                    </div>
+                    </form>
+                    </div>
+                    </div>
+                    </div>
+                    }*@
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+<script type="text/javascript">
+    $(function () {
+        $('.ui.rating')
+            .rating();
+    })
+</script>
+}

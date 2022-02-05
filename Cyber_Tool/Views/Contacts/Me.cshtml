@@ -1,0 +1,131 @@
+﻿@{
+    ViewData["Title"] = "Cyber Feeds";
+}
+
+@model ContactsViewModel
+
+<div class="ui top attached tabular menu">
+    <a class="active item" data-tab="Followings">Followings</a>
+    <a class="item" data-tab="Followers">Followers</a>
+    <a class="item" data-tab="UnFollowers">UnFollowers</a>
+</div>
+<div class="ui bottom attached active tab segment" data-tab="Followings">
+    <div class="ui middle  aligned selection list">
+        <div class="ui info message">
+            <div class="header">
+                info
+            </div>
+            <p>User has @Model.FollowingsList.Count Followings.</p>
+        </div>
+
+        @foreach (var person in Model.FollowingsList)
+        {
+            <div class="item">
+                <img class="ui avatar image" src="@person.Avatar">
+                <div class="content">
+                    <div class="header" style="margin-top:5px;">
+                        @(string.IsNullOrEmpty(person.Domain)?person.Address: person.Domain)
+                    </div>
+                </div>
+
+                <div class="right floated content">
+                    <div class="ui primary mini buttons">
+                        <div class="ui button">Explore</div>
+                        <div class="ui floating dropdown icon button">
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                                <a class="item" target="_blank" href="@Url.ActionLink("me","contacts",new {id=person.Address})">Cyber Contacts</a>
+                                <a class="item" target="_blank" href="@Url.ActionLink("me","feeds",new {id=person.Address})">Space</a>
+                                <a class="item" target="_blank" href="https://cyberch.at/">Chat</a>
+                                <a class="item" target="_blank" href="https://opensea.io/@person.Address">Opensea</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="ui bottom attached tab segment" data-tab="Followers">
+    <div class="ui middle  aligned selection list">
+        <div class="ui info message">
+            <div class="header">
+                info
+            </div>
+            <p>User has @Model.FollowersList.Count Followers.</p>
+        </div>
+
+        @foreach (var person in Model.FollowersList)
+        {
+            <div class="item">
+                <img class="ui avatar image" src="@person.Avatar">
+                <div class="content">
+                    <div class="header" style="margin-top:5px;">
+                        @(string.IsNullOrEmpty(person.Domain)?person.Address: person.Domain)
+                    </div>
+                </div>
+
+                <div class="right floated content">
+                    <div class="ui primary mini buttons">
+                        <div class="ui button">Explore</div>
+                        <div class="ui floating dropdown icon button">
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                                <a class="item" target="_blank" href="@Url.ActionLink("me","contacts",new {id=person.Address})">Cyber Contacts</a>
+                                <a class="item" target="_blank" href="@Url.ActionLink("me","feeds",new {id=person.Address})">Space</a>
+                                <a class="item" target="_blank" href="https://cyberch.at/">Chat</a>
+                                <a class="item" target="_blank" href="https://opensea.io/@person.Address">Opensea</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="ui bottom attached tab segment" data-tab="UnFollowers">
+    <div class="ui middle  aligned selection list">
+        <div class="ui info message">
+            <div class="header">
+                info
+            </div>
+            <p>User has @Model.UnfollowList.Count UnFollowers. The list is the user address which you are not following but followed you.</p>
+        </div>
+
+        @foreach (var person in Model.UnfollowList)
+        {
+            <div class="item">
+                <img class="ui avatar image" src="@person.Avatar">
+                <div class="content">
+                    <div class="header" style="margin-top:5px;">
+                        @(string.IsNullOrEmpty(person.Domain)?person.Address: person.Domain)
+                    </div>
+                </div>
+
+                <div class="right floated content">
+                    <div class="ui primary mini buttons">
+                        <div class="ui button">Explore</div>
+                        <div class="ui floating dropdown icon button">
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                                <a class="item" target="_blank" href="@Url.ActionLink("me","contacts",new {id=person.Address})">Cyber Contacts</a>
+                                <a class="item" target="_blank" href="@Url.ActionLink("me","feeds",new {id=person.Address})">Space</a>
+                                <a class="item" target="_blank" href="https://cyberch.at/">Chat</a>
+                                <a class="item" target="_blank" href="https://opensea.io/@person.Address">Opensea</a>
+                                <a class="item" target="_blank" href="https://app.cyberconnect.me/address/@person.Address">Follow back</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+<script type="text/javascript">
+    $(function () {
+        $('.menu .item').tab();
+    })
+</script>
+        }

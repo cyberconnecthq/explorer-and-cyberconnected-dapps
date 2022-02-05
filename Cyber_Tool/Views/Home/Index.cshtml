@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Cyber Social";
+}
+
+<div class="ui info message">
+    <div class="header">
+        info
+    </div>
+    <p>Please connect your Metamask wallet or search a eth address to continue.</p>
+</div>
+
+@section Scripts {
+<script type="text/javascript">
+    $(function () {
+        var cookie_address = getCookie("address");
+        if (cookie_address != null && cookie_address != undefined && cookie_address.length > 0) {
+            window.location.href = "/contacts/me/" + cookie_address;
+        }
+    })
+</script>
+}
