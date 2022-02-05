@@ -4,7 +4,7 @@ import { WithMenuBar } from "../components/wrappers";
 import { ProfileCorner, Header } from "../components/styles/common";
 
 const Messages = () => {
-  const theme = useSelector((state) => state.theme);
+  const theme = useSelector((state) => state.session.theme);
   return (
     <WithMenuBar>
       <ProfileCorner border={theme.border}>
@@ -12,7 +12,7 @@ const Messages = () => {
           <h2>Messages</h2>
         </Header>
         <h2 style={{ textAlign: "center", color: theme.color }}>
-          Coming soon!
+          Messages coming soon!
         </h2>
       </ProfileCorner>
     </WithMenuBar>
@@ -21,7 +21,7 @@ const Messages = () => {
 
 export async function getServerSideProps(context) {
   return {
-    props: {}, // will be passed to the page component as props
+    props: {}, 
   };
 }
 

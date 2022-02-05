@@ -1,32 +1,21 @@
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
-import { auth, recommend } from "../../lib/cyber-connect/query";
+import { registerKey, recommendsQuery } from "../../lib/cyberconnect/query";
 import useWallet from "../../providers/wallet-provider";
 import useCC from "../../providers/cyberconnect-provider";
-import useSignin from "../../providers/signin-provider";
+import useLogin from "../../providers/login-provider";
 
 const Comp = () => {
-  const { user } = useCC();
-  const { login } = useSignin();
-  const { address, signer, provider, connect } = useWallet();
+  const { address, connectWallet } = useWallet();
 
-  useEffect(() => {}, []);
+  const handleRecommend = useCallback(async (ev) => {
+    const { address } = await connectWallet();
 
-  const handleRecommend = useCallback(
-    async (ev) => {
-      const res = await recommend({ address});
-      console.log("res");
-      console.log(res);
-    },
-    [address]
-  );
+    const res = await recommend({ address });
+  }, [address]);
 
   return (
     <>
-      <button onClick={connect}>connect</button>
-      <br />
-      <button onClick={login}>login</button>
-      <br />
       <button onClick={handleRecommend}>recommend</button>
     </>
   );

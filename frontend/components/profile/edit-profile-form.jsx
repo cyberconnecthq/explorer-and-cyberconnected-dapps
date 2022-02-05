@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Field, reduxForm } from "redux-form";
 import { Cover, Avatar, ImgFlex } from "../styles/profile";
 import { StyledInput, Button } from "../styles/common";
-import { Error } from "../styles/signin";
+import { Error } from "../styles/login";
 import UploadButton from "../upload-button";
 
 const validate = (data) => {
@@ -15,7 +15,7 @@ const validate = (data) => {
 };
 
 const Input = ({ input, type, placeholder, meta: { touched, error } }) => {
-  const theme = useSelector((state) => state.theme);
+  const theme = useSelector((state) => state.session.theme);
   return (
     <React.Fragment>
       <StyledInput
@@ -34,7 +34,7 @@ const _EditProfileForm = (props) => {
   const [cover, setCover] = useState(props.initialValues.cover);
   const [avatar, setAvatar] = useState(props.initialValues.avatar);
 
-  const theme = useSelector((state) => state.theme);
+  const theme = useSelector((state) => state.session.theme);
 
   const { isSaveDisabled } = props;
 

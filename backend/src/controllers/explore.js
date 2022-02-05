@@ -6,10 +6,10 @@ module.exports = {
     // query -> {search}
     //important lkw
     const users = await User.findAll({
-      attributes: ["uid","username", "avatar"],
+      attributes: ["uid","domain", "avatar"],
       where: {
         [Op.or]: {
-          username: {
+          domain: {
             [Op.substring]: req.query.search,
           },
         },

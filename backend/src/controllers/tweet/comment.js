@@ -38,7 +38,7 @@ module.exports = {
   getTweetComments: async (req, res) => {
     // body -> {tweetId}
     const comments = await User.findAll({
-      attributes: ["uid","username", "avatar"],
+      attributes: ["uid","domain", "avatar"],
       include: {
         model: Comment,
         required: true,

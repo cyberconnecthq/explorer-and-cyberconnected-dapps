@@ -5,7 +5,7 @@ import UploadButton from "../upload-button";
 import { Flex, Button } from "../styles/modal";
 import { SET_UPDATE } from "../../redux/actions";
 import Image from "next/image";
-import useSignin from "../../providers/signin-provider";
+import useLogin from "../../providers/login-provider";
 
 
 const URL = process.env.REACT_APP_BACKEND_URL;
@@ -15,8 +15,8 @@ const CommentModal = (props) => {
   const [isCommentDisabled, setIsCommentDisabled] = useState(true);
   const [preview, setPreview] = useState({ image: "", video: "", media: null });
 
-  const {user} = useSignin();
-  const theme = useSelector((state) => state.theme);
+  const {user} = useLogin();
+  const theme = useSelector((state) => state.session.theme);
   const dispatch = useDispatch();
 
   const { handleClose, rows, tweetId } = props;

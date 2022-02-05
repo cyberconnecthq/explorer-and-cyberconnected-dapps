@@ -1,14 +1,16 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
-import { makeName } from "../lib/bip39";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+  useMemo,
+} from "react";
 import Web3Modal from "web3modal";
 import { ethers } from "ethers";
 
 const _context = React.createContext({
   address: "",
-  signer: null,
-  provider: null,
-  connect: () => undefined,
-  domain: "",
+  connectWallet: () => undefined,
 });
 
 const useWallet = () => {
@@ -18,40 +20,33 @@ export default useWallet;
 
 export const WalletProvider = ({ children }) => {
   const [address, setAddress] = useState("");
-  const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
-  const [domain, setDomain] = useState("");
+  const [provider, setProvider] = useState(null);
 
-  const connect = useCallback(() => {
-    const _f = async () => {
-      try {
-        const web3Modal = new Web3Modal({
-          network: "mainnet",
-          cacheProvider: true,
-          providerOptions: {},
-        });
-        const web3instance = await web3Modal.connect();
-        const provider = new ethers.providers.Web3Provider(web3instance);
+  const connectWallet = async () => {
+    try {
+      const web3Modal = new Web3Modal({
+        network: "mainnet",
+        cacheProvider: true,
+        providerOptions: {},
+      });
+      const web3instance = await web3Modal.connect();
+      const _provider = new ethers.providers.Web3Provider(web3instance);
 
-        const signer = provider.getSigner();
-        const address = await signer.getAddress();
-        
-        //const domain = await provider.lookupAddress(address);
-
-        setProvider(provider);
-        setSigner(signer);
-        //setDomain(domain);
-        setAddress(address);
-
-        console.log("connect OK!");
-      } catch (err) {
-        alert("Error: wallet connect. Did you installed MetaMask extesion?");
-        console.error(err);
-        throw err;
-      }
-    };
-    _f();
-  }, []);
+      const _signer = _provider.getSigner();
+      const _address = await _signer.getAddress();
+      setProvider(_provider);
+      setSigner(_signer);
+      setAddress(_address);
+      return { provider: _provider, signer: _signer, address: _address };
+    } catch (err) {
+      alert("Error: wallet connect. Did you installed MetaMask extesion?");
+      console.error(err);
+      throw err;
+    }
+    return { provider, signer, address };
+    console.info(address);
+  };
 
   const { Provider } = _context;
 
@@ -59,10 +54,7 @@ export const WalletProvider = ({ children }) => {
     <Provider
       value={{
         address,
-        signer,
-        provider,
-        domain: domain,
-        connect,
+        connectWallet,
       }}
     >
       {children}

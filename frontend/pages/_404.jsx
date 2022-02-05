@@ -12,7 +12,7 @@ const _404 = (props) => {
 
 export async function getServerSideProps(context) {
   return {
-    props: {}, // will be passed to the page component as props
+    props: {}, 
   };
 }
 export default _404;

@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { LoadingIcon } from "./styles/loading";
 
 const Loading = () => {
-  const theme = useSelector((state) => state.theme);
+  const theme = useSelector((state) => state.session.theme);
   return (
     <LoadingIcon>
       <svg viewBox="0 0 32 32">

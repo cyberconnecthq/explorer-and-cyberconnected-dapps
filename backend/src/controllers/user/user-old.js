@@ -74,7 +74,7 @@ module.exports = {
       return res.status(200).json({
         user: {
           uid: user.uid,
-          username: user.username,
+          domain: user.domain,
           avatar: user.avatar,
           cover: user.cover,
           birth: user.birth,
@@ -86,8 +86,8 @@ module.exports = {
     } catch (err) {
       let errors = {};
       err.errors.map((e) => {
-        if (e.path === "users.username" && e.validatorKey === "not_unique")
-          errors.username = "Username is taken";
+        if (e.path === "users.domain" && e.validatorKey === "not_unique")
+          errors.domain = "User domain is taken";
         if (e.path === "users.email" && e.validatorKey === "not_unique")
           errors.email = "Email id is already registered";
       });
@@ -97,12 +97,12 @@ module.exports = {
   loginUser_old: async (req, res) => {
     const user = await User.findOne({
       where: {
-        [Op.or]: [{ username: req.body.user }, { email: req.body.user }],
+        [Op.or]: [{ domain: req.body.user }, { email: req.body.user }],
       },
       raw: true,
     });
     if (!user)
-      return res.status(401).json({ user: "Incorrect username/email" });
+      return res.status(401).json({ user: "Incorrect domain/email" });
 
     const match = await bcrypt.compare(req.body.password, user.password);
     if (!match) return res.status(401).json({ password: "Incorrect password" });
@@ -115,7 +115,7 @@ module.exports = {
     return res.status(200).json({
       user: {
         uid: user.uid,
-        username: user.username,
+        domain: user.domain,
         avatar: user.avatar,
         cover: user.cover,
         birth: user.birth,
@@ -131,7 +131,7 @@ module.exports = {
     const user = await User.findOne({
       attributes: [
         "uid",
-        "username",
+        "domain",
         "nonce",
         "bio",
         "avatar",

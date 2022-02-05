@@ -36,7 +36,7 @@ module.exports = {
   getTweetLikes: async (req, res) => {
     // body -> {tweetId}
     const likes = await User.findAll({
-      attributes: ["uid","username", "avatar", "bio"],
+      attributes: ["uid","domain", "avatar", "bio"],
       include: {
         model: Like,
         required: true,

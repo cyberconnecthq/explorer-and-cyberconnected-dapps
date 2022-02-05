@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import useSignin from "../providers/signin-provider";
+import useLogin from "../providers/login-provider";
 import TweetModal from "../components/menubar/tweet-modal";
 import Activity from "../components/profile/activity";
 import { Tweet } from "../components/styles/home";
@@ -9,9 +9,9 @@ import { WithMenuBar } from "../components/wrappers";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 const Home = () => {
-  const { user } = useSignin();
-  const uid = user.uid;
-  const theme = useSelector((state) => state.theme);
+  const { user } = useLogin();
+  const uid = user?.uid;
+  const theme = useSelector((state) => state.session.theme);
 
   return (
     <WithMenuBar>
@@ -30,7 +30,7 @@ const Home = () => {
 
 export async function getServerSideProps(context) {
   return {
-    props: {}, // will be passed to the page component as props
+    props: {}, 
   };
 }
 

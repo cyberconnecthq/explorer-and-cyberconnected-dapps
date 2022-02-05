@@ -4,13 +4,14 @@ import axios from "axios";
 import Icon from "../icon";
 import { Text } from "../styles/profile";
 import { ActivityBox, ActivityIcon } from "../styles/common";
+import useLogin from "../../providers/login-provider";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
 const Retweet = (props) => {
   const [retweetDisabled, setRetweetDisabled] = useState(false);
 
-  const token = useSelector((state) => state.user.token);
+  const { token } = useLogin();
 
   const { tweets, tweet, idx, updateDetails, myId, getData } = props;
   const retweetPath = [

@@ -1,29 +1,26 @@
-
-import LogIn from "../components/signin";
+import LogIn from "../components/login";
 //import PrivateRoute from "../components/privateRoute.jsx--";
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
-import useSignin from "../providers/signin-provider";
-
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import useLogin from "../providers/login-provider";
 
 const Comp = () => {
   const router = useRouter();
-  const { user } = useSignin();
-
+  const { user, token } = useLogin();
 
   useEffect(() => {
-    if (user && user.uid && user.token) {
-      router.push('/home')
+    if (user && user.uid && token) {
+      router.push("/home");
     }
   }, []);
 
-  //return <PrivateRoute exact path="/" component={SignIn} isHome />;
+  //return <PrivateRoute exact path="/" component={Login} isHome />;
   return <LogIn></LogIn>;
 };
 
 export async function getServerSideProps(context) {
   return {
-    props: {}, // will be passed to the page component as props
+    props: {},
   };
 }
 

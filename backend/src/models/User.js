@@ -7,10 +7,9 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             primaryKey: true,
         },
-        username: {
+        domain: {
             type: DataTypes.STRING,
             allowNull: false,
-			defaultValue: () => "NewUser",
         },
         nonce: {
 			type: DataTypes.INTEGER, // SQLITE will use INTEGER
@@ -27,7 +26,7 @@ module.exports = (sequelize) => {
         avatar: {
             type: DataTypes.STRING,
             //defaultValue: 'https://res.cloudinary.com/twitter-clone-media/image/upload/v1597737557/user_wt3nrc.png'
-            defaultValue: '/images/avatar/strict-beauty.png'
+            defaultValue: '/images/avatar/default.png'
         },
         cover: {
             type: DataTypes.STRING,

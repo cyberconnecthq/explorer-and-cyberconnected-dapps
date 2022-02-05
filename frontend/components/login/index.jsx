@@ -3,14 +3,14 @@ import { useRouter } from "next/router";
 import { useParams, useHistory } from "../use-router";
 import { useSelector, useDispatch } from "react-redux";
 import Icon from "../icon";
-import { LogoWrapper, Motto, Button, Flex } from "../styles/signin";
+import { LogoWrapper, Motto, Button, Flex } from "../styles/login";
 import { SET_THEME } from "../../redux/actions";
 import { logo, motto } from "./paths";
 import { Row, Col } from "antd";
-import useSignin from "../../providers/signin-provider";
+import useLogin from "../../providers/login-provider";
 
 const LogIn = (props) => {
-  const { logout, login, isLogined, isLoading, user } = useSignin(); // Loading button state
+  const { logout, login, isLogined, isLoading, user } = useLogin(); // Loading button state
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -74,7 +74,7 @@ const LogIn = (props) => {
                 hovbg="rgb(26, 146, 220)"
                 onClick={login}
               >
-                Sign In
+                Log In
               </Button>
             </div>
           </Flex>

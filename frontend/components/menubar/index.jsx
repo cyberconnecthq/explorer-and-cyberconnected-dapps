@@ -9,12 +9,12 @@ import { Header, MenuItem, MenuTitle, Button } from "../styles/menubar";
 import TweetModal from "./tweet-modal";
 import { SET_THEME } from "../../redux/actions";
 import { useParams, useHistory } from "../use-router";
-import useSignin from "../../providers/signin-provider";
+import useLogin from "../../providers/login-provider";
 
 const MenuBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { user, logout: _logout } = useSignin();
-  const theme = useSelector((state) => state.theme);
+  const { user, logout: _logout } = useLogin();
+  const theme = useSelector((state) => state.session.theme);
   const mode = theme.mode;
   const dispatch = useDispatch();
   const history = useHistory();

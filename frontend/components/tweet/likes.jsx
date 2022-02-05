@@ -5,22 +5,24 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import Modal from "../modal";
 import { PeopleFlex, PeopleDetails, UserImage } from "../styles/profile";
+import { fixTweet } from "../../lib/bip39";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
 const Likes = () => {
   const [likes, setLikes] = useState([]);
 
-  const theme = useSelector((state) => state.theme);
+  const theme = useSelector((state) => state.session.theme);
 
   const { uid, tweetId } = useParams();
   const history = useHistory();
   useEffect(() => {
     (async () => {
-      const likes = await axios.get(
+      const res = await axios.get(
         `${URL}/api/tweet/like/get-likes?tweetId=${tweetId}`
       );
-      setLikes(likes.data.likes);
+      res.data.likes.map((tw) => fixTweet(tw));
+      setLikes(res.data.likes);
     })();
   }, [tweetId]);
 
@@ -32,7 +34,7 @@ const Likes = () => {
     <Modal padding="0 0 80px 0" handleClose={handleClose} heading="Liked by">
       <div>
         {likes.map((_user) => (
-          <ALink key={_user["Likes.id"]} href={`/profile/${_user.uid}`} >
+          <ALink key={_user["Likes.id"]} href={`/profile/${_user.uid}`}>
             <PeopleFlex key={_user.uid} border={theme.border}>
               <div>
                 <UserImage src={_user.avatar} />
@@ -41,13 +43,13 @@ const Likes = () => {
                 <PeopleDetails>
                   <div>
                     <object>
-                      <ALink href={`/profile/${_user.uid}`} >
-                        <h3 style={{ color: theme.color }}>{_user.username}</h3>
+                      <ALink href={`/profile/${_user.uid}`}>
+                        <h3 style={{ color: theme.color }}>{_user.domain}</h3>
                       </ALink>
                     </object>
                     <object>
-                      <ALink href={`/profile/${_user.uid}`} >
-                        <p>@{_user.username}</p>
+                      <ALink href={`/profile/${_user.uid}`}>
+                        <p>@{_user.domain}</p>
                       </ALink>
                     </object>
                   </div>

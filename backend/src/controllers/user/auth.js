@@ -33,7 +33,7 @@ module.exports = {
         // Step 2: Verify digital signature
         ////////////////////////////////////////////////////
         .then(async (user) => {
-         const SIGN_MSG = `CyberConnect Twitter Login : ${user.nonce}`;
+         const SIGN_MSG = `CCTwitter Login: ${user.nonce}`;
 
           // We now are in possession of msg, id and signature. We
           // will use a helper from eth-sig-util to extract the address from the signature
@@ -84,7 +84,7 @@ module.exports = {
           return res.status(200).json({
             user: {
               uid: user.uid,
-              username: user.username,
+              domain: user.domain,
               nonce: user.nonce,
               avatar: user.avatar,
               cover: user.cover,

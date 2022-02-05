@@ -16,7 +16,7 @@ module.exports = {
     // query -> {uid}
     const tweetIds = `SELECT tweetId from Bookmarks where uid='${req.query.uid}'`;
     const tweets = await User.findAll({
-      attributes: ["uid", "username", "avatar"],
+      attributes: ["uid", "domain", "avatar"],
       include: {
         model: Tweet,
         required: true,

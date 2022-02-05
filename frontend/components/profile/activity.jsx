@@ -20,8 +20,9 @@ import Loading from "../loading";
 import Bookmark from "./bookmark";
 import Modal from "../modal";
 import CommentModal from "../tweet/comment-modal";
-import useSignin from "../../providers/signin-provider";
-
+import useLogin from "../../providers/login-provider";
+import { red } from "@mui/material/colors";
+import { fixTweet } from "../../lib/bip39";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -30,12 +31,10 @@ const Activity = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tweetId, setTweetId] = useState(null);
 
-  const { uid } = useParams();
-  const {user} = useSignin();
+  const refresh = useSelector((state) => state.volatile.update.refresh);
+  const theme = useSelector((state) => state.session.theme);
+  const { user, token } = useLogin();
   const myId = user.uid;
-  const token = user.token;
-  const refresh = useSelector((state) => state.update.refresh);
-  const theme = useSelector((state) => state.theme);
 
   const {
     url,
@@ -55,6 +54,7 @@ const Activity = (props) => {
           Authorization: `Bearer ${token}`,
         },
       });
+      res.data.tweets.map((tw) => fixTweet(tw));
       setTweets(res.data.tweets);
       handleHeaderText &&
         handleHeaderText(`${res.data.tweets.length} ${header}`);
@@ -62,9 +62,8 @@ const Activity = (props) => {
       console.error(err);
     }
   };
-  
+
   useEffect(() => {
-    // ComponentDidMount
     const cancelToken = axios.CancelToken;
     const source = cancelToken.source();
     getData(source);
@@ -72,7 +71,6 @@ const Activity = (props) => {
       source.cancel();
     };
   }, [url, refresh]);
-
 
   const updateDetails = (idx, newState) => {
     setTweets([
@@ -105,7 +103,9 @@ const Activity = (props) => {
   if (!tweets.length)
     return (
       <EmptyMsg>
-        {feed ? "You are all caught up!" : `@${uid} has no ${dataKey} yet!`}
+        {feed
+          ? "You are all caught up!"
+          : `@${user.domain} has no ${dataKey} yet!`}
       </EmptyMsg>
     );
   return (
@@ -120,7 +120,7 @@ const Activity = (props) => {
         const date = new Date(tweet["Tweets.createdAt"]);
         return (
           <React.Fragment key={idx}>
-            <ALink 
+            <ALink
               key={tweet["Tweets.id"]}
               href={`/${tweet.uid}/status/${tweet["Tweets.id"]}`}
             >
@@ -128,25 +128,15 @@ const Activity = (props) => {
                 <User>
                   <UserImage src={tweet.avatar} />
                 </User>
-                <div style={{ width: "80%" }}>
+                <div style={{ width: "80%", marginLeft: "10px" }}>
                   <TweetDetails color={theme.color}>
                     {/* <object> to hide nested <a> warning */}
                     <object>
-                      <ALink href={`/profile/${tweet.uid}`} >
-                        <h3>@{tweet.username}</h3>
+                      <ALink href={`/profile/${tweet.uid}`}>
+                        <h3>@{tweet.domain}</h3>
                       </ALink>
                     </object>
-                    <p
-                      style={{
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        maxWidth: "18%",
-                      }}
-                    >
-                      {/*{tweet.username}{tweet.uid}*/}
-                    </p>
-                    <span>
+                    <span style={{ marginLeft: "10px" }}>
                       {date.toLocaleString("default", { month: "short" })}{" "}
                       {date.getDate()}{" "}
                       {new Date().getFullYear() !== date.getFullYear() &&
@@ -154,13 +144,23 @@ const Activity = (props) => {
                     </span>
                   </TweetDetails>
                   <div style={{ color: theme.color }}>
-                    {tweet["Tweets.text"]}
+                    <p
+                      style={{
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        maxWidth: "90%",
+                      }}
+                    >
+                      {tweet["Tweets.text"]}
+                    </p>
                   </div>
                   {tweet["Tweets.media"] && isImage(tweet["Tweets.media"]) && (
                     <img
                       src={tweet["Tweets.media"]}
                       style={{ width: "100%" }}
-                      width={20} height={20}
+                      width={20}
+                      height={20}
                     />
                   )}
                   {tweet["Tweets.media"] && isVideo(tweet["Tweets.media"]) && (

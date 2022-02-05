@@ -22,7 +22,8 @@ import Modal from "../modal";
 import CommentModal from "./comment-modal";
 import Comments from "./comments";
 import TweetActivity from "./activity";
-import useSignin from "../../providers/signin-provider";
+import useLogin from "../../providers/login-provider";
+import { fixUser, fixTweet } from "../../lib/bip39";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -31,17 +32,16 @@ const Tweet = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { uid, tweetId } = useParams();
 
-  const { user } = useSignin();
-  const theme = useSelector((state) => state.theme);
+  const theme = useSelector((state) => state.session.theme);
+  const { user, token } = useLogin();
   const myId = user.uid;
-  const token = user.token;
 
   useEffect(() => {
     (async () => {
       const res = await axios.get(
         `${URL}/api/tweet/get-tweet?uid=${uid}&tweetId=${tweetId}&myId=${myId}`
       );
-      setTweet(res.data.tweet);
+      setTweet(fixTweet(res.data.tweet));
     })();
   }, []);
 
@@ -62,11 +62,13 @@ const Tweet = (props) => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setTweet({
-          ...tweet,
-          [count]: tweet[count] - 1,
-          [self]: false,
-        });
+        setTweet(
+          fixTweet({
+            ...tweet,
+            [count]: tweet[count] - 1,
+            [self]: false,
+          })
+        );
       } catch (err) {
         console.error(err.response.data);
       }
@@ -85,11 +87,13 @@ const Tweet = (props) => {
             },
           }
         );
-        setTweet({
-          ...tweet,
-          [count]: tweet[count] + 1,
-          [self]: true,
-        });
+        setTweet(
+          fixTweet({
+            ...tweet,
+            [count]: tweet[count] + 1,
+            [self]: true,
+          })
+        );
       } catch (err) {
         console.error(err.response.data);
       }
@@ -127,13 +131,15 @@ const Tweet = (props) => {
             </div>
             <div>
               <ALink href={`/profile/${tweet.uid}`}>
-                <h3 style={{ color: theme.color }}>{tweet.username} </h3>
-                <p>@{tweet.username}</p>
+                <h3 style={{ color: theme.color }}>@{tweet.domain} </h3>
+                <p>0x{tweet.shortAddress}</p>
               </ALink>
             </div>
           </Flex>
           <TweetText>
-            <p style={{ color: theme.color }}>{tweet["Tweets.text"]}</p>
+            <p style={{ color: theme.color, wordBreak: "break-all" }}>
+              {tweet["Tweets.text"]}
+            </p>
             {tweet["Tweets.media"] && isImage(tweet["Tweets.media"]) && (
               <img src={tweet["Tweets.media"]} style={{ width: "100%" }} />
             )}
@@ -208,8 +214,8 @@ const Tweet = (props) => {
             </div>
             <div>
               <TweetActivity
-                 title="like"
-                 handleClick={() =>
+                title="like"
+                handleClick={() =>
                   handleActivity("selfLiked", "Tweets.likesCount", "like")
                 }
                 hoverColor="rgb(224,36,94)"

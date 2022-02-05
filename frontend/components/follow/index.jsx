@@ -16,44 +16,42 @@ import {
 import { ProfileCorner, Button } from "../styles/common";
 import Loading from "../loading";
 import { SET_UPDATE } from "../../redux/actions";
-import { makeName, makeShortAddress } from "../../lib/bip39";
-import useSignin from "../../providers/signin-provider";
+import { fixUser, domain } from "../../lib/bip39";
+import useLogin from "../../providers/login-provider";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
 const Follow = () => {
-  const [userData, setUserData] = useState(null);
+  const [data, setData] = useState(null);
   const [followDisabled, setFollowDisabled] = useState(false);
 
   const { uid, activity } = useParams();
-  const { user } = useSignin();
-  //const refresh = useSelector((state) => state.update.refresh);
-  const theme = useSelector((state) => state.theme);
-  const myId = user.uid;
-  const token = user.token;
+  const { user: me, token } = useLogin();
+  const myId = me.uid;
+  //const refresh = useSelector((state) => state.volatile.update.refresh);
+  const theme = useSelector((state) => state.session.theme);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    (async () => {
-      const { data: user } = await axios.get(
-        `${URL}/api/user/get-user?uid=${uid}`
-      );
-      const { data: res } = await axios.get(
-        `${URL}/api/follow/details?uid=${user.uid}&myId=${myId}`
-      );
-      setUserData({
-        user,
-        following: res.following.map((item) => ({
-          ...item,
-          unfollow: false,
-        })),
-        followers: res.followers.map((item) => ({
-          ...item,
-          unfollow: false,
-        })),
-      });
-    })();
-  }, []);
+  useEffect(async () => {
+    const { data: users } = await axios.get(`${URL}/api/user/get?uid=${uid}`);
+    const { data: res } = await axios.get(
+      `${URL}/api/follow/details?uid=${uid}&myId=${myId}`
+    );
+    if (users.length == 0) {
+      return;
+    }
+    setData({
+      user: fixUser(users[0]),
+      following: res.following.map((u) => ({
+        ...fixUser(u),
+        unfollow: false,
+      })),
+      followers: res.followers.map((u) => ({
+        ...fixUser(u),
+        unfollow: false,
+      })),
+    });
+  }, [uid, myId]);
 
   const handleFollow = async (e, uid, idx, follow) => {
     e.preventDefault();
@@ -70,16 +68,16 @@ const Follow = () => {
         },
       }
     );
-    setUserData({
-      ...userData,
+    setData({
+      ...data,
       [activity]: [
-        ...userData[activity].slice(0, idx),
+        ...data[activity].slice(0, idx),
         {
-          ...userData[activity][idx],
+          ...data[activity][idx],
           isFollowing: follow,
           unfollow: follow,
         },
-        ...userData[activity].slice(idx + 1),
+        ...data[activity].slice(idx + 1),
       ],
     });
     setFollowDisabled(false);
@@ -87,15 +85,15 @@ const Follow = () => {
   };
 
   const handleMouseOver = (idx) => {
-    setUserData({
-      ...userData,
+    setData({
+      ...data,
       [activity]: [
-        ...userData[activity].slice(0, idx),
+        ...data[activity].slice(0, idx),
         {
-          ...userData[activity][idx],
-          unfollow: !userData[activity][idx].unfollow,
+          ...data[activity][idx],
+          unfollow: !data[activity][idx].unfollow,
         },
-        ...userData[activity].slice(idx + 1),
+        ...data[activity].slice(idx + 1),
       ],
     });
   };
@@ -113,24 +111,27 @@ const Follow = () => {
     },
   ];
 
-  if (!userData) return <Loading />;
-
+  if (!data) {
+    return <Loading />;
+  }
   return (
     <ProfileCorner border={theme.border}>
       <ProfileHeader
-        heading={`@${userData.user.username}`}
-        text={`${makeShortAddress(userData.user)}`}
+        heading1={`2345`}
+        heading2={`@${data.user.domain}`}
+        heading={"@" + data.user.domain}
+        text={`${data.user.shortAddress}`}
       />
       <Tabs tabList={tabList} />
-      {!userData[activity].length ? (
+      {!data[activity].length ? (
         <EmptyMsg>
           {activity === "following"
-            ? `@${makeName(uid)} doesn't follow anyone!`
-            : `@${makeName(uid)} has no followers!`}
+            ? `@${data.user.domain} doesn't follow anyone!`
+            : `@${data.user.domain} has no followers!`}
         </EmptyMsg>
       ) : (
         <div>
-          {userData[activity].map((_user, idx) => (
+          {data[activity].map((_user, idx) => (
             <ALink key={_user.uid} href={`/profile/${_user.uid}`}>
               <PeopleFlex
                 key={_user.uid}
@@ -145,14 +146,12 @@ const Follow = () => {
                     <div>
                       <object>
                         <ALink href={`/profile/${_user.uid}`}>
-                          <h3 style={{ color: theme.color }}>
-                            {_user.username}
-                          </h3>
+                          <h3 style={{ color: theme.color }}>{_user.domain}</h3>
                         </ALink>
                       </object>
                       <object>
                         <ALink href={`/profile/${_user.uid}`}>
-                          <p>@{_user.username}</p>
+                          <p>@{_user.domain}</p>
                         </ALink>
                       </object>
                     </div>

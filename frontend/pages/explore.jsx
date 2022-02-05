@@ -6,8 +6,13 @@ import { WithMenuBar } from "../components/wrappers";
 import ALink from "../components/alink";
 import Icon from "../components/icon";
 import { Search, AutoComplete } from "../components/styles/explore";
-import { PeopleFlex, PeopleDetails, UserImage } from "../components/styles/profile";
+import {
+  PeopleFlex,
+  PeopleDetails,
+  UserImage,
+} from "../components/styles/profile";
 import { ProfileCorner } from "../components/styles/common";
+import { fixUser } from "../lib/bip39";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -15,7 +20,7 @@ const Explore = () => {
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState(null);
 
-  const theme = useSelector((state) => state.theme);
+  const theme = useSelector((state) => state.session.theme);
 
   useEffect(() => {
     const onDocumentClick = () => {
@@ -35,80 +40,84 @@ const Explore = () => {
   const handleSearch = async (e) => {
     setSearch(e.target.value);
     const res = await axios.get(`${URL}/api/explore?search=${e.target.value}`);
+    res.data.users.map((u) => fixUser(u));
     setUsers(res.data.users);
   };
 
   return (
     <WithMenuBar>
-    <ProfileCorner border={theme.border}>
-      <div style={{ padding: "10px 15px" }}>
-        <Search bg={theme.bg}>
-          <Icon d={searchIcon} width="40px" height="18.75px" />
-          <input
-            placeholder="Search Twitter"
-            value={search}
-            style={{ caretColor: theme.color, color: theme.color }}
-            onChange={handleSearch}
-          />
-        </Search>
-        {users && !users.length && (
-          <AutoComplete boxShadow={theme.boxShadow}>
-            <h3
+      <ProfileCorner border={theme.border}>
+        <div style={{ padding: "10px 15px" }}>
+          <Search bg={theme.bg}>
+            <Icon d={searchIcon} width="40px" height="18.75px" />
+            <input
+              placeholder="Search Twitter"
+              value={search}
+              style={{ caretColor: theme.color, color: theme.color }}
+              onChange={handleSearch}
+            />
+          </Search>
+          {users && !users.length && (
+            <AutoComplete boxShadow={theme.boxShadow}>
+              <h3
+                style={{
+                  textAlign: "center",
+                  fontWeight: 700,
+                  color: theme.color,
+                }}
+              >
+                No results
+              </h3>
+            </AutoComplete>
+          )}
+          {users && users.length && (
+            <AutoComplete boxShadow={theme.boxShadow}>
+              {users.map((_user) => (
+                <ALink key={_user.uid} href={`/profile/${_user.uid}`}>
+                  <PeopleFlex key={_user.uid}>
+                    <div>
+                      <UserImage src={_user.avatar} />
+                    </div>
+                    <div style={{ width: "100%" }}>
+                      <PeopleDetails>
+                        <div>
+                          <object>
+                            <ALink href={`/profile/${_user.uid}`}>
+                              <p>@{_user.domain}</p>
+                            </ALink>
+                          </object>
+                        </div>
+                        {/* <div>Following</div> */}
+                      </PeopleDetails>
+                      <div>
+                        <p>{_user.bio}</p>
+                      </div>
+                    </div>
+                  </PeopleFlex>
+                </ALink>
+              ))}
+            </AutoComplete>
+          )}
+          {!users && (
+            <h2
               style={{
                 textAlign: "center",
                 fontWeight: 700,
                 color: theme.color,
               }}
             >
-              No results
-            </h3>
-          </AutoComplete>
-        )}
-        {users && users.length && (
-          <AutoComplete boxShadow={theme.boxShadow}>
-            {users.map((_user) => (
-              <ALink key={_user.uid} href={`/profile/${_user.uid}`} >
-                <PeopleFlex key={_user.uid}>
-                  <div>
-                    <UserImage src={_user.avatar} />
-                  </div>
-                  <div style={{ width: "100%" }}>
-                    <PeopleDetails>
-                      <div>
-                        <object>
-                          <ALink href={`/profile/${_user.uid}`} >
-                            <p>@{_user.username}</p>
-                          </ALink>
-                        </object>
-                      </div>
-                      {/* <div>Following</div> */}
-                    </PeopleDetails>
-                    <div>
-                      <p>{_user.bio}</p>
-                    </div>
-                  </div>
-                </PeopleFlex>
-              </ALink>
-            ))}
-          </AutoComplete>
-        )}
-        {!users && (
-          <h2
-            style={{ textAlign: "center", fontWeight: 700, color: theme.color }}
-          >
-            Search for users
-          </h2>
-        )}
-      </div>
-    </ProfileCorner>
+              Search for users
+            </h2>
+          )}
+        </div>
+      </ProfileCorner>
     </WithMenuBar>
   );
 };
 
-
 export async function getServerSideProps(context) {
   return {
-    props: {}, // will be passed to the page component as props
+    props: {},
   };
 }
 

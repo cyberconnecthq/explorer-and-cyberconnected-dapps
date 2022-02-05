@@ -51,7 +51,7 @@ module.exports = {
     const followers = await User.findAll({
       attributes: [
         "uid",
-        "username",
+        "domain",
         "email",
         "avatar",
         "bio",
@@ -73,7 +73,7 @@ module.exports = {
     const following = await User.findAll({
       attributes: [
         "uid",
-        "username",
+        "domain",
         "email",
         "avatar",
         "bio",

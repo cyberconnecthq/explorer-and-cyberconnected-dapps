@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { FollowFlex } from "../styles/profile";
 import { useParams, useHistory } from "../use-router";
+import { useParams, useHistory } from "../use-router";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -13,28 +14,28 @@ const Follower = (props) => {
   const { user } = props;
 
   const { uid } = useParams();
-  const myId = useSelector((state) => state.user.uid);
-  const theme = useSelector((state) => state.theme);
+  const myId = useSelector((state) => state.session.login.user.uid);
+  const theme = useSelector((state) => state.session.theme);
 
-  useEffect(() => {
-    // ComponentDidMount
-    (async () => {
-      const res = await axios.get(
-        `${URL}/api/follow/details?uid=${user.uid}&myId=${myId}`
-      );
-      setResponse({
-        followers: res.data.followers,
-        following: res.data.following,
-      });
-    })();
+  useEffect(async () => {
+    const res = await axios.get(
+      `${URL}/api/follow/details?uid=${user.uid}&myId=${myId}`
+    );
+    // res.data.followers.map(fixUser);
+    setResponse({
+      followers: res.data.followers,
+      following: res.data.following,
+    });
   }, [user]);
 
-  if (!response) return <React.Fragment></React.Fragment>;
+  if (!response) {
+    return <React.Fragment></React.Fragment>;
+  }
 
   return (
     <FollowFlex>
       <div>
-        <ALink href={`/profile/${uid}/following`} >
+        <ALink href={`/profile/${uid}/following`}>
           <p>
             <span style={{ color: theme.color }}>
               {response.following.length}
@@ -44,7 +45,7 @@ const Follower = (props) => {
         </ALink>
       </div>
       <div>
-        <ALink href={`/profile/${uid}/followers`} >
+        <ALink href={`/profile/${uid}/followers`}>
           <p>
             <span style={{ color: theme.color }}>
               {response.followers.length}

@@ -49,7 +49,7 @@ router.put(
   updateUser
 );
 
-router.get("/get-user", getUserByUserId);
+router.get("/get", getUserByUserId);
 router.get("/get-tweets", getTweetsByUserId);
 router.get("/get-likes", getLikesByUserId);
 router.get("/get-media", getMediaByUserId);

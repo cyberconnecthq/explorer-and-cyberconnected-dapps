@@ -10,15 +10,15 @@ import { useRouter } from "next/router";
 import { store, persistor } from "../redux/store";
 import { SET_THEME } from "../redux/actions";
 import { WalletProvider } from "../providers/wallet-provider";
-import { SigninProvider } from "../providers/signin-provider";
+import { LoginProvider } from "../providers/login-provider";
 import { CCProvider } from "../providers/cyberconnect-provider";
-import useSignin from "../providers/signin-provider";
+import useLogin from "../providers/login-provider";
 import "./_app.css";
 
 const Wrapper = ({ WrappedComponent, ...pageProps }) => {
-  const theme = useSelector((state) => state.theme);
+  const theme = useSelector((state) => state.session.theme);
   const dispatch = useDispatch();
-  const { isLogined } = useSignin();
+  const { isLogined } = useLogin();
   const router = useRouter();
 
   useEffect(() => {
@@ -47,17 +47,17 @@ const Wrapper = ({ WrappedComponent, ...pageProps }) => {
 };
 
 function CCTwitterApp({ Component, pageProps }) {
-  console.log("CCTwitterApp render");
+  console.info("App render");
   return (
     <StyledEngineProvider injectFirst>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <WalletProvider>
-            <SigninProvider>
-              <CCProvider>
+            <CCProvider>
+              <LoginProvider>
                 <Wrapper WrappedComponent={Component} {...pageProps} />
-              </CCProvider>
-            </SigninProvider>
+              </LoginProvider>
+            </CCProvider>
           </WalletProvider>
         </PersistGate>
       </Provider>
@@ -67,7 +67,7 @@ function CCTwitterApp({ Component, pageProps }) {
 
 export async function getServerSideProps(context) {
   return {
-    props: {}, // will be passed to the page component as props
+    props: {}, 
   };
 }
 

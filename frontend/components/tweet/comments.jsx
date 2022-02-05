@@ -8,20 +8,22 @@ import { PeopleFlex, UserImage, TweetDetails } from "../styles/profile";
 import { isImage, isVideo } from "../media";
 import { useParams, useHistory } from "../use-router";
 import Image from "next/image";
+import { fixTweet } from "../../lib/bip39";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
 const Comments = () => {
   const [comments, setComments] = useState(null);
   const { tweetId } = useParams();
-  const refresh = useSelector((state) => state.update.refresh);
-  const theme = useSelector((state) => state.theme);
+  const refresh = useSelector((state) => state.volatile.update.refresh);
+  const theme = useSelector((state) => state.session.theme);
 
   useEffect(() => {
     (async () => {
       const res = await axios.get(
         `${URL}/api/tweet/comment/get-comments?tweetId=${tweetId}`
       );
+      res.data.comments.map((comm) => fixTweet(comm));
       setComments(res.data.comments);
     })();
   }, [refresh]);
@@ -41,12 +43,12 @@ const Comments = () => {
                 {/* <object> to hide nested <a> warning */}
                 <object>
                   <ALink href={`/profile/${comment.uid}`}>
-                    <h3>{comment.username}</h3>
+                    <h3>@{comment.domain}</h3>
                   </ALink>
                 </object>
-                <p>@{comment.username}</p>
+                <p>{/*0x{comment.shortAddress}*/}</p>
                 <span>
-                  {date.toLocaleString("default", { month: "long" })}{" "}
+                  {date.toLocaleString("default", { month: "short" })}{" "}
                   {date.getDate()}{" "}
                   {new Date().getFullYear() !== date.getFullYear() &&
                     date.getFullYear()}

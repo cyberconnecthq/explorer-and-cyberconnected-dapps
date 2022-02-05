@@ -32,7 +32,7 @@ module.exports = {
         return res.status(200).json({
           user: {
             uid: user.uid,
-            username: user.username,
+            domain: user.domain,
             nonce: user.nonce,
             avatar: user.avatar,
             cover: user.cover,
@@ -79,7 +79,7 @@ module.exports = {
       .then((user) => {
         return res.status(200).json({
           uid: user.uid,
-          username: user.username,
+          domain: user.domain,
           nonce: user.nonce,
           bio: user.bio,
           avatar: user.avatar,

@@ -7,4 +7,11 @@ export const Default = styled.div`
     font-size: 23px;
     font-weight: 700;
   }
+  p {
+    line-break: anywhere;
+    word-break: break-all;
+  }
+  *{
+    color:red;
+  }
 `;

@@ -40,7 +40,7 @@ module.exports = {
   },
   getUserTweet: async (tweetId, uid) => {
     const tweet = await User.findOne({
-      attributes: ["uid", "username", "avatar"],
+      attributes: ["uid", "domain", "avatar"],
       where: {
         uid: uid,
       },

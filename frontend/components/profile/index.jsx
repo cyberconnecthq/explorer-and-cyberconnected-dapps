@@ -15,31 +15,30 @@ import { ProfileCorner } from "../styles/common";
 import Loading from "../loading";
 import { toast } from "react-toastify";
 import { SET_UPDATE } from "../../redux/actions";
-import { makeName, makeShortAddress } from "../../lib/bip39";
+import { fixUser } from "../../lib/bip39";
 import { useParams, useHistory } from "../use-router";
-import useSignin from "../../providers/signin-provider";
+import useLogin from "../../providers/login-provider";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
 const Profile = (props) => {
-  const [user, setUser] = useState(null);
+  const [targetUser, setTargetUser] = useState(null);
   const [headerText, setHeaderText] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSaveDisabled, setIsSaveDisabled] = useState(false);
 
   const { uid, activity } = useParams();
-  const { user: storeUser } = useSignin();
-  const refresh = useSelector((state) => state.update.refresh);
-  const theme = useSelector((state) => state.theme);
-  const myId = storeUser.uid;
-  const token = storeUser.token;
+  const refresh = useSelector((state) => state.volatile.update.refresh);
+  const theme = useSelector((state) => state.session.theme);
+  const { token, user: me } = useLogin();
+  const myId = me.uid;
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    (async () => {
-      const res = await axios.get(`${URL}/api/user/get-user?uid=${uid}`);
-      setUser(res.data);
-    })();
+  useEffect(async () => {
+    const res = await axios.get(`${URL}/api/user/get?uid=${uid}`);
+    let u = res.data[0];
+    fixUser(u);
+    setTargetUser(u);
   }, [uid, refresh]);
 
   const handleHeaderText = (text) => {
@@ -49,7 +48,7 @@ const Profile = (props) => {
   const handleSubmit = async (data) => {
     setIsSaveDisabled(true);
     const formData = new FormData();
-    formData.append("uid", user.uid);
+    formData.append("uid", targetUser.uid);
     //formData.append("birth", data.birth);
     formData.append("bio", data.bio);
     formData.append("location", data.location);
@@ -63,8 +62,8 @@ const Profile = (props) => {
     setIsSaveDisabled(false);
     setIsModalOpen(false);
     toast("Profile was edited successfully");
-    setUser({
-      ...user,
+    setTargetUser({
+      ...targetUser,
       bio: data.bio,
       location: data.location,
       avatar: data.avatar,
@@ -73,11 +72,11 @@ const Profile = (props) => {
     dispatch({ type: SET_UPDATE });
   };
 
-  if (user === null) return <Loading />;
+  if (targetUser === null) return <Loading />;
 
   //const birth = new Date(user.birth);
-  const joinedAt = new Date(user.createdAt);
-  /*
+  /* const joinedAt = new Date(targetUser.createdAt);
+ 
   const birthPath = [
     "M7.75 11.083c-.414 0-.75-.336-.75-.75C7 7.393 9.243 5 12 5c.414 0 .75.336.75.75s-.336.75-.75.75c-1.93 0-3.5 1.72-3.5 3.833 0 .414-.336.75-.75.75z",
     "M20.75 10.333c0-5.01-3.925-9.083-8.75-9.083s-8.75 4.074-8.75 9.083c0 4.605 3.32 8.412 7.605 8.997l-1.7 1.83c-.137.145-.173.357-.093.54.08.182.26.3.46.3h4.957c.198 0 .378-.118.457-.3.08-.183.044-.395-.092-.54l-1.7-1.83c4.285-.585 7.605-4.392 7.605-8.997zM12 17.917c-3.998 0-7.25-3.402-7.25-7.584S8.002 2.75 12 2.75s7.25 3.4 7.25 7.583-3.252 7.584-7.25 7.584z",
@@ -107,7 +106,9 @@ const Profile = (props) => {
     },
   ];
 
-  if (activity === "followers" || activity === "following") return <Follow />;
+  if (activity === "followers" || activity === "following") {
+    return <Follow />;
+  }
 
   const renderTab = () => {
     // undefined -> tweet
@@ -116,7 +117,7 @@ const Profile = (props) => {
         return (
           <div>
             <Activity
-              url={`${URL}/api/user/get-tweets?uid=${user.uid}&myId=${myId}`}
+              url={`${URL}/api/user/get-tweets?uid=${targetUser.uid}&myId=${myId}`}
               dataKey="tweets"
               header="Tweets"
               handleHeaderText={handleHeaderText}
@@ -127,7 +128,7 @@ const Profile = (props) => {
         return (
           <div>
             <Activity
-              url={`${URL}/api/user/get-media?uid=${user.uid}&myId=${myId}`}
+              url={`${URL}/api/user/get-media?uid=${targetUser.uid}&myId=${myId}`}
               dataKey="media"
               header="Photos &amp; Videos"
               handleHeaderText={handleHeaderText}
@@ -138,7 +139,7 @@ const Profile = (props) => {
         return (
           <div>
             <Activity
-              url={`${URL}/api/user/get-likes?uid=${user.uid}&myId=${myId}`}
+              url={`${URL}/api/user/get-likes?uid=${targetUser.uid}&myId=${myId}`}
               dataKey="likes"
               header="Likes"
               handleHeaderText={handleHeaderText}
@@ -158,24 +159,24 @@ const Profile = (props) => {
         >
           <EditProfileForm
             onSubmit={handleSubmit}
-            initialValues={user}
+            initialValues={targetUser}
             isSaveDisabled={isSaveDisabled}
           />
         </Modal>
       )}
       <ProfileCorner border={theme.border}>
-        <ProfileHeader heading={`@${user.username}`} text={headerText} />
+        <ProfileHeader heading={`@${targetUser.domain}`} text={headerText} />
         <div>
           <Cover
             bg={theme.border}
             style={{
-              backgroundImage: `url(${user.cover})`,
+              backgroundImage: `url(${targetUser.cover})`,
               backgroundSize: "cover",
             }}
           ></Cover>
           <ImgFlex>
-            <Avatar backgroundImage={user.avatar} bg={theme.bg} />
-            {storeUser.uid === user.uid && (
+            <Avatar backgroundImage={targetUser.avatar} bg={theme.bg} />
+            {myId === targetUser.uid && (
               <Button bg={theme.bg} onClick={() => setIsModalOpen(true)}>
                 Edit profile
               </Button>
@@ -183,11 +184,11 @@ const Profile = (props) => {
           </ImgFlex>
         </div>
         <Info color={theme.color}>
-          <h2>@{user.username}</h2>
-          <p>{makeShortAddress(user)}</p>
-          {user.bio && <p>{user.bio}</p>}
+          <h2>@{targetUser.domain}</h2>
+          <p>{targetUser.shortAddress}</p>
+          {targetUser.bio && <p>{targetUser.bio}</p>}
           <Dates>
-            {user.location && (
+            {targetUser.location && (
               <div>
                 <Icon
                   d={locationPath}
@@ -195,7 +196,7 @@ const Profile = (props) => {
                   height="18.75px"
                   fill="rgb(101,119,134)"
                 />
-                <span>{user.location}</span>
+                <span>{targetUser.location}</span>
               </div>
             )}
             {/*
@@ -212,7 +213,7 @@ const Profile = (props) => {
               </span>
             </div>
            
-            */}
+           
             <div>
               <Icon
                 d={joinPath}
@@ -228,9 +229,9 @@ const Profile = (props) => {
                 })}{" "}
                 {joinedAt.getFullYear()}
               </span>
-            </div>
+            </div> */}
           </Dates>
-          <Follower user={user} />
+          <Follower user={targetUser} />
         </Info>
         <Tabs tabList={tabList} />
         {renderTab()}

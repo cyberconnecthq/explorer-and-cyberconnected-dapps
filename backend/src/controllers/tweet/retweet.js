@@ -53,7 +53,7 @@ module.exports = {
   getTweetRetweets: async (req, res) => {
     // body -> {tweetId}
     const retweets = await User.findAll({
-      attributes: ["uid", "username", "avatar", "bio"],
+      attributes: ["uid", "domain", "avatar", "bio"],
       include: {
         model: Retweet,
         required: true,

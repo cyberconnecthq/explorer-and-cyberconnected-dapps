@@ -8,7 +8,7 @@ import Retweet from "./tweet/retweets";
 import SideBar from "./sidebar";
 
 export const WithMenuBar = (props) => {
-  const theme = useSelector((state) => state.theme);
+  const theme = useSelector((state) => state.session.theme);
   const { children, ...others } = props;
   return (
     <React.Fragment>

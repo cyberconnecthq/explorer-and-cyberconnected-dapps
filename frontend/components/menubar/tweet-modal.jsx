@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import UploadButton from "../upload-button";
 import { Flex, Button } from "../styles/modal";
 import { SET_UPDATE } from "../../redux/actions";
-import useSignin from "../../providers/signin-provider";
+import useLogin from "../../providers/login-provider";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -15,8 +15,8 @@ const TweetModal = (props) => {
   const [isTweetDisabled, setIsTweetDisabled] = useState(true);
   const [preview, setPreview] = useState({ image: "", video: "", media: null });
 
-  const { user } = useSignin();
-  const theme = useSelector((state) => state.theme);
+  const { user } = useLogin();
+  const theme = useSelector((state) => state.session.theme);
   const dispatch = useDispatch();
 
   const { handleClose, rows } = props;
@@ -27,8 +27,9 @@ const TweetModal = (props) => {
     data.append("uid", user.uid);
     data.append("text", text);
     if (preview.media) data.append("media", preview.media);
-    if (preview.image || preview.video)
+    if (preview.image || preview.video){
       data.append("resource_type", preview.image ? "image" : "video");
+    }
     const res = await axios.post(`${URL}/api/tweet/add-tweet`, data);
     setIsTweetDisabled(false);
     setText("");

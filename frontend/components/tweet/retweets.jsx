@@ -7,23 +7,23 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import Modal from "../modal";
 import { PeopleFlex, PeopleDetails, UserImage } from "../styles/profile";
+import { fixTweet } from "../../lib/bip39";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
 const Retweet = () => {
   const [retweets, setRetweets] = useState([]);
 
-  const theme = useSelector((state) => state.theme);
+  const theme = useSelector((state) => state.session.theme);
 
   const { uid, tweetId } = useParams();
   const history = useHistory();
-  useEffect(() => {
-    (async () => {
-      const retweets = await axios.get(
-        `${URL}/api/tweet/retweet/get-retweets?tweetId=${tweetId}`
-      );
-      setRetweets(retweets.data.retweets);
-    })();
+  useEffect(async () => {
+    const retweets = await axios.get(
+      `${URL}/api/tweet/retweet/get-retweets?tweetId=${tweetId}`
+    );
+    retweets.data.retweets.map((tw) => fixTweet(tw));
+    setRetweets(retweets.data.retweets);
   }, [tweetId]);
 
   const handleClose = useCallback(() => {
@@ -48,12 +48,12 @@ const Retweet = () => {
                   <div>
                     <object>
                       <ALink href={`/profile/${_user.uid}`}>
-                        <h3 style={{ color: theme.color }}>{_user.username}</h3>
+                        <h3 style={{ color: theme.color }}>{_user.domain}</h3>
                       </ALink>
                     </object>
                     <object>
                       <ALink href={`/profile/${_user.uid}`}>
-                        <p>@{_user.username}</p>
+                        <p>@{_user.domain}</p>
                       </ALink>
                     </object>
                   </div>

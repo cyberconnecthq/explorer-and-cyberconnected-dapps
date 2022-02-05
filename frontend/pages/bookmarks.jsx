@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import useSignin from "../providers/signin-provider";
+import useLogin from "../providers/login-provider";
 import { WithMenuBar } from "../components/wrappers";
 import { ProfileCorner, Header } from "../components/styles/common";
 import Activity from "../components/profile/activity";
@@ -8,8 +8,8 @@ import Activity from "../components/profile/activity";
 const URL = process.env.REACT_APP_BACKEND_URL;
 
 const BookMarks = () => {
-  const { user } = useSignin();
-  const theme = useSelector((state) => state.theme);
+  const { user } = useLogin();
+  const theme = useSelector((state) => state.session.theme);
 
   return (
     <WithMenuBar>
@@ -21,7 +21,7 @@ const BookMarks = () => {
           border={theme.border}
         >
           <h2>Bookmarks</h2>
-          <p>@ {user.username}</p>
+          <p>@{user.domain}</p>
         </Header>
         <Activity
           url={`${URL}/api/bookmarks?uid=${user.uid}`}
@@ -36,7 +36,7 @@ const BookMarks = () => {
 
 export async function getServerSideProps(context) {
   return {
-    props: {}, // will be passed to the page component as props
+    props: {}, 
   };
 }
 

@@ -5,13 +5,14 @@ import { ActivityBox, ActivityIcon } from "../styles/common";
 import Icon from "../icon";
 import { toast } from "react-toastify";
 import { SET_UPDATE } from "../../redux/actions";
+import useLogin from "../../providers/login-provider";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
 const Bookmark = (props) => {
   const [bookmarkDisabled, setBookmarkDisabled] = useState(false);
 
-  const token = useSelector((state) => state.user.token);
+  const { token } = useLogin();
   const dispatch = useDispatch();
   const { tweet, myId, removeBookmark } = props;
   const bookmarkPath = [

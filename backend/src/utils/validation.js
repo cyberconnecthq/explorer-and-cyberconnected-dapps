@@ -3,7 +3,7 @@ const Joi = require("@hapi/joi");
 module.exports = {
   addUserValidation: (data) => {
     const schema = Joi.object({
-      username: Joi.string().required(),
+      domain: Joi.string().required(),
       email: Joi.string().email().required(),
       birth: Joi.date().required(),
     }).options({ abortEarly: false });

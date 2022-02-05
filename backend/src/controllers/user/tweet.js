@@ -24,7 +24,7 @@ const getMyLikes = async (uid) => {
 const getLikedTweets = async (uid, tweetAttributes) => {
   const sql = `select Likes.tweetId from Likes inner join Users on Users.uid=Likes.uid where Users.uid='${uid}'`;
   const tweets = await User.findAll({
-    attributes: ["uid", "username", "avatar"],
+    attributes: ["uid", "domain", "avatar"],
     include: {
       model: Tweet,
       required: true,
@@ -42,7 +42,7 @@ const getLikedTweets = async (uid, tweetAttributes) => {
 
 const getUserTweets = async (uid, tweetAttributes) => {
   let tweets = await User.findAll({
-    attributes: ["uid", "username", "avatar"],
+    attributes: ["uid", "domain", "avatar"],
     include: {
       model: Tweet,
       required: true,
@@ -59,7 +59,7 @@ const getUserTweets = async (uid, tweetAttributes) => {
 const getUserRetweets = async (uid, tweetAttributes) => {
   const sql = `select Retweets.tweetId from Retweets inner join Tweets on Tweets.id=Retweets.tweetId where Retweets.uid='${uid}'`;
   let retweets = await User.findAll({
-    attributes: ["uid", "username", "avatar"],
+    attributes: ["uid", "domain", "avatar"],
     include: {
       model: Tweet,
       required: true,

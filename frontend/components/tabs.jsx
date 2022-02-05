@@ -8,7 +8,7 @@ import { Tab } from "./styles/profile";
 const Tabs = (props) => {
   // TabList -> [{path,name,title}]
   const { tabList } = props;
-  const theme = useSelector((state) => state.theme);
+  const theme = useSelector((state) => state.session.theme);
   const { uid, activity } = useParams();
   const activeStyle = {
     borderBottom: "2px solid rgb(29,161,242)",
