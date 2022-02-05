@@ -54,7 +54,9 @@ export enum Network {
 }
 
 export interface ConnectionData {
-  address: string,
+  ens: string;
+  address: string;
+  avatar: string;
   is_follower: boolean,
   is_following: boolean
 }

@@ -7,11 +7,9 @@ import { ConnectionsData, FollowListInfoResp, SearchUserInfoResp } from '@/utils
 import { Box, ChakraProvider, Flex, Heading, Input } from '@chakra-ui/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ConnectionsGraph from '../components/ConnectionsGraph';
-import { connections_data } from "../context/connections.data";
 
 
 const ConnectionsPage = () => {
-    const cd = Object.entries(connections_data);
     const [address, setAddress] = useState<string>("0x0c493e5fb71428ba99edcb1bbccd925fdd1f48e0");
 
     const [searchAddrInfo, setSearchAddrInfo] = useState<SearchUserInfoResp | null>(null);
