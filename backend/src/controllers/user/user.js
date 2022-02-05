@@ -3,7 +3,7 @@ const { User } = require("../../db");
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports = {
-  find: (req, res, next) => {
+  find: async (req, res, next) => {
     // If a query string ?id=... is given, then filter results
     const whereClause =
       req.query && req.query.uid
@@ -14,19 +14,46 @@ module.exports = {
 
     return User.findAll(whereClause)
       .then((users) => {
+        if (users.length == 0 && req.query.uid) {
+          users.push({
+            uid: req.query.uid,
+            domain: req.query.domain || ""
+          });
+        }
         return res.json(users);
       })
       .catch(next);
   },
 
-  register: (req, res, next) => {
+  addUser: async (req, res, next) => {
+    console.error(req.body);
+
+    try {
+      const [user, created] = await User.findOrCreate({
+        where: { uid: req.body.uid },
+        defaults: {
+          ...req.body,
+          //nonce: Math.floor(Math.random() * 10000),
+        },
+      });
+      return res.status(200).json({
+        user: {
+          uid: user.uid,
+          domain: user.domain,
+          nonce: user.nonce,
+          avatar: user.avatar,
+          cover: user.cover,
+          birth: user.birth,
+          location: user.location,
+          bio: user.bio,
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      //next();
+      next(req, res);
+    }
     /*
-    User.create(req.body)
-      .then((user) => {
-        return res.json(user);
-      })
-      .catch(next);
-      */
     User.create(req.body)
       .then((user) => {
         return res.status(200).json({
@@ -39,16 +66,14 @@ module.exports = {
             birth: user.birth,
             location: user.location,
             bio: user.bio,
-            //token,
           },
         });
       })
-      .catch(next);
+      .catch(next);*/
   },
 
   ////////////////////  OLD ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  
   updateUser: async (req, res) => {
     // body -> {uid, birth, media}
     const avatar = req.files.avatar ? req.files.avatar[0] : null;

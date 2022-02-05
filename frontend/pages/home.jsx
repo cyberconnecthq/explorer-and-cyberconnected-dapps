@@ -9,6 +9,7 @@ import { WithMenuBar } from "../components/wrappers";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 const Home = () => {
+  console.log("Home Render");
   const { user } = useLogin();
   const uid = user?.uid;
   const theme = useSelector((state) => state.session.theme);
@@ -30,7 +31,7 @@ const Home = () => {
 
 export async function getServerSideProps(context) {
   return {
-    props: {}, 
+    props: {},
   };
 }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useParams, useHistory } from "../use-router";
@@ -18,6 +18,7 @@ import Loading from "../loading";
 import { SET_UPDATE } from "../../redux/actions";
 import { fixUser, domain } from "../../lib/bip39";
 import useLogin from "../../providers/login-provider";
+import useCC from "../../providers/cyberconnect-provider";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -28,11 +29,13 @@ const Follow = () => {
   const { uid, activity } = useParams();
   const { user: me, token } = useLogin();
   const myId = me.uid;
-  //const refresh = useSelector((state) => state.volatile.update.refresh);
+
   const theme = useSelector((state) => state.session.theme);
   const dispatch = useDispatch();
+  const refresh = useSelector((state) => state.volatile.update.refresh);
+  const { follow: f_follow, unfollow: f_unfollow } = useCC();
 
-  useEffect(async () => {
+  useMemo(async () => {
     const { data: users } = await axios.get(`${URL}/api/user/get?uid=${uid}`);
     const { data: res } = await axios.get(
       `${URL}/api/follow/details?uid=${uid}&myId=${myId}`
@@ -51,11 +54,16 @@ const Follow = () => {
         unfollow: false,
       })),
     });
-  }, [uid, myId]);
+  }, [uid, myId, refresh]);
 
   const handleFollow = async (e, uid, idx, follow) => {
     e.preventDefault();
     setFollowDisabled(true);
+    if (follow) {
+      await f_follow("0x" + uid);
+    } else {
+      await f_unfollow("0x" + uid);
+    }
     await axios.post(
       `${URL}/api/follow`,
       {
@@ -101,7 +109,7 @@ const Follow = () => {
   const tabList = [
     {
       name: "following",
-      title: "Following",
+      title: "Followings",
       path: "following",
     },
     {
@@ -120,7 +128,7 @@ const Follow = () => {
         heading1={`2345`}
         heading2={`@${data.user.domain}`}
         heading={"@" + data.user.domain}
-        text={`${data.user.shortAddress}`}
+        text={`0x${data.user.shortAddress}`}
       />
       <Tabs tabList={tabList} />
       {!data[activity].length ? (

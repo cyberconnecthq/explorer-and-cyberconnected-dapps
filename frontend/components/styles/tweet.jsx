@@ -43,11 +43,15 @@ export const ActivityInfo = styled.div`
   padding-top: 15px;
   padding-bottom: 15px;
   border-bottom: 1px solid rgb(230, 236, 240);
-  a {
+  div.a {
+    padding:0;
+    margin:0;
+    border:none;
     margin-right: 10px;
     font-size: 15px;
+    cursor:pointer;
   }
-  a:hover {
+  div.a:hover {
     text-decoration: underline;
     text-decoration-color: rgb(0, 0, 0);
   }

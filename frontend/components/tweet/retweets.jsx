@@ -18,12 +18,14 @@ const Retweet = () => {
 
   const { uid, tweetId } = useParams();
   const history = useHistory();
-  useEffect(async () => {
-    const retweets = await axios.get(
-      `${URL}/api/tweet/retweet/get-retweets?tweetId=${tweetId}`
-    );
-    retweets.data.retweets.map((tw) => fixTweet(tw));
-    setRetweets(retweets.data.retweets);
+  useEffect(() => {
+    (async () => {
+      const retweets = await axios.get(
+        `${URL}/api/tweet/retweet/get-retweets?tweetId=${tweetId}`
+      );
+      retweets.data.retweets.map((tw) => fixTweet(tw));
+      setRetweets(retweets.data.retweets);
+    })();
   }, [tweetId]);
 
   const handleClose = useCallback(() => {

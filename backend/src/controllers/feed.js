@@ -84,7 +84,6 @@ getFeed = async (req, res) => {
   }
 
   getMyFollowing(uid).then((response) => {
-    console.log(response);
     const following = [];
     response.forEach((el) => following.push(el.uid));
     Promise.all([
@@ -94,7 +93,6 @@ getFeed = async (req, res) => {
       getMyLikes(uid),
       getMyRetweets(uid),
     ]).then((values) => {
-      console.log(values);
       let tweets = values[0].concat(values[1]).concat(values[2]);
       const uniqueSet = new Set();
       tweets = tweets.filter((tweet) => {
@@ -138,7 +136,7 @@ whoToFollow = async (req, res) => {
         [Op.notIn]: sequelize.literal(`(${following})`),
       },
     },
-    limit: 3,
+    limit: 8,
   });
   return res.status(200).json({ whoToFollow });
 };

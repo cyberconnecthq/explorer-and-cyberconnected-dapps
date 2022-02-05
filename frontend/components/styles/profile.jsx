@@ -95,13 +95,17 @@ export const Tab = styled.nav`
   div {
     padding: 15px;
   }
-  a {
+  div.a {
+    padding:0;
+    margin:0;
+    border:none;
     flex-basis: 50%;
     color: rgb(101, 119, 134);
     font-weight: 700;
     border-bottom: 2px solid transparent;
+    cursor:pointer;
   }
-  a:hover {
+  div.a:hover {
     background-color: rgba(29, 161, 242, 0.1);
     color: rgb(29, 161, 242);
   }

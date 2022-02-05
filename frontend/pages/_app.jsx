@@ -6,6 +6,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import "react-toastify/dist/ReactToastify.css";
 import { StyledEngineProvider } from "@mui/material";
 import { useRouter } from "next/router";
+import Loading from "../components/loading";
 
 import { store, persistor } from "../redux/store";
 import { SET_THEME } from "../redux/actions";
@@ -25,16 +26,18 @@ const Wrapper = ({ WrappedComponent, ...pageProps }) => {
     if (Object.keys(theme).length === 0)
       dispatch({ type: SET_THEME, payload: "default" });
   }, []);
+  const refresh = useSelector((state) => state.volatile.update.refresh);
+  console.info("App render: " + refresh);
 
   const TEST_MODE = true;
   if (!TEST_MODE) {
     if (!isLogined && router.pathname != "/") {
       router.replace("/");
-      return <div>This is the Contact Us Page</div>;
+      return <Loading />;
     }
     if (isLogined && router.pathname == "/") {
       router.replace("/home");
-      return <div>This is the Contact Us Page</div>;
+      return <Loading />;
     }
   }
 
@@ -47,7 +50,6 @@ const Wrapper = ({ WrappedComponent, ...pageProps }) => {
 };
 
 function CCTwitterApp({ Component, pageProps }) {
-  console.info("App render");
   return (
     <StyledEngineProvider injectFirst>
       <Provider store={store}>
@@ -67,7 +69,7 @@ function CCTwitterApp({ Component, pageProps }) {
 
 export async function getServerSideProps(context) {
   return {
-    props: {}, 
+    props: {},
   };
 }
 

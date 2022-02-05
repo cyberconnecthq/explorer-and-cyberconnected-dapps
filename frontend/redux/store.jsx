@@ -8,6 +8,7 @@ import updateReducer from "./reducers/update";
 import themeReducer from "./reducers/theme";
 //import userReducer from "./reducers/user";
 import loginReducer from "./reducers/login";
+import recommendsReducer from "./reducers/recommends";
 
 const persistConfig = {
   key: "root",
@@ -36,6 +37,7 @@ const appReducer = combineReducers({
     combineReducers({
       theme: themeReducer,
       login: loginReducer,
+      recommends: recommendsReducer,
       //form: formReducer,
     })
   ),

@@ -9,10 +9,9 @@ export const domain = (uid) => {
 const shortAddress = (uid) => {
   const len = uid.length;
   return (
-    "0x" +
     uid.substr(0, 4).toUpperCase() +
     " ... " +
-    uid.substring(len - 4, len).toUpperCase()
+    uid.substring(len - 5, len).toUpperCase()
   );
 };
 
@@ -28,8 +27,8 @@ const defualtUser = {
   followings: { list: [] },
 };
 
-export const fixUser = (u) => {
-  let user = { ...defualtUser, ...u };
+export const fixUser = (user) => {
+  user = { ...defualtUser, ...user };
   if (!user.uid && user.address) {
     user.uid = user.address.substring(2).toUpperCase();
   }

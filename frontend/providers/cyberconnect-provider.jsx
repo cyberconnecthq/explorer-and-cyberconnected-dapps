@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+  useMemo,
+} from "react";
 import { identityQuery } from "../lib/cyberconnect/query";
 import { removeDuplicate } from "../lib/cyberconnect/helper";
 
@@ -10,12 +16,9 @@ const NETWORK = "ETH";
 const FIRST = 20; // The number of users in followings/followers list for each fetch
 
 const _context = React.createContext({
-  followListInfo: null,
-  followLoading: false,
-  userInfo: null,
-  follow: async (address) => undefined,
-  unfollow: async (address) => undefined,
-  initFollowListInfo: async () => undefined,
+  identity: null,
+  follow: async (toAddress) => undefined,
+  unfollow: async (toAddress) => undefined,
 });
 
 const useCC = () => {
@@ -24,57 +27,62 @@ const useCC = () => {
 export default useCC;
 
 export const CCProvider = ({ children }) => {
-  const { address } = useWallet();
+  const { address, connectWallet } = useWallet();
   const [cyberConnect, setCyberConnect] = useState(null);
   const [identity, setIdentity] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   const follow = useCallback(
     async (toAddr) => {
-      if (!cyberConnect) {
-        return;
-      }
       try {
-        setIsLoading(true);
-
-        // Execute connect if the current user is not following the toAddr.
-        await cyberConnect.connect(toAddr);
-
-        // Add the new following to the current user followings list
-        setIdentity((prev) => {
-          let newList = removeDuplicate(prev.followings.list.concat([toAddr]));
-          return !!prev
-            ? {
-                ...prev,
-                followings: {
-                  ...prev.followings,
-                  list: newList,
-                },
-                followingCount: newList.length,
-              }
-            : prev;
-        });
+        cyberConnect = await getCyberConnect();
+        const res = await cyberConnect.connect(toAddr);
       } catch (e) {
         console.error(e);
       } finally {
-        setIsLoading(false);
+        //setIsLoading(false);
       }
     },
-    [cyberConnect]
+    [address]
+  );
+  const unfollow = useCallback(
+    async (toAddr) => {
+      try {
+        cyberConnect = await getCyberConnect();
+        const res = await cyberConnect.disconnect(toAddr);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        //setIsLoading(false);
+      }
+    },
+    [address]
   );
 
-  const unfollow = useCallback(async () => {}, [cyberConnect]);
+  const getCyberConnect = async () => {
+    if (cyberConnect) {
+      return cyberConnect;
+    }
+    const { provider } = await connectWallet();
+    cyberConnect = new CyberConnect({
+      provider,
+      namespace: NAME_SPACE,
+    });
+    setCyberConnect(cyberConnect);
+    return cyberConnect;
+  };
 
-  const initIdentity = useCallback(async () => {
+  useMemo(() => getCyberConnect, [address]);
+
+  const init = async () => {
     setCyberConnect(null);
-    setIsLoading(false);
 
     if (!address) {
       //or no vaild
       return;
     }
     try {
-      setIsLoading(true);
+      //setIsLoading(true);
+      const { provider } = await connectWallet();
       setCyberConnect(
         new CyberConnect({
           provider,
@@ -96,12 +104,12 @@ export const CCProvider = ({ children }) => {
     } catch (err) {
       console.error(err);
     } finally {
-      setIsLoading(false);
+      //setIsLoading(false);
     }
-  }, [address]);
+  };
 
-  useEffect(() => {
-    //initIdentity();
+  useMemo(() => {
+    init();
   }, [address]);
 
   const { Provider } = _context;
@@ -109,11 +117,9 @@ export const CCProvider = ({ children }) => {
   return (
     <Provider
       value={{
-        isLoading,
         identity,
         follow,
         unfollow,
-        initIdentity,
       }}
     >
       {children}

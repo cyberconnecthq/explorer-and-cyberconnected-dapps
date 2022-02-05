@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import ALink from "../alink";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { FollowFlex } from "../styles/profile";
-import { useParams, useHistory } from "../use-router";
 import { useParams, useHistory } from "../use-router";
 
 const URL = process.env.REACT_APP_BACKEND_URL;
@@ -17,7 +16,7 @@ const Follower = (props) => {
   const myId = useSelector((state) => state.session.login.user.uid);
   const theme = useSelector((state) => state.session.theme);
 
-  useEffect(async () => {
+  useMemo(async () => {
     const res = await axios.get(
       `${URL}/api/follow/details?uid=${user.uid}&myId=${myId}`
     );

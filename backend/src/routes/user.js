@@ -5,14 +5,12 @@ const { verifyJwt } = require("../authorization");
 
 const {
   find,
-  register,
+  addUser,
   updateUser,
   getUserByUserId,
 } = require("../controllers/user/user");
 
-const {
-  auth,
-} = require("../controllers/user/auth");
+const { auth } = require("../controllers/user/auth");
 
 const {
   getLikesByUserId,
@@ -20,10 +18,9 @@ const {
   getMediaByUserId,
 } = require("../controllers/user/tweet");
 
-
 ////////////////////////////////////////////////////////
 /** POST /api/user/auth */
-router.route('/auth').post(auth);
+router.route("/auth").post(auth);
 
 router.route("/get").get(find);
 
@@ -32,7 +29,9 @@ router.route("/get").get(find);
 //router.route("/:uid").get(jwt(config), get);
 
 /** POST /api/user/add */
-router.route("/add").post(register);
+router.route("/add").post(addUser);
+//router.post("/add", addUser);
+router.get("/add", addUser);
 
 /** PATCH /api/user/:uid */
 /** Authenticated route */

@@ -6,3 +6,5 @@ export const SET_THEME = "SET_THEME";
 export const LOG_IN = "LOG_IN";
 // logout
 export const LOG_OUT = "LOG_OUT";
+
+export const SET_RECOMMENDS = "SET_RECOMMENDS";

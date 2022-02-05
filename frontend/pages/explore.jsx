@@ -40,7 +40,7 @@ const Explore = () => {
   const handleSearch = async (e) => {
     setSearch(e.target.value);
     const res = await axios.get(`${URL}/api/explore?search=${e.target.value}`);
-    res.data.users.map((u) => fixUser(u));
+    res.data.users = res.data.users.map((u) => fixUser(u));
     setUsers(res.data.users);
   };
 

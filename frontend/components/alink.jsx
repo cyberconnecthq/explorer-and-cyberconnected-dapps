@@ -3,7 +3,9 @@ import Link from "next/link";
 
 const ALink = (props) => {
   const { children, href, style, ...others } = props;
-  const SERVER_SIDE_PAGE_TRANSITION = process.env.SERVER_SIDE_PAGE_TRANSITION || false;
+  const SERVER_SIDE_PAGE_TRANSITION =
+    process.env.SERVER_SIDE_PAGE_TRANSITION || false;
+  style = { ...style, cursor: "pointer" };
 
   if (SERVER_SIDE_PAGE_TRANSITION) {
     return (
@@ -14,7 +16,9 @@ const ALink = (props) => {
   } else {
     return (
       <Link href={href} {...others}>
-        <a style={style}>{children}</a>
+        <div className="a" style={style}>
+          {children}
+        </div>
       </Link>
     );
   }

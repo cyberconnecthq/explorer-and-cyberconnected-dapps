@@ -34,11 +34,12 @@ const Profile = (props) => {
   const myId = me.uid;
   const dispatch = useDispatch();
 
-  useEffect(async () => {
-    const res = await axios.get(`${URL}/api/user/get?uid=${uid}`);
-    let u = res.data[0];
-    fixUser(u);
-    setTargetUser(u);
+  useEffect(() => {
+    (async () => {
+      const res = await axios.get(`${URL}/api/user/get?uid=${uid}`);
+      let u = fixUser(res.data[0]);
+      setTargetUser(u);
+    })();
   }, [uid, refresh]);
 
   const handleHeaderText = (text) => {
@@ -185,7 +186,7 @@ const Profile = (props) => {
         </div>
         <Info color={theme.color}>
           <h2>@{targetUser.domain}</h2>
-          <p>{targetUser.shortAddress}</p>
+          <p>0x{targetUser.shortAddress}</p>
           {targetUser.bio && <p>{targetUser.bio}</p>}
           <Dates>
             {targetUser.location && (

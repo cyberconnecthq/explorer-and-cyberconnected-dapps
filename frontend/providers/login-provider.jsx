@@ -3,9 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 
 import useWallet from "./wallet-provider";
-import Loading from "../components/loading";
 import { domain } from "../lib/bip39";
 import { LOG_IN, LOG_OUT } from "../redux/actions";
+
+const URL = process.env.REACT_APP_BACKEND_URL;
 
 const _defaultUser = { isLogined: false };
 const _context = React.createContext({
@@ -40,11 +41,9 @@ export const LoginProvider = ({ children }) => {
   }, []);
 
   const login = useCallback(async () => {
-    console.log(1);
     if (isLogined || isLoading) {
       return;
     }
-    console.log(2);
 
     try {
       setLoading(true);
@@ -54,7 +53,7 @@ export const LoginProvider = ({ children }) => {
       }
 
       const _register = async (uid) => {
-        return fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/add`, {
+        return fetch(`${URL}/api/user/add`, {
           body: JSON.stringify({
             uid,
             domain: domain(uid),
@@ -89,7 +88,7 @@ export const LoginProvider = ({ children }) => {
       };
 
       const _auth = async ({ uid, signature }) => {
-        return fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/auth`, {
+        return fetch(`${URL}/api/user/auth`, {
           body: JSON.stringify({ uid, signature }),
           headers: {
             "Content-Type": "application/json",
@@ -107,17 +106,36 @@ export const LoginProvider = ({ children }) => {
 
       const uid = address.substring(2).toUpperCase();
 
-      // get nonce from server by uid(publicAddress)
-      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get?uid=${uid}`)
+      //addUser or getUser and  get nonce from server by uid(publicAddress)
+
+      fetch(`${URL}/api/user/add`, {
+        body: JSON.stringify({
+          uid,
+          domain: domain(uid),
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      }) /*
         .then((response) => {
           let users = response.json();
           return users;
         })
         .then(async (users) => {
           return users.length ? users[0] : _register(uid);
+        })*/
+        .then((response) => {
+          if (response.ok) {
+            let res = response.json(); //promise
+            return res;
+          } else {
+            throw new Error(`Add Error!`);
+          }
         })
-        .then(async (user) => {
-          return _signNonceMessage(user);
+        .then((res) => {
+          console.log(res.user)
+          return _signNonceMessage(res.user);
         })
         .then(({ uid, signature }) => {
           return _auth({ uid, signature });
@@ -148,24 +166,11 @@ export const LoginProvider = ({ children }) => {
     if (!isLogined) {
       document.title = "CCTwitter";
     } else {
-      document.title = "@" + user.domain+"/CCTwitter";
+      document.title = "@" + user.domain + "/CCTwitter";
     }
   }, [isLogined, user]);
 
   const { Provider } = _context;
-
-  const TEST_MODE = false;
-  const replace = false;
-  if (!TEST_MODE) {
-    if (!isLogined && router.pathname != "/") {
-      router.replace("/");
-      replace = true;
-    }
-    if (isLogined && router.pathname == "/") {
-      router.replace("/home");
-      replace = true;
-    }
-  }
 
   return (
     <Provider
@@ -178,8 +183,7 @@ export const LoginProvider = ({ children }) => {
         isLoading,
       }}
     >
-      {replace && <Loading />}
-      {!replace && children}
+      {children}
     </Provider>
   );
 };
