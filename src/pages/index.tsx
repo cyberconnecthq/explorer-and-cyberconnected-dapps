@@ -1,9 +1,9 @@
 import ConnectionsTable from '@/components/ConnectionsTable';
 import { isValidAddr } from '@/utils/helper';
-import { followListInfoQuery, searchUserInfoQuery } from '@/utils/query';
+import { followListInfoQuery, recommendationListQuery, searchUserInfoQuery } from '@/utils/query';
 import { FIRST, NAME_SPACE, NETWORK } from '@/utils/settings';
 import theme from '@/utils/theme';
-import { ConnectionsData, FollowListInfoResp, SearchUserInfoResp } from '@/utils/types';
+import { ConnectionsData, FollowListInfoResp, RecommendationInfo, SearchUserInfoResp } from '@/utils/types';
 import { Box, ChakraProvider, Flex, Heading, Input } from '@chakra-ui/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ConnectionsGraph from '../components/ConnectionsGraph';
@@ -27,6 +27,8 @@ const ConnectionsPage = () => {
 
     const [followListInfo, setFollowListInfo] =
         useState<FollowListInfoResp | null>(null);
+    const [recommendedList, setRecommendedList] =
+        useState<RecommendationInfo | null>(null);
 
     const [connections, setConnections] = useState<ConnectionsData>({data: []});
     useEffect(() => {
@@ -68,6 +70,11 @@ const ConnectionsPage = () => {
         });
         if (resp) {
             setFollowListInfo(resp);
+        }
+
+        const resp2 = await recommendationListQuery({address});
+        if (resp2) {
+            setRecommendedList(resp2);
         }
     };
 
