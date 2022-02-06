@@ -31,7 +31,6 @@ interface ConnectionsGraphProps {
 
 export default function ConnectionsGraph(props: ConnectionsGraphProps) {
   const handleClick = (node:any) => {
-    console.log(node);
     props.setHighlight(node.id);
   };
 

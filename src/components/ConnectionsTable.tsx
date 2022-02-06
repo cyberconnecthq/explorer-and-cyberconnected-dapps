@@ -1,13 +1,15 @@
 import { useFetch, useFollowListInfoQuery } from "@/utils/hooks";
-import { ConnectionsData } from "@/utils/types";
+import { ConnectionData, ConnectionsData } from "@/utils/types";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { Box, Flex, Spinner, Tooltip } from "@chakra-ui/react";
+import { Box, Button, Flex, Spinner, Tooltip } from "@chakra-ui/react";
+import { useEffect, useRef } from "react";
 import Identicon from 'react-identicons';
 
 interface ConnectionsTableProps {
     connections: ConnectionsData,
     highlightAddress: string,
     setHighlight: (highlightAddress: string) => void,
+    changeAddress: (address: string) => void,
 }
 
 function ConnectionsTable(props : ConnectionsTableProps) {
@@ -18,6 +20,46 @@ function ConnectionsTable(props : ConnectionsTableProps) {
         invalidateBalance();
         invalidateUserInfo();
     }
+
+    const detailsRef = useRef<HTMLDivElement | null>(null);
+    const details = (entry:ConnectionData) => 
+            <Box ref={detailsRef} pl={10} pr={5} pb={5} key={entry.address + '_1'} bgColor='gray.300'>
+                <Box float='right'>
+                    {balanceState.status === 'fetched' ?
+                        (balanceState.data.result / 1e18).toLocaleString('en-IN', { maximumSignificantDigits: 4 }) :
+                        <Spinner size='xs' />} &Xi;
+                </Box>
+                <Box >
+                    {(entry.ens || 'no domain info available')}
+                </Box>
+                <Box style={{ clear: 'both' }} float='right'>
+                    <ChevronLeftIcon w={6} h={6} color={'yellow.400'} />
+                    {userInfo?.status === 'fetched' ?
+                        userInfo?.data.followingCount + ' '
+                        : <Spinner size='xs' mr={2} />
+                    }
+                    Following
+                </Box>
+                <Box>
+                    <ChevronRightIcon w={6} h={6} color={'green.400'} />
+                    {userInfo?.status === 'fetched' ?
+                        userInfo?.data.followerCount + ' '
+                        : <Spinner size='xs' mr={2} />
+                    }
+                    Followers
+                </Box>
+                <Box style={{ clear: 'both' }}>
+                    <Button onClick={() => { props.changeAddress(props.highlightAddress); }}>Search this address.</Button>
+                </Box>
+            </Box>
+        
+    const highlightEntry = props.connections.data.find((entry) => entry.address === props.highlightAddress)
+    const details_box = highlightEntry ? details(highlightEntry) : undefined;
+    useEffect(() => {
+        if (detailsRef !== null) {
+            detailsRef.current?.scrollIntoView({block: 'center'});
+        }
+    }, [props.highlightAddress, props.connections])
     
     return (
         <Box key="connectionsTable">
@@ -53,34 +95,7 @@ function ConnectionsTable(props : ConnectionsTableProps) {
                         {entry.address}
                     </Box>
                 </Flex>
-                    { (props.highlightAddress == entry.address) && 
-                        <Box pl={10} pr={5} key={entry.address + '_1'}>
-                            <Box float='right'>
-                                {balanceState.status === 'fetched' ?
-                                    (balanceState.data.result / 1e18).toLocaleString('en-IN', { maximumSignificantDigits: 4 }) :
-                                    <Spinner size='xs' />} &Xi;
-                            </Box>
-                            <Box >
-                                {(entry.ens || 'no domain info available')}
-                            </Box>
-                            <Box style={{ clear: 'both' }} float='right'>
-                                <ChevronLeftIcon w={6} h={6} color={'yellow.400'} />
-                                {userInfo?.status === 'fetched' ?
-                                userInfo?.data.followingCount + ' '
-                                : <Spinner size='xs' mr={2}/>
-                                }
-                                Following
-                            </Box>
-                            <Box>
-                                <ChevronRightIcon w={6} h={6} color={'green.400'} />
-                                {userInfo?.status === 'fetched' ?
-                                userInfo?.data.followerCount + ' '
-                                : <Spinner size='xs' mr={2}/>
-                                }
-                                Followers
-                            </Box>
-                        </Box>
-                     }
+                    {(props.highlightAddress == entry.address) && details_box }
                 </Box>
             )}
         </Box>)
