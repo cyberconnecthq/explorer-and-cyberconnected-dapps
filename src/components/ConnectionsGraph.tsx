@@ -1,13 +1,13 @@
 import { ConnectionsData } from "@/utils/types";
 import { Box } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+
 const NoSSRForceGraph = dynamic(() => import('./ForceGraph'), {
   ssr: false,
 });
 
-function genTree(cd: ConnectionsData){
-  const ownAddress = "0x0";
+function genTree(cd: ConnectionsData, ownAddress: string){
   return {
     nodes: [{id: ownAddress}].concat(cd.data.map(conn => ({id: conn.address}) )),
     links: cd.data
@@ -25,6 +25,7 @@ interface ConnectionsGraphProps {
     width: number;
     height: number;
     highlightAddress: string,
+    address: string,
     setHighlight: (highlightAddress: string) => void,
 }
 
@@ -83,9 +84,8 @@ export default function ConnectionsGraph(props: ConnectionsGraphProps) {
     }
   }, [hoverNode, props.highlightAddress, props.connections]);
 
-      const treeData = useMemo(() => genTree(props.connections), [props.connections]);
+      const treeData = useMemo(() => genTree(props.connections, props.address), [props.connections, props.address]);
 
-  const fgRef = useRef();
   return (
     <Box w='100%' h='100%' minHeight='300px'>
       <NoSSRForceGraph

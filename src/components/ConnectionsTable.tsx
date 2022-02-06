@@ -29,10 +29,8 @@ function ConnectionsTable(props : ConnectionsTableProps) {
                         (balanceState.data.result / 1e18).toLocaleString('en-IN', { maximumSignificantDigits: 4 }) :
                         <Spinner size='xs' />} &Xi;
                 </Box>
-                <Box >
-                    {(entry.ens || 'no domain info available')}
-                </Box>
-                <Box style={{ clear: 'both' }} float='right'>
+                {(entry.ens ? <Box fontSize='sm'>{entry.address.slice(0,8) + '...' + entry.address.slice(-9,-1)}</Box> : <Box fontSize='sm'>no domain info available</Box>)}
+                <Box style={{ clear: 'both' }} float='right' fontSize='sm'>
                     <ChevronLeftIcon w={6} h={6} color={'yellow.400'} />
                     {userInfo?.status === 'fetched' ?
                         userInfo?.data.followingCount + ' '
@@ -40,7 +38,7 @@ function ConnectionsTable(props : ConnectionsTableProps) {
                     }
                     Following
                 </Box>
-                <Box>
+                <Box fontSize='sm'>
                     <ChevronRightIcon w={6} h={6} color={'green.400'} />
                     {userInfo?.status === 'fetched' ?
                         userInfo?.data.followerCount + ' '
@@ -49,7 +47,7 @@ function ConnectionsTable(props : ConnectionsTableProps) {
                     Followers
                 </Box>
                 <Box style={{ clear: 'both' }}>
-                    <Button onClick={() => { props.changeAddress(props.highlightAddress); }}>Search this address.</Button>
+                    <Button size='sm' onClick={() => { props.changeAddress(props.highlightAddress); }}>Search this address.</Button>
                 </Box>
             </Box>
         
@@ -92,7 +90,7 @@ function ConnectionsTable(props : ConnectionsTableProps) {
                         onClick={() => {invalidate(); props.setHighlight(entry.address)}}
                         cursor='pointer'
                     >
-                        {entry.address}
+                        {entry.ens || entry.address}
                     </Box>
                 </Flex>
                     {(props.highlightAddress == entry.address) && details_box }

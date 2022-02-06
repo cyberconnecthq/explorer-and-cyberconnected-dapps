@@ -135,7 +135,7 @@ const ConnectionsPage = () => {
                         </Box>
                         <Box flexGrow={1} display={['none', 'none', 'flex']} p={5} rounded='md' backgroundColor='white' overflow='hidden' ref={graphRef}>
                             <Box height='100%' width='100%' >
-                                <ConnectionsGraph connections={connections} width={width} height={height} highlightAddress={highlightAddress} setHighlight={setHighlightCallback} />
+                                <ConnectionsGraph address={address} connections={connections} width={width} height={height} highlightAddress={highlightAddress} setHighlight={setHighlightCallback} />
                             </Box>
                         </Box>
                     </Flex>
