@@ -54,7 +54,7 @@ function ConnectionsTable(props : ConnectionsTableProps) {
                     </Box>
                 </Flex>
                     { (props.highlightAddress == entry.address) && 
-                        <Box pl={10} key={entry.address + '_1'}>
+                        <Box pl={10} pr={5} key={entry.address + '_1'}>
                             <Box float='right'>
                                 {balanceState.status === 'fetched' ?
                                     (balanceState.data.result / 1e18).toLocaleString('en-IN', { maximumSignificantDigits: 4 }) :

@@ -4,6 +4,7 @@ import { followListInfoQuery } from './query';
 import { FIRST, NAME_SPACE, NETWORK } from './settings';
 import { FollowListInfoArgs, FollowListInfoResp } from './types';
 
+// explanation: https://www.smashingmagazine.com/2020/07/custom-react-hook-fetch-cache-data/
 export const useFetch = (url: string) => {
 	const cache = useRef<Record<string, any>>({});
 
