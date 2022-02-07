@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 const { Op } = require("sequelize");
 const { Retweet, Like, User, Tweet, sequelize } = require("../../db");
 

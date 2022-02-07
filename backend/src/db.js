@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 const { Sequelize } = require("sequelize");
 const UserModel = require("./models/User");
 const FollowerModel = require("./models/Follower");

@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 import React from "react";
 import { Text } from "../styles/profile";
 import { ActivityBox, ActivityIcon } from "../styles/common";

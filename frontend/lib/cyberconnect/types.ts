@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 export interface FollowListInfoArgs {
   address: string;
   namespace?: string;

@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 import { BasicUserInfo } from './types';
 
 export const formatAddress = (address: string) => {

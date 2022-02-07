@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 import { SET_THEME } from "../actions";
 
 const availThemes = {

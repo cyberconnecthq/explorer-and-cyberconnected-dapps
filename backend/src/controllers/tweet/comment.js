@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 const { Comment, Tweet, User } = require("../../db");
 const upload = require("../upload");
 

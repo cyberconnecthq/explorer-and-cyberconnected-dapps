@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 const { Op } = require("sequelize");
 const { User, Tweet, Follower, sequelize } = require("../db");
 const { getMyRetweets, getMyLikes } = require("./user/tweet");

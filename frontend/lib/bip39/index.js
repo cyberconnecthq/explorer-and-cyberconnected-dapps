@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 import { entropyToMnemonic } from "bip39";
 
 export const domain = (uid) => {

@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 // Update any changes
 export const SET_UPDATE = "SET_UPDATE";
 // Theme

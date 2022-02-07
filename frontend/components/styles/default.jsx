@@ -1,4 +1,7 @@
-import styled from "styled-components";
+/**
+ * 
+ */
+ import styled from "styled-components";
 
 export const Default = styled.div`
   text-align: center;

@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 import {
   SearchUserInfoResp,
   Network,

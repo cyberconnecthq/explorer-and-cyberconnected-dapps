@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 const { User, Follower } = require("../db");
 
 const _getFollowers = async (uid) => {

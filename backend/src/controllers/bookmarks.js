@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 const { Op } = require("sequelize");
 const { Tweet, Bookmark, User, sequelize } = require("../db");
 const { bookmarkValidation } = require("../utils/validation");

@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 const { Like, Tweet, User } = require("../../db");
 
 module.exports = {

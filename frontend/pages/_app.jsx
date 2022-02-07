@@ -1,3 +1,7 @@
+/**
+ * Next Application's Root Element
+ */
+
 import React, { Children, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { ToastContainer } from "react-toastify";
@@ -29,7 +33,7 @@ const Wrapper = ({ WrappedComponent, ...pageProps }) => {
   const refresh = useSelector((state) => state.volatile.update.refresh);
   console.info("App render: " + refresh);
 
-  const TEST_MODE = true;
+  const TEST_MODE = false;
   if (!TEST_MODE) {
     if (!isLogined && router.pathname != "/") {
       router.replace("/");

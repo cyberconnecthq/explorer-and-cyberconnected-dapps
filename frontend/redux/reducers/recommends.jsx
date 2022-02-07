@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 import { SET_RECOMMENDS } from "../actions";
 
 const initialState = { list: [], pageInfo: {} };

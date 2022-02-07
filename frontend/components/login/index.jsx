@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useParams, useHistory } from "../use-router";

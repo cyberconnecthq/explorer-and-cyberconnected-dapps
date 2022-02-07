@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 import LogIn from "../components/login";
 //import PrivateRoute from "../components/privateRoute.jsx--";
 import { useEffect } from "react";

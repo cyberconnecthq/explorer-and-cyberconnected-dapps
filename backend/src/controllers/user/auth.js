@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 const { recoverPersonalSignature } = require("eth-sig-util");
 const { bufferToHex } = require("ethereumjs-util");
 

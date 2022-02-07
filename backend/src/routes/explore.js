@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 const router = require("express").Router();
 const { searchUser } = require("../controllers/explore");
 

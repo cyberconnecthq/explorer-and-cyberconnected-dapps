@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 const { Tweet, User, Like, Comment, Retweet } = require("../../db");
 const { addTweetValidation } = require("../../utils/validation");
 const upload = require("../upload");

@@ -1,3 +1,7 @@
+/**
+ * currently no operation
+ */
+
 import PageNotFound from "../components/page-not-found";
 import { WithOnlyMenuBar } from "../components/wrappers";
 

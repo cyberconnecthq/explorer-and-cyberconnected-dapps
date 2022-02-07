@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 import styled, { keyframes } from "styled-components";
 
 const spin = keyframes`

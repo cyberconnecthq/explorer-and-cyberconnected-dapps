@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 import React, { useState, useEffect, useMemo } from "react";
 import ALink from "../alink";
 import AVLink from "../avlink";
@@ -142,7 +146,7 @@ const SideBar = () => {
     dispatch({ type: SET_UPDATE });
   };
 
-  const handleMore = async () => {};
+  const handleMore = async () => {alert("no implements")};
 
   let render;
   if (!whoToFollow) {
@@ -245,7 +249,7 @@ const SideBar = () => {
                 onClick={(e) => handleMore()}
                 disabled={isFollowDisabled}
               >
-                More
+                More ?
               </Button>
             </div>
           )}
