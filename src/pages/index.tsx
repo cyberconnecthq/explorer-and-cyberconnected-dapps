@@ -1,10 +1,10 @@
 import ConnectionsTable from '@/components/ConnectionsTable';
 import { isValidAddr } from '@/utils/helper';
-import { useFetch, useFollowListInfoQuery } from '@/utils/hooks';
+import { useFetch } from '@/utils/hooks';
 import { followListInfoQuery, recommendationListQuery, searchUserInfoQuery } from '@/utils/query';
 import { FIRST, NAME_SPACE, NETWORK } from '@/utils/settings';
 import theme from '@/utils/theme';
-import { ConnectionsData, FollowListInfoResp, RecommendationInfo, SearchUserInfoResp } from '@/utils/types';
+import { ConnectionsData, FollowListInfoResp, RecommendedUser, SearchUserInfoResp } from '@/utils/types';
 import { Box, ChakraProvider, Flex, Heading, Input, Spinner } from '@chakra-ui/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ConnectionsGraph from '../components/ConnectionsGraph';
@@ -30,7 +30,7 @@ const ConnectionsPage = () => {
     const [followListInfo, setFollowListInfo] =
         useState<FollowListInfoResp | null>(null);
     const [recommendedList, setRecommendedList] =
-        useState<RecommendationInfo | null>(null);
+        useState<RecommendedUser[]>([]);
 
     const [connections, setConnections] = useState<ConnectionsData>({data: []});
     useEffect(() => {
@@ -109,16 +109,16 @@ const ConnectionsPage = () => {
         };
     },[setWidth, setHeight, graphRef])
 
-    const [highlightAddress, setHighlightAddress] = useState("0x80d17a81edbb64bc1f467955d5c6d92969e70f1c");
+    const [highlightAddress, setHighlightAddress] = useState("");
     const setHighlightCallback = useCallback((str)=>setHighlightAddress(str), []);
 
     return (
         <ChakraProvider theme={theme}>
-            <Box p={6} backgroundColor='black' height='100vh' minHeight='500px'>
-                <Flex p={6} rounded='md' margin='auto' bgColor='white' direction='column' height='100%'>
+            <Box p={6} backgroundColor='black' height='100vh' minHeight='600px' width='100%'>
+                <Flex p={6} rounded='md' margin='auto' bgColor='white' direction='column' height='100%' minW='250px'>
                     <Box mb={3} flex={0}>
-                        <Flex align='end'>
-                            <Box flex={1}>
+                        <Flex align='end' flexWrap={['wrap', 'wrap', 'nowrap']}>
+                            <Box flex={1} minW='200px'>
                                 <Heading as='h2' size='xs' textColor='gray.500' mt={2} mb={0}>Address: </Heading>
                                 <Input name="address" bgColor='gray.300' value={address} onChange={(e) => changeAddress(e.target.value)}></Input>
                             </Box>
@@ -130,8 +130,14 @@ const ConnectionsPage = () => {
                             </Box></Flex>
                     </Box>
                     <Flex flex={1} minHeight='300px' alignItems='stretch' gap={5}>
-                        <Box flexBasis='26em' flexGrow={0} overflow='auto'>
-                            <ConnectionsTable connections={connections} highlightAddress={highlightAddress} setHighlight={setHighlightCallback} changeAddress={changeAddress} />
+                        <Box flexBasis='26em' flexGrow={0}>
+                            <ConnectionsTable 
+                                connections={connections}
+                                recommendations={recommendedList}
+                                highlightAddress={highlightAddress}
+                                setHighlight={setHighlightCallback}
+                                changeAddress={changeAddress}
+                            />
                         </Box>
                         <Box flexGrow={1} display={['none', 'none', 'flex']} p={5} rounded='md' backgroundColor='white' overflow='hidden' ref={graphRef}>
                             <Box height='100%' width='100%' >

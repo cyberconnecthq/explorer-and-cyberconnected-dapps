@@ -24,10 +24,6 @@ export interface RecommendedUser {
   recommendationReason: string
 }
 
-export interface RecommendationInfo {
-  list: RecommendedUser;
-}
-
 export interface BasicUserInfo {
   ens: string;
   address: string;

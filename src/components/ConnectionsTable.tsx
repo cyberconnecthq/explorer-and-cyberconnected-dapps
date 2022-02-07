@@ -1,12 +1,13 @@
 import { useFetch, useFollowListInfoQuery } from "@/utils/hooks";
-import { ConnectionData, ConnectionsData } from "@/utils/types";
+import { ConnectionData, ConnectionsData, RecommendedUser } from "@/utils/types";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { Box, Button, Flex, Spinner, Tooltip } from "@chakra-ui/react";
-import { useEffect, useRef } from "react";
+import { Box, Button, Flex, Spinner, Tab, TabList, TabPanel, TabPanels, Tabs, Tooltip } from "@chakra-ui/react";
+import { useCallback, useEffect, useRef } from "react";
 import Identicon from 'react-identicons';
 
 interface ConnectionsTableProps {
     connections: ConnectionsData,
+    recommendations: RecommendedUser[],
     highlightAddress: string,
     setHighlight: (highlightAddress: string) => void,
     changeAddress: (address: string) => void,
@@ -50,7 +51,52 @@ function ConnectionsTable(props : ConnectionsTableProps) {
                     <Button size='sm' onClick={() => { props.changeAddress(props.highlightAddress); }}>Search this address.</Button>
                 </Box>
             </Box>
-        
+
+    interface EntryData {
+        ens?: string;
+        address: string;
+        is_follower?: boolean,
+        is_following?: boolean,
+        recommendation_reason?: string
+    }
+    const UserEntry = useCallback(((props: { entry: EntryData}) => {
+        const entry = props.entry;
+        return (
+            <Flex
+                alignItems='center'
+                justifyContent='flex-start'
+                maxW='33em'
+                gap={0}
+                key={entry.address}
+            >
+                <Box key='header'>
+                    <Flex minW='fit-content' mx={1} alignItems='center' >
+                        {entry.is_follower !== undefined &&
+                            <Tooltip label={entry.is_follower ? 'Is a follower.' : "Isn't a follower."} >
+                                <ChevronRightIcon w={6} h={6} ml={-2} mr={-2} color={
+                                    entry.is_follower ? 'green.400' : 'gray.400'} /></Tooltip>
+                        }
+                        <Identicon string={entry.address} size={15} />
+                        {entry.is_following !== undefined &&
+                            <Tooltip label={entry.is_following ? 'Is being followed.' : "Isn't being followed."} >
+                                <ChevronLeftIcon w={6} h={6} ml={-2} mr={-2} color={
+                                    entry.is_following ? 'yellow.400' : 'gray.400'} />
+                            </Tooltip>
+                        }
+                    </Flex>
+                </Box>
+                <Box
+                    key={entry.address}
+                    wordBreak='break-all'
+                    fontFamily='monospace'
+                    cursor='pointer'
+                >
+                    {entry.ens || entry.address}
+                </Box>
+            </Flex>
+        )
+    }),[]);
+
     const highlightEntry = props.connections.data.find((entry) => entry.address === props.highlightAddress)
     const details_box = highlightEntry ? details(highlightEntry) : undefined;
     useEffect(() => {
@@ -60,43 +106,41 @@ function ConnectionsTable(props : ConnectionsTableProps) {
     }, [props.highlightAddress, props.connections])
     
     return (
-        <Box key="connectionsTable">
-            {props.connections.data.map(entry =>
-                <Box key={entry.address}>
-                <Flex
-                    alignItems='center'
-                    justifyContent='flex-start'
-                    maxW='33em'
-                    gap={0}
-                    key={entry.address}
-                    bgColor={props.highlightAddress == entry.address ? 'gray.300' : 'white'}
-                >
-                    <Box>
-                        <Flex minW='4em' alignItems='center' mx={-3}>
-                            <Tooltip label={entry.is_follower ? 'Is a follower.' : "Isn't a follower."} >
-                                <ChevronRightIcon w={6} h={6} mr={-1} color={
-                                    entry.is_follower ? 'green.400' : 'gray.400'} /></Tooltip>
-                            <Identicon string={entry.address} size={15} />
-                            <Tooltip label={entry.is_following ? 'Is being followed.' : "Isn't being followed."} >
-                                <ChevronLeftIcon w={6} h={6} ml={-1} color={
-                                    entry.is_following ? 'yellow.400' : 'gray.400'} />
-                            </Tooltip>
-                        </Flex>
+        <Tabs height='100%' display='flex' flexDir='column' p={0}>
+            <TabList flex={0} flexWrap='wrap'>
+                <Tab>Connections</Tab>
+                <Tab>Recommendations</Tab>
+            </TabList>
+
+            <TabPanels overflow='auto' flex={1}>
+                <TabPanel p={1}>
+                    <Box key="connectionsTable">
+                        {props.connections.data.map(entry =>
+                            <Box key={entry.address + '_user'}
+                                bgColor={props.highlightAddress == entry.address ? 'gray.300' : 'white'}
+                                onClick={() => { invalidate(); props.setHighlight(entry.address) }}
+                            >
+                                <UserEntry entry={entry} />
+                                {(props.highlightAddress == entry.address) && details_box}
+                            </Box>
+                        )}
                     </Box>
-                    <Box
-                        key={entry.address}
-                        wordBreak='break-all'
-                        fontFamily='monospace'
-                        onClick={() => {invalidate(); props.setHighlight(entry.address)}}
-                        cursor='pointer'
-                    >
-                        {entry.ens || entry.address}
-                    </Box>
-                </Flex>
-                    {(props.highlightAddress == entry.address) && details_box }
-                </Box>
-            )}
-        </Box>)
+                </TabPanel>
+                <TabPanel p={1}>
+                    {props.recommendations.map(entry =>
+                        <Box key={entry.address + '_user'}
+                            bgColor={props.highlightAddress == entry.address ? 'gray.300' : 'white'}
+                            onClick={() => { invalidate(); props.setHighlight(entry.address) }}
+                        >
+                            <UserEntry entry={entry} />
+                            {(props.highlightAddress.replace(/^{0x}+/, '') === entry.address.replace(/^{0x}+/, '')) && 
+                                <Box pl={10} pr={5} pb={5} fontSize='sm'>Reason: {entry.recommendationReason}</Box>
+                            }
+                        </Box>
+                    )}
+                </TabPanel>
+            </TabPanels>
+        </Tabs>)
 }
 
 export default ConnectionsTable;
