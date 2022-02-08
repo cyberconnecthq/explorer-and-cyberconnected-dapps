@@ -42,8 +42,8 @@ const ConnectionsPage = () => {
     useEffect(() => {
         // TODO: it should be done querying the info for each follower because if there are more than query maximum (FIRST=1000) it could be missing in the list
         // combine followers and following into connections
-        let connections = followListInfo?.followers.list.map((follower) => ({...follower, is_follower: true, is_following: false}));
-        const following = followListInfo?.followings.list.map((following) => ({...following, is_follower:false, is_following: true}));
+        let connections = followListInfo?.followers?.list.map((follower) => ({...follower, is_follower: true, is_following: false}));
+        const following = followListInfo?.followings?.list.map((following) => ({...following, is_follower:false, is_following: true}));
         following?.forEach((fing) => {
             let connection_index = connections?.findIndex((fer) => {
                 return fer.address == fing.address;
