@@ -222,7 +222,7 @@ Two themes(Black/White) are provided.
 ### 1. Goal
 The deadline for the bounty is 20 days.
 
-It is impossible to create a high-level product by exploiting all the possibilities of CyberConnect during this period.
+It is difficult to create a high-level product by exploiting all the possibilities of CyberConnect during this period.
 
 Therefore, in this project, the main goal was to show my skills and potential and to make a reusable code base.
 
@@ -233,24 +233,35 @@ The specific items of the goal are as follows.
 * To clearly show the possibility of combining with CyberConnect.
 
 ### 2. Choose Architectire
-There are three architecture options.
+
+The following three architectures were considered.
 
 ![Feed](readme/12-architecture.png)
 
-* Option 1 is the ideal type of dApps. However, it is impossible to realize at the moment because the functions necessary to realize Twitter are not provided.
+* Option 1 is the ideal type of dApps. However, it is impossible to realize at this moment because the distributed services for Twitter are not provided.
 
 * Option 2 has the advantage that the new service can easily solve the cold start problem by using the follow data already established in CyberConnect.
 
+  In the case of a newcomers, since there is no follow data already established in CyberConnect, it may not be very helpful.
+
+  In addition, follow data established in CyberConnect is mainly related to NFT.
+
+  Twitter does not exclusively serve the NFT, so even in this case, the already established follow data may not be very helpful.
+
+  From this, in this project, attention was paid to making the site interesting even for newcomers or those who are not interested in NFT.
+
   This option uses cyberconnect, but structurally, it is no dApp and is no different from the traditional app because the user completely depends on the central server.
 
-* Option 3 is a hybrid of traditional and distributed apps.
+  So option 2 lost weight.
 
-  In other words, Twitter functions depend on a central server and follow functions operate like a distributed app.
+* Option 3 is a hybrid of traditional apps and dApps.
 
-So, to have a sense of challenge, I chose option 3 experimentally.
+  In other words, Twitter functions depend on a central server and follow functions operate like a dApp.
+
+In the end, to have a sense of challenge, I chose option 3 experimentally in this bounty.
 
 ### 3. Login with Metamask
-If we truly want to do a decentralized app, we must use a suitable login method.
+If we truly want to do a dApp, we must use a suitable login method.
 Login using email or social account is the most commonly used now.
 
 This method is subordinate to large corporations.
