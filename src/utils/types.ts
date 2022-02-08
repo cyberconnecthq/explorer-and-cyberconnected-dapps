@@ -1,3 +1,9 @@
+export interface MultipleFollowListInfoArgs {
+  addresses: string[];
+  namespace?: string;
+  network?: string;
+}
+
 export interface FollowListInfoArgs {
   address: string;
   namespace?: string;
@@ -10,6 +16,10 @@ export interface FollowListInfoArgs {
 
 export interface RecomendationListInfoArgs {
   address: string;
+}
+
+export interface MultipleFollowersQuery {
+  addresses: string[];
 }
 
 export interface SearchUserInfoArgs {
@@ -36,6 +46,12 @@ export interface FollowListInfo {
     hasNextPage: boolean;
   };
   list: BasicUserInfo[];
+}
+
+export interface MultipleFollowListInfoRespEntry {
+  address: string;
+  followings: {address: string}[];
+  followers: {address: string}[];
 }
 
 export interface FollowListInfoResp {

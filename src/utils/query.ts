@@ -1,13 +1,10 @@
+import { NAME_SPACE, NETWORK } from './settings';
 import {
-  FollowListInfoArgs,
-  SearchUserInfoArgs,
-  FollowListInfoResp,
-  SearchUserInfoResp,
-  RecomendationListInfoArgs,
-  RecommendationInfo
+  FollowListInfoArgs, FollowListInfoResp, MultipleFollowListInfoArgs, MultipleFollowListInfoRespEntry, RecomendationListInfoArgs,
+  RecommendedUser, SearchUserInfoArgs, SearchUserInfoResp
 } from './types';
 
-const endPoint = 'https://api.cybertino.io/connect/';
+export const endPoint = 'https://api.cybertino.io/connect/';
 
 export const recommendationListSchema = ({
   address
@@ -27,6 +24,38 @@ export const recommendationListSchema = ({
     `,
     variables: {
       address,
+    },
+  };
+};
+
+export const multipleFollowersSchema = ({
+  addresses,
+  namespace=NAME_SPACE,
+  network=NETWORK,
+}: MultipleFollowListInfoArgs) => {
+  const queries = addresses.map((address) =>
+    `q${address}: identity(address: "${address}", network: $network) {
+        followings(namespace: $namespace) {
+          list {
+            address
+          }
+        }
+        followers(namespace: $namespace) {
+          list {
+            address
+          }
+        }
+      }
+      `).join('');
+  const query = `query followListInfo($namespace: String, $network: Network) {
+      ${queries}
+    }`;
+  return {
+    operationName: 'followListInfo',
+    query: query,
+    variables: {
+      namespace,
+      network,
     },
   };
 };
@@ -154,13 +183,21 @@ export const recommendationListQuery = async ({
 
   const resp = await handleQuery(schema, endPoint);
 
-  return (resp?.data?.recommendations?.data?.list as RecommendationInfo) || null;
+  return (resp?.data?.recommendations?.data?.list as RecommendedUser[]) || null;
 }
+
+export const multipleFollowersQuery = async (addresses: string[]) => {
+  if(addresses === undefined || addresses.length == 0) return [];
+  const data = await handleQuery(multipleFollowersSchema({ addresses }), endPoint);
+  //@ts-ignore
+  const ret = Object.entries(data.data).map(([address, data])=>({address:address.slice(1), followers:data.followers.list, followings:data.followings.list}));
+  return ret as MultipleFollowListInfoRespEntry[];
+};
 
 export const followListInfoQuery = async ({
   address,
-  namespace,
-  network,
+  namespace=NAME_SPACE,
+  network=NETWORK,
   followingFirst,
   followingAfter,
   followerFirst,
