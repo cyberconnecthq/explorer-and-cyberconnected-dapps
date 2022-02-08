@@ -11,7 +11,7 @@ import ConnectionsGraph from '../components/ConnectionsGraph';
 
 
 const ConnectionsPage = () => {
-    const [address, setAddress] = useState<string>("0x0c493e5fb71428ba99edcb1bbccd925fdd1f48e0");
+    const [address, setAddress] = useState<string>("0x1dd779850b584e10e8f95b03a2a86b90b312d75d");
 
     const [balanceState, invalidateBalance] = useFetch(`https://api.etherscan.io/api?module=account&action=balance&address=${address}&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=ECK9EWNEXGYJUEAACITH3F2N8DC6GMMHS9`);
     const [searchAddrInfo, setSearchAddrInfo] = useState<SearchUserInfoResp | null>(null);
@@ -114,20 +114,21 @@ const ConnectionsPage = () => {
 
     return (
         <ChakraProvider theme={theme}>
-            <Box p={6} backgroundColor='black' height='100vh' minHeight='600px' width='100%'>
-                <Flex p={6} rounded='md' margin='auto' bgColor='white' direction='column' height='100%' minW='250px'>
+            <Box p={6} backgroundColor='black' bgGradient='linear(to-tr, black, blue.800, pink.900)' height='100vh' minHeight='600px' width='100%'>
+                <Flex p={6} rounded='md' margin='auto' bgColor='blackAlpha.600' direction='column' height='100%' minW='250px'>
                     <Box mb={3} flex={0}>
                         <Flex align='end' flexWrap={['wrap', 'wrap', 'nowrap']}>
-                            <Box flex={1} minW='200px'>
+                            <Box flex={2} minW='200px'>
                                 <Heading as='h2' size='xs' textColor='gray.500' mt={2} mb={0}>Address: </Heading>
-                                <Input name="address" bgColor='gray.300' value={address} onChange={(e) => changeAddress(e.target.value)}></Input>
+                                <Input name="address" bgColor='gray.700' value={address} onChange={(e) => changeAddress(e.target.value)}></Input>
                             </Box>
                             <Box ml={3} flex={1}>
                                 <Box> {searchAddrInfo?.identity?.ens || 'no domain for current address'} </Box>
                                 {balanceState.status === 'fetched' ?
                                     (balanceState.data.result / 1e18).toLocaleString('en-IN', { maximumSignificantDigits: 4 }) :
                                     <Spinner size='xs' />} &Xi;
-                            </Box></Flex>
+                            </Box>
+                            </Flex>
                     </Box>
                     <Flex flex={1} minHeight='300px' alignItems='stretch' gap={5}>
                         <Box flexBasis='26em' flexGrow={0}>
@@ -139,10 +140,12 @@ const ConnectionsPage = () => {
                                 changeAddress={changeAddress}
                             />
                         </Box>
-                        <Box flexGrow={1} display={['none', 'none', 'flex']} p={5} rounded='md' backgroundColor='white' overflow='hidden' ref={graphRef}>
-                            <Box height='100%' width='100%' >
-                                <ConnectionsGraph address={address} connections={connections} width={width} height={height} highlightAddress={highlightAddress} setHighlight={setHighlightCallback} />
-                            </Box>
+                        <Box flexGrow={1} p={5} overflow='hidden' ref={graphRef}>
+                            {width > 400 &&
+                                <Box height='100%' width='100%' >
+                                    <ConnectionsGraph address={address} connections={connections} width={width} height={height} highlightAddress={highlightAddress} setHighlight={setHighlightCallback} />
+                                </Box>
+                            }
                         </Box>
                     </Flex>
                 </Flex>

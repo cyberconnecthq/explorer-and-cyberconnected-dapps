@@ -23,7 +23,6 @@ export const WalletConnectButton: React.FC = () => {
             loading={loading}
             onClick={connect}
             disabled={loading}
-            bgColor='black'
             textColor='gray.400'
             _hover={{textColor: 'white'}}
           >

@@ -64,39 +64,44 @@ export default function ConnectionsGraph(props: ConnectionsGraphProps) {
 
   const paintRing = useCallback((node, ctx) => {
     const nodeProps = props.connections.data.find((entity) => entity.address === node.id);
+    const red500 = '#EF4444';
+    const red600 = '#DC2626';
+    const yellow400 = '#FACC15';
+    const green500 = '#22C55E';
+    const zinc300 = '#D4D4D8';
     // add ring just for highlighted nodes
     if (node.id === props.highlightAddress) {
       ctx.beginPath();
-      ctx.arc(node.x, node.y, NODE_R * 1.8, 0, 2 * Math.PI, false);
-      ctx.fillStyle = 'gray';
+      ctx.arc(node.x, node.y, NODE_R * 1.4, 0, 2 * Math.PI, false);
+      ctx.fillStyle = zinc300;
       ctx.fill();
     }
     if (node.id === props.address) {
       ctx.beginPath();
       ctx.arc(node.x, node.y, NODE_R * 1.8, 0, 2 * Math.PI, false);
-      ctx.fillStyle = 'red';
+      ctx.fillStyle = red600;
       ctx.fill();
       return;
     }
     if (node === hoverNode) {
       ctx.beginPath();
       ctx.arc(node.x, node.y, NODE_R * 1.4, 0, 2 * Math.PI, false);
-      ctx.fillStyle = 'red';
+      ctx.fillStyle = red500;
       ctx.fill();
     }
     if (nodeProps?.is_follower && nodeProps?.is_following) {
       ctx.beginPath();
       ctx.arc(node.x, node.y, NODE_R, 0.5 * Math.PI, 1.5 * Math.PI, false);
-      ctx.fillStyle = 'green';
+      ctx.fillStyle = green500;
       ctx.fill();
       ctx.beginPath();
       ctx.arc(node.x, node.y, NODE_R, -0.5 * Math.PI, 0.5 * Math.PI, false);
-      ctx.fillStyle = 'orange';
+      ctx.fillStyle = yellow400;
       ctx.fill();
     } else {
       ctx.beginPath();
       ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
-      ctx.fillStyle = nodeProps?.is_follower ? 'green' : 'orange';
+      ctx.fillStyle = nodeProps?.is_follower ? green500 : yellow400;
       ctx.fill();
     }
   }, [hoverNode, props.address, props.highlightAddress, props.connections]);
@@ -153,7 +158,9 @@ export default function ConnectionsGraph(props: ConnectionsGraphProps) {
     <Box w='100%' h='100%' minHeight='300px'>
       <NoSSRForceGraph
         linkWidth={1}
-        linkDirectionalArrowLength={2}
+        linkColor={()=>'#ffffff'}
+        linkDirectionalArrowLength={4}
+        linkDirectionalArrowColor={()=>'#ffffff'}
         width={props.width}
         height={props.height-50}
         nodeLabel='id'
@@ -162,9 +169,13 @@ export default function ConnectionsGraph(props: ConnectionsGraphProps) {
         onNodeHover={handleNodeHover}
         nodeCanvasObject={paintRing}
       />
+      <Box float="right" textColor='red.600' px={2}>Current Search</Box>
+      <Box float="right" textColor='green.500' px={2}>Bo<Box display='inline' textColor='yellow.400'>th</Box></Box>
+      <Box float="right" textColor='green.500' px={2}>Follower</Box>
+      <Box float="right" textColor='yellow.400' px={2}>Following</Box>
       {loadingState === '' ?
-      <Box fontSize='sm'>Loading of {treeData.links.length} connections done</Box>
-      : <Box fontSize='sm'>Loading connections between followers and following ... </Box>
+      <Box fontSize='sm'>Loading of {treeData.links.length} connections done.</Box>
+      : <Box fontSize='sm'>Loading more connections ... </Box>
       }
     </Box>
   );

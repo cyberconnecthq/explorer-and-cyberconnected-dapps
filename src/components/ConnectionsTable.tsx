@@ -1,7 +1,8 @@
 import { useFetch, useFollowListInfoQuery } from "@/utils/hooks";
+import theme from "@/utils/theme";
 import { ConnectionData, ConnectionsData, RecommendedUser } from "@/utils/types";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { Box, Button, Flex, Spinner, Tab, TabList, TabPanel, TabPanels, Tabs, Tooltip } from "@chakra-ui/react";
+import { Box, Button, ChakraProvider, Flex, Spinner, Tab, TabList, TabPanel, TabPanels, Tabs, Tooltip } from "@chakra-ui/react";
 import { useCallback, useEffect, useRef } from "react";
 import Identicon from 'react-identicons';
 
@@ -24,7 +25,7 @@ function ConnectionsTable(props : ConnectionsTableProps) {
 
     const detailsRef = useRef<HTMLDivElement | null>(null);
     const details = (entry:ConnectionData) => 
-            <Box ref={detailsRef} pl={10} pr={5} pb={5} key={entry.address + '_1'} bgColor='gray.300'>
+            <Box ref={detailsRef} pl={10} pr={5} pb={5} key={entry.address + '_1'}>
                 <Box float='right'>
                     {balanceState.status === 'fetched' ?
                         (balanceState.data.result / 1e18).toLocaleString('en-IN', { maximumSignificantDigits: 4 }) :
@@ -106,18 +107,26 @@ function ConnectionsTable(props : ConnectionsTableProps) {
     }, [props.highlightAddress, props.connections])
     
     return (
+        <ChakraProvider theme={theme}>
         <Tabs height='100%' display='flex' flexDir='column' p={0}>
             <TabList flex={0} flexWrap='wrap'>
                 <Tab>Connections</Tab>
                 <Tab>Recommendations</Tab>
             </TabList>
 
-            <TabPanels overflow='auto' flex={1}>
+                <TabPanels overflow='auto' flex={1} sx={{
+                    '&::-webkit-scrollbar': {
+                        width: '16px',
+                        borderRadius: '8px',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: `rgba(255, 255, 255, 80)`,
+                    },
+                }}>
                 <TabPanel p={1}>
                     <Box key="connectionsTable">
                         {props.connections.data.map(entry =>
                             <Box key={entry.address + '_user'}
-                                bgColor={props.highlightAddress == entry.address ? 'gray.300' : 'white'}
                                 onClick={() => { invalidate(); props.setHighlight(entry.address) }}
                             >
                                 <UserEntry entry={entry} />
@@ -129,18 +138,17 @@ function ConnectionsTable(props : ConnectionsTableProps) {
                 <TabPanel p={1}>
                     {props.recommendations.map(entry =>
                         <Box key={entry.address + '_user'}
-                            bgColor={props.highlightAddress == entry.address ? 'gray.300' : 'white'}
                             onClick={() => { invalidate(); props.setHighlight(entry.address) }}
                         >
                             <UserEntry entry={entry} />
                             {(props.highlightAddress.replace(/^{0x}+/, '') === entry.address.replace(/^{0x}+/, '')) && 
-                                <Box pl={10} pr={5} pb={5} fontSize='sm'>Reason: {entry.recommendationReason}</Box>
+                                <Box pl={6} pr={5} pb={2} mt={-1} fontSize='sm'>Reason: {entry.recommendationReason}</Box>
                             }
                         </Box>
                     )}
                 </TabPanel>
             </TabPanels>
-        </Tabs>)
+        </Tabs></ChakraProvider>)
 }
 
 export default ConnectionsTable;
