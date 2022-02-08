@@ -1,0 +1,792 @@
+#
+directive @admin on FIELD_DEFINITION
+
+#
+type Airdrop {
+  #
+  name: String!
+
+  #
+  amount: String!
+
+  #
+  value: String!
+}
+
+#
+type AuthResponse {
+  #
+  result: AuthResponse_Result!
+
+  #
+  authToken: String!
+}
+
+#
+enum AuthResponse_Result {
+  #
+  SUCCESS
+
+  #
+  AUTHENTICATION_FAILED
+}
+
+#
+type BasicInfoConnection {
+  #
+  pageInfo: PageInfo!
+
+  #
+  list: [Connect!]!
+}
+
+#
+type Connect {
+  #
+  address: String!
+
+  #
+  domain: String!
+
+  #
+  ens: String! @deprecated(reason: "`ens` is deprecated. Use `domain` instead.")
+
+  #
+  avatar: String!
+
+  #
+  alias: String!
+
+  #
+  namespace: String!
+
+  #
+  lastModifiedTime: String!
+
+  #
+  verifiable: Boolean!
+}
+
+#
+type ConnectResponse {
+  #
+  result: ConnectResponse_Result!
+}
+
+#
+enum ConnectResponse_Result {
+  #
+  SUCCESS
+
+  #
+  FAILED
+
+  #
+  FOLLOWED
+
+  #
+  UNFOLLOWED
+
+  #
+  INVALID_ADDRESS
+
+  #
+  EMPTY_NAMESPACE
+
+  #
+  INVALID_SIGNATURE
+
+  #
+  INVALID_OPERATION
+
+  #
+  SIGNING_KEY_EXPIRED
+}
+
+#
+type FollowResponse {
+  #
+  result: FollowResponse_Result!
+}
+
+#
+enum FollowResponse_Result {
+  #
+  SUCCESS
+
+  #
+  FAILED
+
+  #
+  INVALID_ADDRESS
+
+  #
+  AUTHENTICATION_FAILED
+
+  #
+  EMPTY_NAMESPACE
+
+  #
+  FOLLOWED
+}
+
+#
+type FollowStatus {
+  #
+  isFollowed: Boolean!
+
+  #
+  isFollowing: Boolean!
+}
+
+#
+enum GenerateSummaryResponse_Result {
+  #
+  SUCCESS
+
+  #
+  FAILED
+
+  #
+  INVALID_ADDRESS
+
+  #
+  AUTHENTICATION_FAILED
+}
+
+#
+type GenerateWeb3SummaryResponse {
+  #
+  result: GenerateSummaryResponse_Result!
+
+  #
+  imageUrl: String!
+}
+
+#
+type GetActivationCodeResponse {
+  #
+  result: GetActivationCodeResponse_Result!
+
+  #
+  code: String!
+}
+
+#
+enum GetActivationCodeResponse_Result {
+  #
+  SUCCESS
+
+  #
+  INVALID_ADDRESS
+
+  #
+  INELIGIBLE
+
+  #
+  INSUFFICIENT_CODE
+}
+
+#
+type GetEligibilityResponse {
+  #
+  isTwitterVerified: Boolean!
+
+  #
+  isFollowerEligible: Boolean!
+}
+
+#
+type HomePage {
+  #
+  userCount: Int!
+
+  #
+  connectionCount: Int!
+}
+
+#
+type Mutation {
+  #
+  generateSummary(
+    address: String!
+    signature: String!
+    imageContent: String!
+    source: Source!
+  ): GenerateWeb3SummaryResponse!
+
+  #
+  registerKey(input: RegisterKeyInput!): RegisterKeyResponse!
+
+  #
+  connect(input: UpdateConnectionInput!): ConnectResponse!
+
+  #
+  disconnect(input: UpdateConnectionInput!): ConnectResponse!
+
+  #
+  alias(input: UpdateConnectionInput!): ConnectResponse!
+
+  #
+  auth(address: String!, signature: String!, network: Network): AuthResponse!
+    @deprecated(
+      reason: "`auth` for centralized authorization is deprecated. To make data verifiable, use `registerKey` instead."
+    )
+
+  #
+  follow(
+    fromAddr: String!
+    toAddr: String!
+    namespace: String!
+    signature: String!
+    network: Network
+    alias: String
+  ): FollowResponse!
+    @deprecated(
+      reason: "`follow` is deprecated. To make data verifiable, use `connect` instead."
+    )
+
+  #
+  unfollow(
+    fromAddr: String!
+    toAddr: String!
+    namespace: String!
+    signature: String!
+    network: Network
+  ): UnFollowResponse!
+    @deprecated(
+      reason: "`unfollow` is deprecated. To make data verifiable, use `disconnect` instead."
+    )
+
+  #
+  setAlias(
+    fromAddr: String!
+    toAddr: String!
+    alias: String!
+    namespace: String!
+    signature: String!
+    network: Network
+  ): SetAliasResponse!
+    @deprecated(
+      reason: "`setAlias` is deprecated. To make data verifiable, use `alias` instead."
+    )
+
+  #
+  setProfile(
+    address: String!
+    avatar: String
+    domain: String
+    twitter: String
+    signature: String!
+    network: Network!
+  ): SetProfileResponse!
+}
+
+#
+enum Network {
+  #
+  ETH
+
+  #
+  SOLANA
+}
+
+#
+interface Node {
+  #
+  id: ID!
+}
+
+#
+type PageInfo {
+  #
+  startCursor: String!
+
+  #
+  endCursor: String!
+
+  #
+  hasNextPage: Boolean!
+
+  #
+  hasPreviousPage: Boolean!
+}
+
+#
+scalar Percentage
+
+#
+type Popular {
+  #
+  address: String!
+
+  #
+  domain: String!
+
+  #
+  ens: String! @deprecated(reason: "`ens` is deprecated. Use `domain` instead.")
+
+  #
+  recommendationReason: String!
+
+  #
+  followerCount: Int!
+
+  #
+  isFollowing: Boolean!
+
+  #
+  avatar: String!
+}
+
+#
+type PopularConnection {
+  #
+  pageInfo: PageInfo!
+
+  #
+  list: [Popular!]!
+}
+
+#
+type Query {
+  #
+  web3EOYSummary(address: String!): Web3EOYSummary!
+
+  #
+  web3EOYSummaryEligiblity(address: String!): Web3EOYSummaryEligiblity!
+
+  #
+  getEligibility(address: String!): GetEligibilityResponse!
+
+  #
+  identity(address: String!, network: Network): UserIdentity!
+
+  #
+  recommendations(
+    address: String!
+    filter: RecommFilter
+    network: Network
+    first: Int
+    after: String
+  ): RecommendationResponse!
+
+  #
+  homePage(network: Network): HomePage!
+
+  #
+  proof(
+    fromAddr: String!
+    toAddr: String!
+    namespace: String
+    network: Network
+  ): String!
+
+  #
+  followStatus(
+    fromAddr: String!
+    toAddr: String!
+    namespace: String
+    network: Network
+  ): FollowStatus
+
+  #
+  followingAlias(
+    fromAddr: String!
+    toAddr: String!
+    namespace: String
+    network: Network
+  ): String!
+
+  #
+  popular(
+    fromAddr: String
+    tags: TagsInput!
+    network: Network
+    first: Int
+    after: String
+  ): PopularConnection!
+
+  #
+  featured(fromAddr: String, network: Network): [Popular!]!
+
+  #
+  rankings(
+    fromAddr: String
+    first: Int
+    after: String
+    network: Network
+  ): RankingResponse!
+
+  #
+  activationCode(address: String!): GetActivationCodeResponse!
+
+  #
+  allFollowings(address: String!, namespace: String): [Connect!]!
+    @deprecated(
+      reason: "`allFollowings` is deprecated. Use `identity.followings` instead."
+    )
+}
+
+#
+type Ranking {
+  #
+  address: String!
+
+  #
+  domain: String!
+
+  #
+  ens: String! @deprecated(reason: "`ens` is deprecated. Use `domain` instead.")
+
+  #
+  avatar: String!
+
+  #
+  followerCount: Int!
+
+  #
+  isFollowing: Boolean!
+
+  #
+  verifiable: Boolean!
+
+  #
+  isP10: Boolean!
+}
+
+#
+type RankingConnection {
+  #
+  pageInfo: PageInfo!
+
+  #
+  list: [Ranking!]!
+}
+
+#
+type RankingResponse {
+  #
+  result: RankingResponse_Result!
+
+  #
+  data: RankingConnection
+}
+
+#
+enum RankingResponse_Result {
+  #
+  SUCCESS
+
+  #
+  INVALID_ADDRESS
+}
+
+#
+enum RecommFilter {
+  #
+  SOCIAL
+
+  #
+  NFT
+
+  #
+  DEFI
+
+  #
+  GAME
+}
+
+#
+type Recommendation {
+  #
+  address: String!
+
+  #
+  domain: String!
+
+  #
+  ens: String! @deprecated(reason: "`ens` is deprecated. Use `domain` instead.")
+
+  #
+  avatar: String!
+
+  #
+  recommendationReason: String!
+
+  #
+  followerCount: Int!
+}
+
+#
+type RecommendationConnection {
+  #
+  pageInfo: PageInfo!
+
+  #
+  list: [Recommendation!]!
+}
+
+#
+type RecommendationResponse {
+  #
+  result: RecommendationResponse_Result!
+
+  #
+  data: RecommendationConnection
+}
+
+#
+enum RecommendationResponse_Result {
+  #
+  SUCCESS
+
+  #
+  INDEXING
+
+  #
+  NO_RECOMMENDATION
+}
+
+#
+input RegisterKeyInput {
+  #
+  address: String!
+
+  #
+  message: String!
+
+  #
+  signature: String!
+
+  #
+  network: Network
+}
+
+#
+type RegisterKeyResponse {
+  #
+  result: RegisterKeyResponse_Result!
+}
+
+#
+enum RegisterKeyResponse_Result {
+  #
+  SUCCESS
+
+  #
+  FAILED
+}
+
+#
+type SetAliasResponse {
+  #
+  result: SetAliasResponse_Result!
+}
+
+#
+enum SetAliasResponse_Result {
+  #
+  SUCCESS
+
+  #
+  FAILED
+
+  #
+  INVALID_ADDRESS
+
+  #
+  AUTHENTICATION_FAILED
+
+  #
+  EMPTY_NAMESPACE
+
+  #
+  UNFOLLOWED
+}
+
+#
+type SetProfileResponse {
+  #
+  result: SetProfileResponse_Result!
+}
+
+#
+enum SetProfileResponse_Result {
+  #
+  SUCCESS
+
+  #
+  UNSUPPORTED_NETWORK
+
+  #
+  INVALID_ADDRESS
+
+  #
+  AUTHENTICATION_FAILED
+
+  #
+  PROFILE_NOT_EXIST
+}
+
+#
+type Social {
+  #
+  twitter: String!
+}
+
+#
+enum Source {
+  #
+  MOBILE
+
+  #
+  WEBSITE
+}
+
+#
+enum Tag {
+  #
+  PLAZA
+
+  #
+  FEATURED
+
+  #
+  NFTMARKET
+}
+
+#
+input TagsInput {
+  #
+  list: [Tag!]!
+}
+
+#
+scalar Time
+
+#
+type UnFollowResponse {
+  #
+  result: UnFollowResponse_Result!
+}
+
+#
+enum UnFollowResponse_Result {
+  #
+  SUCCESS
+
+  #
+  FAILED
+
+  #
+  INVALID_ADDRESS
+
+  #
+  AUTHENTICATION_FAILED
+
+  #
+  EMPTY_NAMESPACE
+
+  #
+  UNFOLLOWED
+}
+
+#
+input UpdateConnectionInput {
+  #
+  fromAddr: String!
+
+  #
+  toAddr: String!
+
+  #
+  namespace: String!
+
+  #
+  signature: String!
+
+  #
+  operation: String!
+
+  #
+  signingKey: String!
+
+  #
+  alias: String
+
+  #
+  network: Network
+}
+
+#
+scalar Upload
+
+#
+type UserIdentity {
+  #
+  address: String!
+
+  #
+  domain: String!
+
+  #
+  ens: String! @deprecated(reason: "`ens` is deprecated. Use `domain` instead.")
+
+  #
+  social: Social!
+
+  #
+  avatar: String!
+
+  #
+  joinTime: String!
+
+  #
+  followerCount(namespace: String): Int!
+
+  #
+  followingCount(namespace: String): Int!
+
+  #
+  followings(namespace: String, first: Int, after: String): BasicInfoConnection!
+
+  #
+  followers(namespace: String, first: Int, after: String): BasicInfoConnection!
+
+  #
+  friends(namespace: String, first: Int, after: String): BasicInfoConnection!
+}
+
+#
+type Web3EOYSummary {
+  #
+  joinTime: Int!
+
+  #
+  airdrops: [Airdrop!]
+
+  #
+  userType: String!
+
+  #
+  keyword: String!
+
+  #
+  greeting: String!
+
+  #
+  keywordUrl: String!
+
+  #
+  recommendations(address: String!): [Recommendation!]
+}
+
+#
+type Web3EOYSummaryEligiblity {
+  #
+  eligible: Boolean!
+
+  #
+  imageUrl: String!
+}
