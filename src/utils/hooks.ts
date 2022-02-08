@@ -1,8 +1,7 @@
-import { useEffect, useRef, useReducer } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import { isValidAddr } from './helper';
 import { followListInfoQuery } from './query';
 import { FIRST, NAME_SPACE, NETWORK } from './settings';
-import { FollowListInfoArgs, FollowListInfoResp } from './types';
 
 // explanation: https://www.smashingmagazine.com/2020/07/custom-react-hook-fetch-cache-data/
 export const useFetch = (url: string) => {

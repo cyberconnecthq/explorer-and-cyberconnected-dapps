@@ -73,6 +73,7 @@ export const followListInfoSchema = ({
     operationName: 'followListInfo',
     query: `query followListInfo($address: String!, $namespace: String, $network: Network, $followingFirst: Int, $followingAfter: String, $followerFirst: Int, $followerAfter: String) {
       identity(address: $address, network: $network) {
+        address
         followingCount(namespace: $namespace)
         followerCount(namespace: $namespace)
         followings(namespace: $namespace, first: $followingFirst, after: $followingAfter) {
@@ -214,7 +215,7 @@ export const followListInfoQuery = async ({
   });
   const resp = await handleQuery(schema, endPoint);
 
-  return (resp?.data?.identity as FollowListInfoResp) || null;
+  return ({address: resp?.data?.address, ...resp?.data?.identity} as FollowListInfoResp) || null;
 };
 
 export const searchUserInfoQuery = async ({

@@ -11,13 +11,13 @@ import ConnectionsGraph from '../components/ConnectionsGraph';
 
 
 const ConnectionsPage = () => {
-    const [address, setAddress] = useState<string>("0x1dd779850b584e10e8f95b03a2a86b90b312d75d");
+    const [addressInput, setAddressInput] = useState<string>("0x1dd779850b584e10e8f95b03a2a86b90b312d75d");
+    const [addressInputImmediate, setAddressInputImmediate] = useState<string>("0x1dd779850b584e10e8f95b03a2a86b90b312d75d");
 
-    const [balanceState, invalidateBalance] = useFetch(`https://api.etherscan.io/api?module=account&action=balance&address=${address}&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=ECK9EWNEXGYJUEAACITH3F2N8DC6GMMHS9`);
     const [searchAddrInfo, setSearchAddrInfo] = useState<SearchUserInfoResp | null>(null);
     const fetchSearchAddrInfo = async (toAddr: string) => {
         const resp = await searchUserInfoQuery({
-            fromAddr: address,
+            fromAddr: addressInput,
             toAddr,
             namespace: NAME_SPACE,
             network: NETWORK,
@@ -31,6 +31,12 @@ const ConnectionsPage = () => {
         useState<FollowListInfoResp | null>(null);
     const [recommendedList, setRecommendedList] =
         useState<RecommendedUser[]>([]);
+    const [address, setAddress] = useState<string>(addressInput)
+    const [balanceState, invalidateBalance] = useFetch(`https://api.etherscan.io/api?module=account&action=balance&address=${address}&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=ECK9EWNEXGYJUEAACITH3F2N8DC6GMMHS9`);
+
+    useEffect(()=>{
+        followListInfo && setAddress(followListInfo.address);
+    }, [followListInfo])
 
     const [connections, setConnections] = useState<ConnectionsData>({data: []});
     useEffect(() => {
@@ -59,12 +65,12 @@ const ConnectionsPage = () => {
     useEffect(() => {
         // Get the current user followings and followers list
         const initFollowListInfo = async () => {
-            if (!address) {
+            if (!addressInput) {
                 return;
             }
 
         const resp = await followListInfoQuery({
-            address,
+            address: addressInput,
             namespace: NAME_SPACE,
             network: NETWORK,
             followingFirst: FIRST,
@@ -74,20 +80,33 @@ const ConnectionsPage = () => {
             setFollowListInfo(resp);
         }
 
-        const resp2 = await recommendationListQuery({address});
+        const resp2 = await recommendationListQuery({address: addressInput});
         if (resp2) {
             setRecommendedList(resp2);
         }
     };
 
         initFollowListInfo();
-    }, [address]);
+    }, [addressInput]);
 
+    const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+    function changeAddressImmediate(address: string) {
+        setAddressInputImmediate(address);
+        if (timer) {
+            clearTimeout(timer);
+            setTimer(null);
+        }
+        setTimer(
+            setTimeout(() => {
+                changeAddress(address);
+            }, 500)
+        );
+    }
     const changeAddress = async (value: string) => {
-        setHighlightAddress(address);
-        setAddress(value);
+        setHighlightAddress(addressInput);
+        setAddressInput(value);
 
-        if (isValidAddr(value) && address) {
+        if (isValidAddr(value) && addressInput) {
             // setSearchLoading(true);
             await fetchSearchAddrInfo(value);
         }
@@ -120,10 +139,13 @@ const ConnectionsPage = () => {
                         <Flex align='end' flexWrap={['wrap', 'wrap', 'nowrap']}>
                             <Box flex={2} minW='200px'>
                                 <Heading as='h2' size='xs' textColor='gray.500' mt={2} mb={0}>Address: </Heading>
-                                <Input name="address" bgColor='gray.700' value={address} onChange={(e) => changeAddress(e.target.value)}></Input>
+                                <Input name="address" bgColor='gray.700' value={addressInputImmediate} onChange={(e) => {changeAddressImmediate(e.target.value)}}></Input>
                             </Box>
                             <Box ml={3} flex={1}>
-                                <Box> {searchAddrInfo?.identity?.ens || 'no domain for current address'} </Box>
+                                <Box> {
+                                    address !== addressInput ? address :
+                                searchAddrInfo?.identity?.ens || 'no domain for current address'
+                                } </Box>
                                 {balanceState.status === 'fetched' ?
                                     (balanceState.data.result / 1e18).toLocaleString('en-IN', { maximumSignificantDigits: 4 }) :
                                     <Spinner size='xs' />} &Xi;
@@ -143,7 +165,7 @@ const ConnectionsPage = () => {
                         <Box flexGrow={1} p={5} overflow='hidden' ref={graphRef}>
                             {width > 400 &&
                                 <Box height='100%' width='100%' >
-                                    <ConnectionsGraph address={address} connections={connections} width={width} height={height} highlightAddress={highlightAddress} setHighlight={setHighlightCallback} />
+                                    <ConnectionsGraph address={addressInput} connections={connections} width={width} height={height} highlightAddress={highlightAddress} setHighlight={setHighlightCallback} />
                                 </Box>
                             }
                         </Box>

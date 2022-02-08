@@ -55,6 +55,7 @@ export interface MultipleFollowListInfoRespEntry {
 }
 
 export interface FollowListInfoResp {
+  address: string;
   followingCount: number;
   followerCount: number;
   followings: FollowListInfo;

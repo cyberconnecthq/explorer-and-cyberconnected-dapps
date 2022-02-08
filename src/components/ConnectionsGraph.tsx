@@ -1,6 +1,6 @@
 import { multipleFollowersQuery } from "@/utils/query";
 import { ConnectionsData } from "@/utils/types";
-import { Box } from '@chakra-ui/react';
+import { Box, Button } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -106,14 +106,20 @@ export default function ConnectionsGraph(props: ConnectionsGraphProps) {
     }
   }, [hoverNode, props.address, props.highlightAddress, props.connections]);
 
-  const [loadingState, setLoadingState] = useState<string>('0/0');
+  const [loadingState, setLoadingState] = useState<string>('initial');
 
   const [treeData, setTreeData] = useState<GraphData>({ nodes: [], links: [] });
   interface AdditionalConnection {
     source: any;
     target: any;
   }
-  useEffect(() => {
+  useEffect( () => {
+    const orig_treeD = genTree(props.connections, props.address);
+    setTreeData(orig_treeD);
+    setLoadingState('initial')
+  }, [props.connections, props.address])
+  const loadConnectionsBetweenFollowers = useCallback(() => {
+    const orig_treeD = genTree(props.connections, props.address);
     const removeDuplicates = (entries: AdditionalConnection[]): AdditionalConnection[] => {
       let check = new Set<string>();
       let res: AdditionalConnection[] = [];
@@ -131,10 +137,8 @@ export default function ConnectionsGraph(props: ConnectionsGraphProps) {
       }
       return res;
     }
-    const orig_treeD = genTree(props.connections, props.address);
-    setTreeData(orig_treeD);
     if (orig_treeD.nodes == undefined ) return;
-    setLoadingState('...');
+    setLoadingState('loading');
     const addresses = props.connections.data.map(entry => entry.address);
     let additionalConnections: AdditionalConnection[] = [];
     multipleFollowersQuery(addresses).then((result) => {
@@ -150,7 +154,7 @@ export default function ConnectionsGraph(props: ConnectionsGraphProps) {
         if (treeData?.nodes[0].id !== orig_treeD?.nodes[0].id) return treeData; // tree has already been updated
         return { nodes: orig_treeD.nodes, links: removeDuplicates(orig_treeD.links.concat(additionalConnections)) }
       })
-      setLoadingState('');
+      setLoadingState('done');
     }); // TODO: .error
   }, [props.connections, props.address])
 
@@ -173,10 +177,14 @@ export default function ConnectionsGraph(props: ConnectionsGraphProps) {
       <Box float="right" textColor='green.500' px={2}>Bo<Box display='inline' textColor='yellow.400'>th</Box></Box>
       <Box float="right" textColor='green.500' px={2}>Follower</Box>
       <Box float="right" textColor='yellow.400' px={2}>Following</Box>
-      {loadingState === '' ?
-      <Box fontSize='sm'>Loading of {treeData.links.length} connections done.</Box>
-      : <Box fontSize='sm'>Loading more connections ... </Box>
-      }
+      <Button size='xs' disabled={loadingState !== 'initial'} onClick={()=>loadConnectionsBetweenFollowers()}>
+        {loadingState === 'initial' ?
+          'Load more connections.'
+          : loadingState === 'done' ?
+          `Loading of ${treeData.links.length} connections done.` 
+          : 'Loading more connections ...'
+        }
+      </Button>
     </Box>
   );
 }
