@@ -20,47 +20,10 @@ function genTree(cd: ConnectionsData, ownAddress: string){
   };
 }
 
-<<<<<<< Updated upstream
-function get_color(node:any, props: ConnectionsData){
-  const n = props.data.find(x => x.address == node.id);
-  if (n!== undefined ) {
-    if (n.is_follower){
-      if(n.is_following){
-        // follower and following
-        return '#ffffff';
-      } else {
-        // // follower
-        return '#00ff00';
-      }
-    } else {
-      // following
-      return '#00ffff'
-    }
-  } else {
-    // own node
-    return '#ff0000'
-  }
-}
-
-=======
->>>>>>> Stashed changes
 interface ConnectionsGraphProps {
     connections: ConnectionsData;
     width: number;
     height: number;
-<<<<<<< Updated upstream
-}
-
-export default function ConnectionsGraph(props: ConnectionsGraphProps) {
-  return (
-    <Box w='100%' h='100%' minHeight='300px'>
-      <NoSSRForceGraph
-        width={props.width}
-        height={props.height}
-        nodeLabel='id'
-        graphData={genTree(props.connections)}
-        nodeAutoColorBy={n => get_color(n, props.connections)}
-=======
     highlightAddress: string,
     address: string,
     setHighlight: (highlightAddress: string) => void,
@@ -135,7 +98,6 @@ export default function ConnectionsGraph(props: ConnectionsGraphProps) {
         onNodeClick={(node)=>handleClick(node)}
         onNodeHover={handleNodeHover}
         nodeCanvasObject={paintRing}
->>>>>>> Stashed changes
       />
     </Box>
   );
