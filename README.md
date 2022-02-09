@@ -1,4 +1,6 @@
-Deployed to https://cyberconnect-explorer.netlify.app/ via [Netlify](https://www.netlify.com/)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/2e8eb21e-ea2f-4196-932e-14d199a13f3e/deploy-status)](https://app.netlify.com/sites/cyberconnect-radar/deploys)
+
+Deployed to https://cyberconnect-radar.netlify.app/ via [Netlify](https://www.netlify.com/)
 
 Fork it freely.
 
