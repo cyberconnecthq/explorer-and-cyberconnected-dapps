@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 import React, { useEffect, useState } from "react";
@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Icon from "../icon";
 import { LogoWrapper, Motto, Button, Flex } from "../styles/login";
 import { SET_THEME } from "../../redux/actions";
-import { logo, motto } from "./paths";
+import { logo, bird, motto } from "./paths";
 import { Row, Col } from "antd";
 import useLogin from "../../providers/login-provider";
 
@@ -35,7 +35,11 @@ const LogIn = (props) => {
           style={{ overflow: "hidden", position: "relative" }}
         >
           <LogoWrapper>
-            <Icon d={logo} height="130vh" fill="rgb(29,161,242)" />
+            <Icon
+              d={bird}
+              height="130vh"
+              fill="rgb(29,161,242)"
+            />
             <div
               style={{
                 position: "absolute",
@@ -48,7 +52,6 @@ const LogIn = (props) => {
                 <Motto key={item.text}>
                   <Icon
                     d={item.path}
-                    width="28.75px"
                     height="28.75px"
                     fill="rgb(255,255,255)"
                   />
@@ -63,7 +66,7 @@ const LogIn = (props) => {
             <div>
               <Icon
                 d={logo}
-                width="41.25px"
+                viewBox={"0 0 32 26"}
                 height="41.25px"
                 fill="rgb(29,161,242)"
               />
