@@ -80,11 +80,12 @@ export enum Network {
 }
 
 export interface ConnectionData {
-  ens: string;
+  ens?: string;
   address: string;
-  avatar: string;
+  avatar?: string;
   is_follower: boolean,
-  is_following: boolean
+  is_following: boolean,
+  has_interacted: boolean,
 }
 export interface ConnectionsData {
   data: ConnectionData[]

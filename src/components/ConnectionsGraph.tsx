@@ -18,13 +18,18 @@ interface GraphData {
 }
 
 function genTree(cd: ConnectionsData, ownAddress: string): GraphData {
+  const initial = cd.data.find((conn) => conn.address == ownAddress) ? [] : [{id: ownAddress}];
   return {
-    nodes: [{id: ownAddress}].concat(cd.data.map(conn => ({id: conn.address}) )),
+    nodes: initial.concat(cd.data.map(conn => ({id: conn.address}) )),
     links: cd.data
       .filter((conn) => conn.is_follower)
       .map((conn) => ({ source: conn.address, target: ownAddress })).concat(
         cd.data
           .filter(conn => conn.is_following)
+          .map((conn) => ({ target: conn.address, source: ownAddress }))
+      ).concat(
+        cd.data
+          .filter(conn => conn.has_interacted)
           .map((conn) => ({ target: conn.address, source: ownAddress }))
       )
   };
@@ -35,7 +40,7 @@ interface ConnectionsGraphProps {
     width: number;
     height: number;
     highlightAddress: string,
-    address: string,
+    address: string | null,
     setHighlight: (highlightAddress: string) => void,
 }
 
@@ -69,6 +74,7 @@ export default function ConnectionsGraph(props: ConnectionsGraphProps) {
     const yellow400 = '#FACC15';
     const green500 = '#22C55E';
     const zinc300 = '#D4D4D8';
+    const violet600 = '#7C3AED';
     // add ring just for highlighted nodes
     if (node.id === props.highlightAddress) {
       ctx.beginPath();
@@ -101,7 +107,9 @@ export default function ConnectionsGraph(props: ConnectionsGraphProps) {
     } else {
       ctx.beginPath();
       ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI, false);
-      ctx.fillStyle = nodeProps?.is_follower ? green500 : yellow400;
+      ctx.fillStyle = nodeProps?.is_follower ? green500 : (
+        nodeProps?.is_following? yellow400 : violet600 // has interacted
+      );
       ctx.fill();
     }
   }, [hoverNode, props.address, props.highlightAddress, props.connections]);
@@ -114,11 +122,13 @@ export default function ConnectionsGraph(props: ConnectionsGraphProps) {
     target: any;
   }
   useEffect( () => {
+    if ( props.address === null ) return;
     const orig_treeD = genTree(props.connections, props.address);
     setTreeData(orig_treeD);
     setLoadingState('initial')
   }, [props.connections, props.address])
   const loadConnectionsBetweenFollowers = useCallback(() => {
+    if ( props.address === null ) return;
     const orig_treeD = genTree(props.connections, props.address);
     const removeDuplicates = (entries: AdditionalConnection[]): AdditionalConnection[] => {
       let check = new Set<string>();
@@ -177,6 +187,7 @@ export default function ConnectionsGraph(props: ConnectionsGraphProps) {
       <Box float="right" textColor='green.500' px={2}>Bo<Box display='inline' textColor='yellow.400'>th</Box></Box>
       <Box float="right" textColor='green.500' px={2}>Follower</Box>
       <Box float="right" textColor='yellow.400' px={2}>Following</Box>
+      <Box float="right" textColor='#7C3AED' px={2}>Has interacted</Box>
       <Button size='xs' disabled={loadingState !== 'initial'} onClick={()=>loadConnectionsBetweenFollowers()}>
         {loadingState === 'initial' ?
           'Load more connections.'

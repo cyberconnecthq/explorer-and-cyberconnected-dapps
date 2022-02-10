@@ -1,96 +1,54 @@
 import ConnectionsTable from '@/components/ConnectionsTable';
+import { CovalentTransactionsForAddressResp, ICovalentGetTransactionsForAddressData, useCovalentTransactionsForAddress } from '@/utils/covalent_query';
 import { isValidAddr } from '@/utils/helper';
-import { useFetch } from '@/utils/hooks';
-import { followListInfoQuery, recommendationListQuery, searchUserInfoQuery } from '@/utils/query';
-import { FIRST, NAME_SPACE, NETWORK } from '@/utils/settings';
+import { useAddressInfo, useEtherscanBalance, useFollowListInfoQuery } from '@/utils/hooks';
+import { recommendationListQuery, searchUserInfoQuery } from '@/utils/query';
+import { NAME_SPACE, NETWORK } from '@/utils/settings';
 import theme from '@/utils/theme';
-import { ConnectionsData, FollowListInfoResp, RecommendedUser, SearchUserInfoResp } from '@/utils/types';
-import { Box, ChakraProvider, Flex, Heading, Input, Spinner } from '@chakra-ui/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { ConnectionData, ConnectionsData, FollowListInfoResp, RecommendedUser, SearchUserInfoResp } from '@/utils/types';
+import { Box, ChakraProvider, Flex, Heading, Input, Skeleton, Spinner } from '@chakra-ui/react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import ConnectionsGraph from '../components/ConnectionsGraph';
 
 
 const ConnectionsPage = () => {
-    const [addressInput, setAddressInput] = useState<string>("0x1dd779850b584e10e8f95b03a2a86b90b312d75d");
+    const [address, setAddress] = useState<string | null>("0x1dd779850b584e10e8f95b03a2a86b90b312d75d");
     const [addressInputImmediate, setAddressInputImmediate] = useState<string>("0x1dd779850b584e10e8f95b03a2a86b90b312d75d");
 
-    const [searchAddrInfo, setSearchAddrInfo] = useState<SearchUserInfoResp | null>(null);
-    const fetchSearchAddrInfo = async (toAddr: string) => {
-        const resp = await searchUserInfoQuery({
-            fromAddr: addressInput,
-            toAddr,
-            namespace: NAME_SPACE,
-            network: NETWORK,
-        });
-        if (resp) {
-            setSearchAddrInfo(resp);
-        }
-    };
-
-    const [followListInfo, setFollowListInfo] =
-        useState<FollowListInfoResp | null>(null);
     const [recommendedList, setRecommendedList] =
         useState<RecommendedUser[]>([]);
-    const [address, setAddress] = useState<string>(addressInput)
-    const [balanceState, invalidateBalance] = useFetch(`https://api.etherscan.io/api?module=account&action=balance&address=${address}&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=ECK9EWNEXGYJUEAACITH3F2N8DC6GMMHS9`);
+    const balanceState = useEtherscanBalance(address);
+    const useFollowListInfo = useFollowListInfoQuery(address);
 
     useEffect(()=>{
-        followListInfo && setAddress(followListInfo.address);
-    }, [followListInfo])
+        useFollowListInfo.data && setAddress(useFollowListInfo.data.address);
+    }, [useFollowListInfo.data])
 
     const [connections, setConnections] = useState<ConnectionsData>({data: []});
-    useEffect(() => {
+    const covalentQuery = useCovalentTransactionsForAddress(address);
+    const [connectionsLoading, setConnectionsLoading] = useState<boolean>(true);
+
+    // Load connections
+    useLayoutEffect(() => {
         // TODO: it should be done querying the info for each follower because if there are more than query maximum (FIRST=1000) it could be missing in the list
         // combine followers and following into connections
-        let connections = followListInfo?.followers?.list.map((follower) => ({...follower, is_follower: true, is_following: false}));
-        const following = followListInfo?.followings?.list.map((following) => ({...following, is_follower:false, is_following: true}));
-        following?.forEach((fing) => {
-            let connection_index = connections?.findIndex((fer) => {
-                return fer.address == fing.address;
-            });
-            if (connection_index === -1 || connection_index === undefined) {
-                connections?.push(fing);
-            } else {
-                if(connections == undefined) {
-                    connections = [];
-                }
-                connections[connection_index].is_following = true;
-            }
-        });
-        if(connections !== undefined) {
-            setConnections({ data: connections });
+        setConnectionsLoading(true);
+        const followListInfo = useFollowListInfo.data;
+        if (useFollowListInfo.data !== undefined) {
+        let connections: ConnectionData[] = createConnectionsData(followListInfo, covalentQuery.isSuccess, covalentQuery.data, address);
+        setConnections({ data: connections });
         }
-    }, [followListInfo]);
+        setConnectionsLoading(false);
+    }, [useFollowListInfo.data, covalentQuery.data, covalentQuery.isSuccess, address]);
 
     useEffect(() => {
-        // Get the current user followings and followers list
-        const initFollowListInfo = async () => {
-            if (!addressInput) {
-                return;
-            }
-
-        const resp = await followListInfoQuery({
-            address: addressInput,
-            namespace: NAME_SPACE,
-            network: NETWORK,
-            followingFirst: FIRST,
-            followerFirst: FIRST,
-        });
-        if (resp) {
-            setFollowListInfo(resp);
-        }
-
-        const resp2 = await recommendationListQuery({address: addressInput});
-        if (resp2) {
-            setRecommendedList(resp2);
-        }
-    };
-
-        initFollowListInfo();
-    }, [addressInput]);
+        // load recommendations
+        if (!address) return;
+        recommendationListQuery({ address: address }).then( (resp) => setRecommendedList(resp) );
+    }, [address]);
 
     const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
-    function changeAddressImmediate(address: string) {
+    function changeAddressImmediate(address: string) { // update Address after 500 ms
         setAddressInputImmediate(address);
         if (timer) {
             clearTimeout(timer);
@@ -102,20 +60,34 @@ const ConnectionsPage = () => {
             }, 500)
         );
     }
-    const changeAddress = async (value: string) => {
-        setHighlightAddress(addressInput);
-        setAddressInput(value);
 
-        if (isValidAddr(value) && addressInput) {
-            // setSearchLoading(true);
-            await fetchSearchAddrInfo(value);
+    const changeAddress = async (value: string) => {
+        // update address only if it is valid
+        if (addressInputImmediate !== value) {
+            setAddressInputImmediate(value);
+        }
+        if (isValidAddr(value)) {
+            setAddress(value);
+            if( address ) setHighlightAddress(address);
+        }
+        else if(value.slice(-4,-1) == '.eth'){
+            setAddress(null); // if eth domain wait for addressInfo
         }
     };
+
+    const addressInfo = useAddressInfo(addressInputImmediate);
+    useEffect( () => {
+        if(addressInfo.isSuccess) {
+            if(address !== addressInfo?.data?.identity.address)
+                setAddress(addressInfo?.data?.identity.address);
+        }
+    }, [address, addressInfo.isSuccess, addressInfo.data]);
 
     const [height, setHeight] = useState(200);
     const [width, setWidth] = useState(200);
     const graphRef = useRef<HTMLDivElement | null>(null);
     const onResize = useEffect(() => {
+        // resize Graph Window
         if (graphRef !== null && graphRef.current !== null) {
             setHeight(graphRef.current.getBoundingClientRect().height);
             setWidth(graphRef.current.getBoundingClientRect().width);
@@ -142,30 +114,46 @@ const ConnectionsPage = () => {
                                 <Input name="address" bgColor='gray.700' value={addressInputImmediate} onChange={(e) => {changeAddressImmediate(e.target.value)}}></Input>
                             </Box>
                             <Box ml={3} flex={1}>
-                                <Box> {
-                                    address !== addressInput ? address :
-                                searchAddrInfo?.identity?.ens || 'no domain for current address'
-                                } </Box>
-                                {balanceState.status === 'fetched' ?
-                                    (balanceState.data.result / 1e18).toLocaleString('en-IN', { maximumSignificantDigits: 4 }) :
-                                    <Spinner size='xs' />} &Xi;
+                                {address === undefined ? 'Invalid address' :
+                                    <>
+                                        <Box> {
+                                            address !== addressInputImmediate ? address :
+                                                addressInfo.data?.identity?.ens || 'no domain for current address'
+                                        } </Box>
+                                        {balanceState.isFetched && balanceState?.data ?
+                                            (balanceState.data.result / 1e18).toLocaleString('en-IN', { maximumSignificantDigits: 4 }) :
+                                            <Spinner size='xs' />} &Xi;</>
+                                }
+
                             </Box>
                             </Flex>
                     </Box>
                     <Flex flex={1} minHeight='300px' alignItems='stretch' gap={5}>
                         <Box flexBasis='26em' flexGrow={0}>
+                            {useFollowListInfo.isSuccess && !connectionsLoading && address ?
                             <ConnectionsTable 
                                 connections={connections}
                                 recommendations={recommendedList}
                                 highlightAddress={highlightAddress}
                                 setHighlight={setHighlightCallback}
-                                changeAddress={changeAddress}
+                                changeAddress={changeAddressImmediate}
                             />
+                            : <Skeleton startColor='pink.500' endColor='orange.500' height={height} />
+                            }
                         </Box>
                         <Box flexGrow={1} p={5} overflow='hidden' ref={graphRef}>
                             {width > 400 &&
                                 <Box height='100%' width='100%' >
-                                    <ConnectionsGraph address={addressInput} connections={connections} width={width} height={height} highlightAddress={highlightAddress} setHighlight={setHighlightCallback} />
+                                    {!useFollowListInfo.isLoading && address !== undefined? 
+                                    <ConnectionsGraph address={address}
+                                        connections={connections}
+                                        width={width}
+                                        height={height}
+                                        highlightAddress={highlightAddress}
+                                        setHighlight={setHighlightCallback}
+                                        /> :
+                                        <Skeleton startColor='pink.500' endColor='orange.500' height={height} />
+                                    }
                                 </Box>
                             }
                         </Box>
@@ -177,3 +165,43 @@ const ConnectionsPage = () => {
 }
 
 export default ConnectionsPage;
+
+function createConnectionsData(followListInfo: FollowListInfoResp | undefined, covalentQueryIsSuccess: boolean, covalentQueryData: undefined | ICovalentGetTransactionsForAddressData, address: string | null) {
+    let connections: ConnectionData[] = followListInfo?.followers?.list.map((follower) => ({ ...follower, is_follower: true, is_following: false, has_interacted: false })) || [];
+    const following: ConnectionData[] = followListInfo?.followings?.list.map((following) => ({ ...following, is_follower: false, is_following: true, has_interacted: false })) || [];
+    following?.forEach((fing) => {
+        let connection_index = connections?.findIndex((fer) => {
+            return fer.address == fing.address;
+        });
+        if (connection_index === -1 || connection_index === undefined) {
+            connections?.push(fing);
+        } else {
+            if (connections == undefined) {
+                connections = [];
+            }
+            connections[connection_index].is_following = true;
+        }
+    });
+    if (covalentQueryIsSuccess) {
+        let covalentConnections: ConnectionData[] = covalentQueryData?.items.map(item => ({
+            address: item.from_address === address ? item.to_address : item.from_address,
+            is_follower: false,
+            is_following: false,
+            has_interacted: true
+        })).filter((item) => item.address !== address) || [];
+        covalentConnections?.forEach((covalent) => {
+            let connection_index = connections?.findIndex((connection) => {
+                return covalent.address == connection.address;
+            });
+            if (connection_index === -1 || connection_index === undefined) {
+                connections?.push(covalent);
+            } else {
+                if (connections == undefined) {
+                    connections = [];
+                }
+                connections[connection_index].has_interacted = true;
+            }
+        });
+    }
+    return connections;
+}

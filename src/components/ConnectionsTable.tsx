@@ -1,4 +1,4 @@
-import { useFetch, useFollowListInfoQuery } from "@/utils/hooks";
+import { useEtherscanBalance, useFollowListInfoQuery } from "@/utils/hooks";
 import theme from "@/utils/theme";
 import { ConnectionData, ConnectionsData, RecommendedUser } from "@/utils/types";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
@@ -16,34 +16,30 @@ interface ConnectionsTableProps {
 
 function ConnectionsTable(props : ConnectionsTableProps) {
 
-    const [balanceState, invalidateBalance] = useFetch(`https://api.etherscan.io/api?module=account&action=balance&address=${props.highlightAddress}&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=ECK9EWNEXGYJUEAACITH3F2N8DC6GMMHS9`);
-    const [userInfo, invalidateUserInfo] = useFollowListInfoQuery(props.highlightAddress);
-    const invalidate = () => {
-        invalidateBalance();
-        invalidateUserInfo();
-    }
+    const balanceState = useEtherscanBalance(props.highlightAddress);
+    const userInfo = useFollowListInfoQuery(props.highlightAddress);
 
     const detailsRef = useRef<HTMLDivElement | null>(null);
     const details = (entry:ConnectionData) => 
             <Box ref={detailsRef} pl={10} pr={5} pb={5} key={entry.address + '_1'}>
                 <Box float='right'>
-                    {balanceState.status === 'fetched' ?
+                    {balanceState.isFetched && balanceState.data ?
                         (balanceState.data.result / 1e18).toLocaleString('en-IN', { maximumSignificantDigits: 4 }) :
                         <Spinner size='xs' />} &Xi;
                 </Box>
                 {(entry.ens ? <Box fontSize='sm'>{entry.address.slice(0,8) + '...' + entry.address.slice(-9,-1)}</Box> : <Box fontSize='sm'>no domain info available</Box>)}
                 <Box style={{ clear: 'both' }} float='right' fontSize='sm'>
                     <ChevronLeftIcon w={6} h={6} color={'yellow.400'} />
-                    {userInfo?.status === 'fetched' ?
-                        userInfo?.data.followingCount + ' '
+                    {userInfo?.isFetched ?
+                        userInfo?.data?.followingCount + ' '
                         : <Spinner size='xs' mr={2} />
                     }
                     Following
                 </Box>
                 <Box fontSize='sm'>
                     <ChevronRightIcon w={6} h={6} color={'green.400'} />
-                    {userInfo?.status === 'fetched' ?
-                        userInfo?.data.followerCount + ' '
+                    {userInfo?.isFetched ?
+                        userInfo?.data?.followerCount + ' '
                         : <Spinner size='xs' mr={2} />
                     }
                     Followers
@@ -127,7 +123,7 @@ function ConnectionsTable(props : ConnectionsTableProps) {
                     <Box key="connectionsTable">
                         {props.connections.data.map(entry =>
                             <Box key={entry.address + '_user'}
-                                onClick={() => { invalidate(); props.setHighlight(entry.address) }}
+                                onClick={() => { props.setHighlight(entry.address) }}
                             >
                                 <UserEntry entry={entry} />
                                 {(props.highlightAddress == entry.address) && details_box}
@@ -138,10 +134,10 @@ function ConnectionsTable(props : ConnectionsTableProps) {
                 <TabPanel p={1}>
                     {props.recommendations.map(entry =>
                         <Box key={entry.address + '_user'}
-                            onClick={() => { invalidate(); props.setHighlight(entry.address) }}
+                            onClick={() => { props.setHighlight(entry.address) }}
                         >
                             <UserEntry entry={entry} />
-                            {(props.highlightAddress.replace(/^{0x}+/, '') === entry.address.replace(/^{0x}+/, '')) && 
+                            {(props?.highlightAddress?.replace(/^{0x}+/, '') === entry?.address.replace(/^{0x}+/, '')) && 
                                 <Box pl={6} pr={5} pb={2} mt={-1} fontSize='sm'>Reason: {entry.recommendationReason}</Box>
                             }
                         </Box>
